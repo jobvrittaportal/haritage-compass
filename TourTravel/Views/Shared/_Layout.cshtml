@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- title -->
+    <title> Travelox - Travel & Tour HTML5 Template </title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/favicon.png">
+
+
+    <!-- css -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="/assets/css/themify-icons.css" rel="stylesheet" />
+    <link href="/assets/css/icofont.min.css" rel="stylesheet" />
+    <link href="/assets/css/flaticon.css" rel="stylesheet" />
+    <link href="/assets/css/magnific-popup.css" rel="stylesheet" />
+    <link href="/assets/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/assets/css/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="/assets/css/nice-select.min.css" rel="stylesheet" />
+    <link href="/assets/css/jquery-ui.min.css" rel="stylesheet" />
+    <link href="/assets/css/animate.min.css" rel="stylesheet" />
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    <!-- preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-box-1"></div>
+            <div class="loader-box-2"></div>
+        </div>
+    </div>
+    <!-- preloader end -->
+
+    @await Html.PartialAsync("_Header")
+    <main class="main">
+        @RenderBody()
+    </main>
+    @await Html.PartialAsync("_Footer")
+
+    <!-- scroll-top -->
+    <a href="#" id="scroll-top"><i class="far fa-angle-double-up"></i></a>
+    <!-- scroll-top end -->
+
+    <!-- js -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/jquery.easing.min.js"></script>
+    <script src="/assets/js/jquery.appear.js"></script>
+    <script src="/assets/js/modernizr.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.nice-select.min.js"></script>
+    <script src="/assets/js/jquery-ui.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/js/isotope.pkgd.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/wow.min.js"></script>
+    <script src="/assets/js/count-to.js"></script>
+    <script src="/assets/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
