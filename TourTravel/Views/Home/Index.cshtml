@@ -1,7 +1,4 @@
-﻿@* @await Component.InvokeAsync("Carousel")
-@await Component.InvokeAsync("Search") *@
-
-<!-- hero slider -->
+﻿<!-- hero slider -->
 <div class="hero-section hero-slider owl-carousel owl-theme">
     <div class="hero-single" style="background-image: url(/assets/img/slider/banner2.jpg)">
         <div class="container">
@@ -143,5 +140,178 @@
 <!-- feature area end -->
 
 <!-- about area-->
-@await Component.InvokeAsync("About");
+@await Component.InvokeAsync("About")
 
+<!-- Destination Area-->
+@await Component.InvokeAsync("DestinationArea")
+
+<!-- Tour Area-->
+<div class="tour-area py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center">
+                    <span class="site-title-tagline">Top Tour</span>
+                    <h2 class="site-title">Top Tour Package</h2>
+                    <p>
+                        It is a long established fact that a reader will be distracted by the readable content
+                        of a page when looking at its layout.
+                    </p>
+                </div>
+            </div>
+        </div>
+        @* @await Component.InvokeAsync("TourCards", new { take = 3 }) *@
+        @await Component.InvokeAsync("TourCards")
+    </div>
+</div>
+<!-- Tour Area ends-->
+
+<!-- Counter area-->
+<div class="counter-area pt-50 pb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-user-friends"></i></div>
+                    <span class="counter" data-count="+" data-to="30" data-speed="3000">30</span>
+                    <h6 class="title">+ Tour Guides</h6>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-users-class"></i></div>
+                    <span class="counter" data-count="+" data-to="600" data-speed="3000">600</span>
+                    <h6 class="title">+ Tour Completed</h6>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-hands-heart"></i></div>
+                    <span class="counter" data-count="+" data-to="25" data-speed="3000">25</span>
+                    <h6 class="title">+ Travel Experience</h6>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-award"></i></div>
+                    <span class="counter" data-count="+" data-to="50" data-speed="3000">50</span>
+                    <h6 class="title">+ Win Awards</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Counter area end-->
+
+<!-- video area -->
+<div class="video-area pt-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center">
+                    <span class="site-title-tagline">Intro Video</span>
+                    <h2 class="site-title">Let's Check Our Video</h2>
+                    <p>
+                        It is a long established fact that a reader will be distracted by the readable content
+                        of a page when looking at its layout.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div class="video-wrapper">
+                    <img src="/assets/img/slider/banner2.jpg" alt="Banner Video">
+                    <a class="play-btn popup-youtube" href="https://www.youtube.com/watch?v=ckHzmP1evNU">
+                        <i class="icofont-ui-play"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- video area end -->
+
+<!-- guide-area -->
+<div class="guide-area py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center">
+                    <span class="site-title-tagline">Tour Guides</span>
+                    <h2 class="site-title">Meet Our Tour Guides</h2>
+                    <div class="heading-divider"></div>
+                    <p>
+                        It is a long established fact that a reader will be distracted by the readable content
+                        of a page when looking at its layout.
+                    </p>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("TourGuides")
+    </div>
+</div>
+<!-- guide-area ends -->
+
+<!-- cta area -->
+<div class="cta-area">
+    <div class="container">
+        <div class="cta-content">
+            <h2>GET DISCOUNT <span> 20-35% </span> OFF ANY TOUR PACKAGE</h2>
+            <p>WHEN YOU PURCHASE ANY PACKAGE & GET NEXT TOUR</p>
+            <a href="#">Start Your Trip Now <i class="far fa-long-arrow-right"></i></a>
+        </div>
+    </div>
+</div>
+<!-- cta area end -->
+
+<!--Testimonials start-->
+<div class="testimonial-area py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center">
+                    <span class="site-title-tagline">Testimonials</span>
+                    <h2 class="site-title">What Client Say's</h2>
+                    <p>
+                        It is a long established fact that a reader will be distracted by the readable content
+                        of a page when looking at its layout.
+                    </p>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("Testimonials")
+    </div>
+</div>
+<!--Testimonials ends-->
+
+<!-- partner area -->
+<div class="partner-area">
+    <div class="container">
+        <div class="partner-wrapper partner-slider owl-carousel owl-theme">
+            <div class="partner-item">
+                <img src="assets/img/partner/partner1.jpg" alt="thumb">
+            </div>
+            <div class="partner-item">
+                <img src="assets/img/partner/partner2.jpg" alt="thumb">
+            </div>
+            <div class="partner-item">
+                <img src="assets/img/partner/partner3.jpg" alt="thumb">
+            </div>
+            <div class="partner-item">
+                <img src="assets/img/partner/partner4.jpg" alt="thumb">
+            </div>
+            <div class="partner-item">
+                <img src="assets/img/partner/partner1.jpg" alt="thumb">
+            </div>
+            <div class="partner-item">
+                <img src="assets/img/partner/partner2.jpg" alt="thumb">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- partner area end -->
+
+<!-- Blog start -->
+@await Component.InvokeAsync("Blog", new { showHeading = true })
+<!-- Blog ends -->

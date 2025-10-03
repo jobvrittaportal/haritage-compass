@@ -1,0 +1,147 @@
+﻿@* @model IEnumerable<YourProject.Models.Blog>
+@{
+    bool showHeading = ViewData["ShowHeading"] as bool? ?? true;
+}
+
+<div class="blog-area py-120">
+    <div class="container">
+        @if (showHeading)
+        {
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <div class="site-heading text-center">
+                        <span class="site-title-tagline">Our Blog</span>
+                        <h2 class="site-title">Latest News & Blog</h2>
+                        <p>
+                            It is a long established fact that a reader will be distracted by the readable content
+                            of a page when looking at its layout.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            @foreach (var blog in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="blog-item">
+                        <div class="blog-item-thumb">
+                            <img src="@blog.ImageUrl" alt="Thumb">
+                        </div>
+                        <div class="blog-item-info">
+                            <div class="blog-item-meta">
+                                <ul>
+                                    <li><i class="far fa-user"></i> @blog.Author</li>
+                                    <li><i class="far fa-calendar-alt"></i> @blog.CreatedAt.ToString("dd MMM, yyyy")</li>
+                                </ul>
+                            </div>
+                            <h5>
+                                <a href="@Url.Action("Details", "Blog", new { id = blog.Id })" class="blog-item-title">
+                                    @blog.Title
+                                </a>
+                            </h5>
+                            <a class="blog-item-more" href="@Url.Action("Details", "Blog", new { id = blog.Id })">
+                                Read More <i class="far fa-long-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div> *@
+
+
+@{
+    bool showHeading = ViewData["ShowHeading"] as bool? ?? true;
+}
+
+<div class="blog-area py-120">
+    <div class="container">
+        @if (showHeading)
+        {
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <div class="site-heading text-center">
+                        <span class="site-title-tagline">Our Blog</span>
+                        <h2 class="site-title">Latest News & Blog</h2>
+                        <p>
+                            It is a long established fact that a reader will be distracted by the readable content
+                            of a page when looking at its layout.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <div class="blog-item">
+                    <div class="blog-item-thumb">
+                        <img src="assets/img/blog/b.jpg" alt="Thumb">
+                    </div>
+                    <div class="blog-item-info">
+                        <div class="blog-item-meta">
+                            <ul>
+                                <li><i class="far fa-user"></i> Nancy Castdo</li>
+                                <li><i class="far fa-calendar-alt"></i> 09 May, 2024</li>
+                            </ul>
+                        </div>
+                        <h5>
+                            <a href="#" class="blog-item-title">
+                                There are many variations of passages
+                                available
+                            </a>
+                        </h5>
+                        <a class="blog-item-more" href="#">Read More <i class="far fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="blog-item">
+                    <div class="blog-item-thumb">
+                        <img src="assets/img/blog/a.jpg" alt="Thumb">
+                    </div>
+                    <div class="blog-item-info">
+                        <div class="blog-item-meta">
+                            <ul>
+                                <li><i class="far fa-user"></i> Nancy Castdo</li>
+                                <li><i class="far fa-calendar-alt"></i> 09 May, 2024</li>
+                            </ul>
+                        </div>
+                        <h5>
+                            <a href="#" class="blog-item-title">
+                                There are many variations of passages
+                                available
+                            </a>
+                        </h5>
+                        <a class="blog-item-more" href="#">Read More <i class="far fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="blog-item">
+                    <div class="blog-item-thumb">
+                        <img src="assets/img/blog/c.png" alt="Thumb">
+                    </div>
+                    <div class="blog-item-info">
+                        <div class="blog-item-meta">
+                            <ul>
+                                <li><i class="far fa-user"></i> Nancy Castdo</li>
+                                <li><i class="far fa-calendar-alt"></i> 09 May, 2024</li>
+                            </ul>
+                        </div>
+                        <h5>
+                            <a href="#" class="blog-item-title">
+                                There are many variations of passages
+                                available
+                            </a>
+                        </h5>
+                        <a class="blog-item-more" href="#">Read More <i class="far fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

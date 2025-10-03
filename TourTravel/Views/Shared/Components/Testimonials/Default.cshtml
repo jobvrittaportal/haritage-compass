@@ -1,0 +1,131 @@
+﻿@* @model IEnumerable<YourProject.Models.Testimonial>
+
+<div class="testimonial-slider owl-carousel owl-theme">
+    @foreach (var item in Model)
+    {
+        <div class="testimonial-single">
+            <div class="testimonial-quote">
+                <span class="testimonial-quote-icon"><i class="fal fa-quote-right"></i></span>
+                <div class="testimonial-rate">
+                    @for (int i = 0; i < item.Rating; i++)
+                    {
+                        <i class="fas fa-star"></i>
+                    }
+                </div>
+                <p>@item.Quote</p>
+            </div>
+            <div class="testimonial-content">
+                <div class="testimonial-author-img">
+                    <img src="@item.ImageUrl" alt="@item.AuthorName" />
+                </div>
+                <div class="testimonial-author-info">
+                    <h4>@item.AuthorName</h4>
+                    <p>@item.Role</p>
+                </div>
+            </div>
+        </div>
+    }
+</div> *@
+
+<div class="testimonial-slider owl-carousel owl-theme">
+    <div class="testimonial-single">
+        <div class="testimonial-quote">
+            <span class="testimonial-quote-icon"><i class="fal fa-quote-right"></i></span>
+            <div class="testimonial-rate">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <p>
+                There are many variations of passages available but the majority have suffered
+                alteration in some form.
+            </p>
+        </div>
+        <div class="testimonial-content">
+            <div class="testimonial-author-img">
+                <img style="width:65px; height:65px; object-fit:cover; border-radius:50%;" src="assets/img/testimonial/profile1.jpg" alt="">
+            </div>
+            <div class="testimonial-author-info">
+                <h4>Sylvia H Green</h4>
+                <p>Traveller</p>
+            </div>
+        </div>
+    </div>
+    <div class="testimonial-single">
+        <div class="testimonial-quote">
+            <span class="testimonial-quote-icon"><i class="fal fa-quote-right"></i></span>
+            <div class="testimonial-rate">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <p>
+                There are many variations of passages available but the majority have suffered
+                alteration in some form.
+            </p>
+        </div>
+        <div class="testimonial-content">
+            <div class="testimonial-author-img">
+                <img style="width:65px; height:65px; object-fit:cover; border-radius:50%;" src="assets/img/testimonial/profile2.jpg" alt="">
+            </div>
+            <div class="testimonial-author-info">
+                <h4>Gordon D Novak</h4>
+                <p>Traveller</p>
+            </div>
+        </div>
+    </div>
+    <div class="testimonial-single">
+        <div class="testimonial-quote">
+            <span class="testimonial-quote-icon"><i class="fal fa-quote-right"></i></span>
+            <div class="testimonial-rate">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <p>
+                There are many variations of passages available but the majority have suffered
+                alteration in some form.
+            </p>
+        </div>
+        <div class="testimonial-content">
+            <div class="testimonial-author-img">
+                <img style="width:65px; height:65px; object-fit:cover; border-radius:50%;" src="assets/img/testimonial/profile3.jpg" alt="">
+            </div>
+            <div class="testimonial-author-info">
+                <h4>Reid E Butt</h4>
+                <p>Traveller</p>
+            </div>
+        </div>
+    </div>
+    <div class="testimonial-single">
+        <div class="testimonial-quote">
+            <span class="testimonial-quote-icon"><i class="fal fa-quote-right"></i></span>
+            <div class="testimonial-rate">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <p>
+                There are many variations of passages available but the majority have suffered
+                alteration in some form.
+            </p>
+        </div>
+        <div class="testimonial-content">
+            <div class="testimonial-author-img">
+                <img style="width:65px; height:65px; object-fit:cover; border-radius:50%;" src="assets/img/testimonial/profile1.jpg" alt="">
+            </div>
+            <div class="testimonial-author-info">
+                <h4>Parker Jimenez</h4>
+                <p>Traveller</p>
+            </div>
+        </div>
+    </div>
+</div>

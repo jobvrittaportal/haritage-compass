@@ -1,0 +1,153 @@
+﻿
+<!-- USE THIS CODE LATER WHEN DATA COMES FROM DB-->
+
+@* @model IEnumerable<YourProject.Models.TourPackage>
+
+<div class="row align-items-center">
+    @foreach (var tour in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="tour-item">
+                <div class="tour-img">
+                    <img src="@tour.ImageUrl" alt="@tour.Title" />
+                    <a href="#" class="tour-wish"><i class="far fa-heart"></i></a>
+                </div>
+
+                <div class="tour-meta">
+                    <ul>
+                        <li><i class="far fa-clock"></i> @tour.Duration</li>
+                        <li><i class="far fa-user-friends"></i> @tour.MaxPerson Person</li>
+                        <li><i class="far fa-map-marker-alt"></i> @tour.Location</li>
+                    </ul>
+                </div>
+
+                <div class="tour-info">
+                    <a href="#">
+                        <h5>@tour.Title</h5>
+                    </a>
+                    <div class="tour-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span>(@tour.ReviewsCount Reviews)</span>
+                    </div>
+                </div>
+
+                <div class="tour-footer">
+                    <div class="tour-price">
+                        $@tour.Price <small>/per person</small>
+                    </div>
+                    <a href="#" class="tour-btn">Book Now <i class="far fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+</div> *@
+
+<div class="row align-items-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="tour-item">
+            <div class="tour-img">
+                <span class="tour-sale">Sale</span>
+                <img src="assets/img/tour/1.jpg" alt="">
+                <a href="#" class="tour-wish"><i class="far fa-heart"></i></a>
+            </div>
+            <div class="tour-meta">
+                <ul>
+                    <li><i class="far fa-clock"></i> 7D/6N</li>
+                    <li><i class="far fa-user-friends"></i> 7 Person</li>
+                    <li><i class="far fa-map-marker-alt"></i> Paris</li>
+                </ul>
+            </div>
+            <div class="tour-info">
+                <a href="#">
+                    <h5>Paris - All Stunning</h5>
+                </a>
+                <div class="tour-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <span>(25 Reviews)</span>
+                </div>
+            </div>
+            <div class="tour-footer">
+                <div class="tour-price">
+                    $1,500 <small>/per person</small>
+                </div>
+                <a href="#" class="tour-btn">Book Now <i class="far fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="tour-item">
+            <div class="tour-img">
+                <img src="assets/img/tour/2.jpg" alt="">
+                <a href="#" class="tour-wish"><i class="far fa-heart"></i></a>
+            </div>
+            <div class="tour-meta">
+                <ul>
+                    <li><i class="far fa-clock"></i> 7D/6N</li>
+                    <li><i class="far fa-user-friends"></i> 7 Person</li>
+                    <li><i class="far fa-map-marker-alt"></i> Paris</li>
+                </ul>
+            </div>
+            <div class="tour-info">
+                <a href="#">
+                    <h5>Paris - All Stunning</h5>
+                </a>
+                <div class="tour-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <span>(25 Reviews)</span>
+                </div>
+            </div>
+            <div class="tour-footer">
+                <div class="tour-price">
+                    $1,500 <small>/per person</small>
+                </div>
+                <a href="#" class="tour-btn">Book Now <i class="far fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="tour-item">
+            <div class="tour-img">
+                <img src="assets/img/tour/3.jpg" alt="">
+                <a href="#" class="tour-wish"><i class="far fa-heart"></i></a>
+            </div>
+            <div class="tour-meta">
+                <ul>
+                    <li><i class="far fa-clock"></i> 7D/6N</li>
+                    <li><i class="far fa-user-friends"></i> 7 Person</li>
+                    <li><i class="far fa-map-marker-alt"></i> Paris</li>
+                </ul>
+            </div>
+            <div class="tour-info">
+                <a href="#">
+                    <h5>Paris - All Stunning</h5>
+                </a>
+                <div class="tour-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <span>(25 Reviews)</span>
+                </div>
+            </div>
+            <div class="tour-footer">
+                <div class="tour-price">
+                    $1,500 <small>/per person</small>
+                </div>
+                <a href="#" class="tour-btn">Book Now <i class="far fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
