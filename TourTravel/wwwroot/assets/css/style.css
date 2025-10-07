@@ -2575,15 +2575,15 @@ price range css
 /* ===================
 CTA css 
 ====================== */
-
+/*url(../img/bg/coupon.jpg);*/
 .cta-area {
-  background-image: url(../img/bg/cta.jpg);
-  background-position: center;
-  background-size: cover;
-  padding-top: 120px;
-  padding-bottom: 120px;
-  position: relative;
-  z-index: 1;
+    background-image: url(/assets/img/bg/coupon.jpg);
+    background-position: center;
+    background-size: cover;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    position: relative;
+    z-index: 1;
 }
 
 .cta-area::before {
