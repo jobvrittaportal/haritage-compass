@@ -22,7 +22,7 @@ namespace TourTravel.ViewComponents
 
     public class BlogViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(bool showHeading = true)
+        public IViewComponentResult Invoke(bool showHeading )
         {
 
             ViewData["ShowHeading"] = showHeading;

@@ -1,0 +1,83 @@
+﻿ <!-- booking-conform -->
+@await Component.InvokeAsync("HeroSection")
+<div class="booking-confirm py-120">
+    <div class="container">
+        <div class="success-notify">
+            <div class="success-icon">
+                <i class="fal fa-check-circle"></i>
+            </div>
+            <div class="success-content">
+                <h3>YOUR BOOKING CONFIRMED</h3>
+                <p>Thank you for your booking! your payment has been successful done and your booking is now confirmed.A confirmation email has been sent to your email - info@example.com.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="booking-widget booking-details">
+                    <h4 class="booking-widget-title">Booking Details</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Booking Id</td>
+                                <td>TRSD-WEDV-ASE</td>
+                            </tr>
+                            <tr>
+                                <td>First Name</td>
+                                <td>Marvin</td>
+                            </tr>
+                            <tr>
+                                <td>Last Name</td>
+                                <td>Pricel</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>info@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>Phone</td>
+                                <td>+2-123-4567-7894</td>
+                            </tr>
+                            <tr>
+                                <td>Card number</td>
+                                <td>XXX-XXXX-XX-11</td>
+                            </tr>
+                            <tr>
+                                <td>City</td>
+                                <td>New York</td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td>45 Robson Lane, Saint Clairs, Ohio</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-30">
+                        <h4 class="booking-widget-title">Payment</h4>
+                        <div class="booking-payment">
+                            <p>You Payment With Master card</p>
+                        </div>
+                    </div>
+                    <div class="mt-30">
+                        <h4 class="booking-widget-title">Booking Details Link</h4>
+                        <div class="booking-link">
+                            <p><a href="#">https://www.example.com/booking-234</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="booking cart-summary">
+                    <h4 class="mb-30">Booking Summary</h4>
+                    <ul>
+                        <li><strong>Packages Cost:</strong> <span>$4,500.00</span></li>
+                        <li><strong>Tour Guide:</strong> <span>$25.00</span></li>
+                        <li><strong>Discount:</strong> <span>$5.00</span></li>
+                        <li><strong>Vat:</strong> <span>$20.00</span></li>
+                        <li><strong>Sub Total:</strong> <span>$4,540.00</span></li>
+                        <li class="cart-total"><strong>Total:</strong> <span>$4,540.00</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
