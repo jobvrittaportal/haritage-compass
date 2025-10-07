@@ -1,0 +1,139 @@
+﻿ <!-- tour cart area -->
+@await Component.InvokeAsync("HeroSection")
+<div class="tour-cart py-120">
+    <div class="container">
+        <div class="tour-cart-wrapper">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Thumb</th>
+                            <th>Tour Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Sub Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="cart-img">
+                                    <img src="/assets/img/tour/1.jpg" alt="">
+                                </div>
+                            </td>
+                            <td>
+                                <h5>Norway Lake Tour</h5>
+                            </td>
+                            <td>
+                                <div class="cart-price">
+                                    <span>$1,500</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cart-qty">
+                                    <button class="minus-btn"><i class="fal fa-minus"></i></button>
+                                    <input class="quantity" type="text" value="1" disabled="">
+                                    <button class="plus-btn"><i class="fal fa-plus"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cart-sub-total">
+                                    <span>$1,500</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" class="cart-remove"><i class="far fa-times"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cart-img">
+                                    <img src="/assets/img/tour/2.jpg" alt="">
+                                </div>
+                            </td>
+                            <td>
+                                <h5>Norway Lake Tour</h5>
+                            </td>
+                            <td>
+                                <div class="cart-price">
+                                    <span>$1,500</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cart-qty">
+                                    <button class="minus-btn"><i class="fal fa-minus"></i></button>
+                                    <input class="quantity" type="text" value="1" disabled="">
+                                    <button class="plus-btn"><i class="fal fa-plus"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cart-sub-total">
+                                    <span>$1,500</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" class="cart-remove"><i class="far fa-times"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cart-img">
+                                    <img src="/assets/img/tour/3.jpg" alt="">
+                                </div>
+                            </td>
+                            <td>
+                                <h5>Norway Lake Tour</h5>
+                            </td>
+                            <td>
+                                <div class="cart-price">
+                                    <span>$1,500</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cart-qty">
+                                    <button class="minus-btn"><i class="fal fa-minus"></i></button>
+                                    <input class="quantity" type="text" value="1" disabled="">
+                                    <button class="plus-btn"><i class="fal fa-plus"></i></button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cart-sub-total">
+                                    <span>$1,500</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" class="cart-remove"><i class="far fa-times"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="cart-footer">
+                <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="cart-coupon">
+                            <input type="text" class="form-control" placeholder="Your Coupon Code">
+                            <button class="coupon-btn" type="submit">Apply</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-8">
+                        <div class="cart-summary">
+                            <ul>
+                                <li><strong>Sub Total:</strong> <span>$4,500.00</span></li>
+                                <li><strong>Vat:</strong> <span>$25.00</span></li>
+                                <li><strong>Discount:</strong> <span>$5.00</span></li>
+                                <li class="cart-total"><strong>Total:</strong> <span>$4,520.00</span></li>
+                            </ul>
+
+                            <div class="text-end mt-40">
+                                <a href="#" class="theme-btn">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- tour cart area end -->
