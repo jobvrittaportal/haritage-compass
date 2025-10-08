@@ -7,8 +7,8 @@ namespace TourTravel.Controllers
         public IActionResult Index(bool showHeading )
         {
 
-            ViewBag.Title = "Destination Detail";
-            ViewBag.Page = "Destination Detail";
+            ViewBag.Title = "Destinations";
+            ViewBag.Page = "Destinations";
             ViewData["ShowHeading"] = showHeading;
             return View();
         }
