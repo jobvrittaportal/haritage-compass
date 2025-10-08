@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TourTravel.Admin.Controllers
 {
   public class DashboardController : Controller
   {
+
     [Route("admin/Dashboard")]
     public IActionResult Index()
     {
