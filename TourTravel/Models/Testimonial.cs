@@ -6,6 +6,6 @@
         public required string Role { get; set; }
         public required string Quote { get; set; }
         public string? ImageUrl { get; set; }
-        public int? Rating { get; set; } = 5;
+        public int? Rating { get; set; } 
     }
 }

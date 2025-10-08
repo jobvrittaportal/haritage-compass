@@ -1,0 +1,57 @@
+﻿@await Component.InvokeAsync("HeroSection")
+@await Component.InvokeAsync("About", new { showHeading = false })
+@await Component.InvokeAsync("Testimonials", new { showHeading = true })
+<!-- counter area -->
+<div class="counter-area pt-50 pb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-user-friends"></i></div>
+                    <span class="counter" data-count="+" data-to="30" data-speed="3000">30</span>
+                    <h6 class="title">+ Tour Guides</h6>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-users-class"></i></div>
+                    <span class="counter" data-count="+" data-to="600" data-speed="3000">600</span>
+                    <h6 class="title">+ Tour Completed</h6>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-hands-heart"></i></div>
+                    <span class="counter" data-count="+" data-to="25" data-speed="3000">25</span>
+                    <h6 class="title">+ Travel Experience</h6>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="counter-box">
+                    <div class="icon"><i class="fal fa-award"></i></div>
+                    <span class="counter" data-count="+" data-to="50" data-speed="3000">50</span>
+                    <h6 class="title">+ Win Awards</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- counter area end -->
+<div class="team-area py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center">
+                    <span class="site-title-tagline">Team</span>
+                    <h2 class="site-title">Meet Our Team</h2>
+                    <div class="heading-divider"></div>
+                    <p>
+                        It is a long established fact that a reader will be distracted by the readable content
+                        of a page when looking at its layout.
+                    </p>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("Team")
+    </div>
+</div>

@@ -71,13 +71,8 @@
                 </button>
                 <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Home</a>
-                            <ul class="dropdown-menu fade-up">
-                                <li><a class="dropdown-item" href="/">Homepage 01</a></li>
-                                <li><a class="dropdown-item" href="/">Homepage 02</a></li>
-                                <li><a class="dropdown-item" href="/">Homepage 03</a></li>
-                            </ul>
+                        <li class="nav-item ">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index" >Home</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Destinations</a>
@@ -111,40 +106,40 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Pages</a>
                             <ul class="dropdown-menu fade-up">
-                                <li><a class="dropdown-item" href="about.html">About Us</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="AboutUs">About Us</a></li>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" href="#">Team</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="team.html">Team</a></li>
-                                        <li><a class="dropdown-item" href="team-single.html">Team Single</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="Team" >Team</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="TeamDetails">Team Single</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" href="#">Tour Guide</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="guide.html">Tour Guide</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="Guide">Tour Guide</a></li>
                                         <li>
-                                            <a class="dropdown-item" href="guide-single.html">Tour Guide Single</a>
+                                            <a class="dropdown-item" asp-controller="Pages" asp-action="GuideDetails">Tour Guide Details</a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a class="dropdown-item" href="testimonial.html">Testimonials</a></li>
-                                <li><a class="dropdown-item" href="gallery.html">Gallery</a></li>
-                                <li><a class="dropdown-item" href="faq.html">Faq</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="Testimonials">Testimonials</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="Gallery">Gallery</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="Faq">Faq</a></li>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" href="#">Account Page</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="login.html">Login</a></li>
-                                        <li><a class="dropdown-item" href="register.html">Register</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="Login">Login</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="Register">Register</a></li>
                                         <li>
-                                            <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
+                                            <a class="dropdown-item" asp-controller="Pages" asp-action="ForgotPassword">Forgot Password</a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li><a class="dropdown-item" href="404.html">404 Error</a></li>
                                 <li><a class="dropdown-item" href="coming-soon.html">Coming Soon</a></li>
-                                <li><a class="dropdown-item" href="terms.html">Terms Of Service</a></li>
-                                <li><a class="dropdown-item" href="privacy.html">Privacy Policy</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="TermsOfService">Terms Of Service</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="PrivacyPolicy">Privacy Policy</a></li>
                             </ul>
                         </li>
 
