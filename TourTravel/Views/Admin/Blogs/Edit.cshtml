@@ -1,0 +1,34 @@
+@model TourTravel.Models.Blog
+@{
+    ViewData["Title"] = "Edit Blog";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <h3>Edit Blog</h3>
+    <form asp-action="Edit" asp-route-id="@Model.Id" enctype="multipart/form-data" method="post">
+        <div class="mb-3">
+            <label>Title</label>
+            <input asp-for="Title" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label>Author</label>
+            <input asp-for="Author" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label>Content</label>
+            <textarea asp-for="Content" class="form-control" rows="5" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Current Image</label><br />
+            <img src="@Model.ImageUrl" style="width:120px; height:80px; object-fit:cover;" />
+        </div>
+        <div class="mb-3">
+            <label>Change Image</label>
+            <input type="file" name="imageFile" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="@Url.Action("Index", "Blogs")" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
