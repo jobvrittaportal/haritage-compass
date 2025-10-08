@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace TourTravel.Models
 {
-  public class User : Base
+  using Microsoft.AspNetCore.Identity;
+  public class User : IdentityUser
   {
-    [MaxLength(255)]
-    public required string Name { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
+    public string Name { get; set; } = null!;
     public bool IsActive { get; set; } = true;
   }
+
 
   public class UserLogin
   {

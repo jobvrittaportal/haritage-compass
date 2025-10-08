@@ -1,14 +1,16 @@
-using TourTravel.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TourTravel.Models;
 
-namespace TourTravel.Data
+public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
 {
-    public class MyDbContext(DbContextOptions<MyDbContext> options) : DbContext(options)
-    {
-        public DbSet<User> User { get; set; }
-        public DbSet<Blog> Blog { get; set; }
-        public DbSet<Testimonial> Testimonial { get; set; }
-        public DbSet<TourCardsView> TourCardsView { get; set; }
-        public DbSet<TourGuideView> TourGuideView { get; set; }
-    }
+  public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
+
+  public DbSet<Page> Pages { get; set; } = null!;
+  public DbSet<Permission> Permissions { get; set; } = null!;
+  public DbSet<Blog> Blog { get; set; }
+  public DbSet<Testimonial> Testimonial { get; set; }
+  public DbSet<TourCardsView> TourCardsView { get; set; }
+  public DbSet<TourGuideView> TourGuideView { get; set; }
 }

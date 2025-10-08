@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TourTravel.Data;
+using Microsoft.AspNetCore.Mvc;
 using TourTravel.Models;
 using TourTravel.ViewModel;
 
