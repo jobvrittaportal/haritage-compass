@@ -1,11 +1,11 @@
 namespace TourTravel.Models
 {
-  public class Blog : Base
+  public class About :Base
   {
     public required string Title { get; set; }
-    public required string Author { get; set; }
-    public required string ImageUrl { get; set; }
-    public required string Content { get; set; }
+    public required string Description { get; set; }
+    public required string Image { get; set; }
+    public required string KeyFeatures { get; set; }
     public required string MetaTitle { get; set; }
     public required string MetaDescription { get; set; }
     public string? SlugUrl { get; set; }

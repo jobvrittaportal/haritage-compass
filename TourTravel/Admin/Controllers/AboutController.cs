@@ -6,13 +6,13 @@ using TourTravel.Models;
 namespace TourTravel.Admin.Controllers
 {
   [Authorize]
-  [Route("admin/blogs")]
-  public class BlogsController : Controller
+  [Route("admin/About")]
+  public class AboutController : Controller
   {
     private readonly MyDbContext _db;
     private readonly IWebHostEnvironment _env;
 
-    public BlogsController(MyDbContext db, IWebHostEnvironment env)
+    public AboutController(MyDbContext db, IWebHostEnvironment env)
     {
       _db = db;
       _env = env;
@@ -23,16 +23,16 @@ namespace TourTravel.Admin.Controllers
     [Authorize]
     public IActionResult Index(string? search, int page = 1, int pageSize = 5)
     {
-      var query = _db.Blog.AsQueryable();
+      var query = _db.About.AsQueryable();
 
       // 🔍 Search filter by Title or Author
       if (!string.IsNullOrEmpty(search))
       {
-        query = query.Where(b => b.Title.Contains(search) || b.Author.Contains(search));
+        query = query.Where(b => b.Title.Contains(search) );
       }
 
       int totalItems = query.Count();
-      var blogs = query
+      var about = query
           .OrderByDescending(b => b.Id)
           .Skip((page - 1) * pageSize)
           .Take(pageSize)
@@ -42,29 +42,29 @@ namespace TourTravel.Admin.Controllers
       ViewBag.Page = page;
       ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-      return View("~/Views/Admin/Blogs/Index.cshtml", blogs);
+      return View("~/Views/Admin/About/Index.cshtml", about);
     }
 
     // ✅ Get single blog for editing (AJAX)
-    [HttpGet("GetBlogById")]
+    [HttpGet("GetAboutById")]
     [Authorize]
-    public IActionResult GetBlogById(int id)
+    public IActionResult GetAboutById(int id)
     {
-      var blog = _db.Blog.Find(id);
-      if (blog == null)
-        return Json(new { success = false, message = "Blog not found" });
+      var about = _db.About.Find(id);
+      if (about == null)
+        return Json(new { success = false, message = "About not found" });
 
       return Json(new
       {
         success = true,
-        id = blog.Id,
-        title = blog.Title,
-        author = blog.Author,
-        content = blog.Content,
-        imageUrl = blog.ImageUrl,
-        metaTitle = blog.MetaTitle,
-        metaDescription = blog.MetaDescription,
-        slugUrl=blog.SlugUrl
+        id = about.Id,
+        title = about.Title,
+        description = about.Description,
+        KeyFeatures = about.KeyFeatures,
+        MetaTitle = about.MetaTitle,
+        MetaDescription = about.MetaDescription,
+        SlugUrl = about.SlugUrl,
+        image = about.Image
       });
     }
 
@@ -72,41 +72,43 @@ namespace TourTravel.Admin.Controllers
     [HttpPost("Create")]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Blog model, IFormFile? imageUrl)
+    public async Task<IActionResult> Create(About model, IFormFile? image)
     {
       try
       {
+
         // ✅ Check if SlugUrl already exists (case-insensitive)
-        bool slugExists = await _db.Blog
+        bool slugExists = await _db.About
             .AnyAsync(b => b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
 
         if (slugExists)
         {
           return Json(new { success = false, message = "Slug URL already exists. Please use a different one." });
         }
-
-        if (imageUrl == null || imageUrl.Length == 0)
+        if (image == null || image.Length == 0)
         {
-          return Json(new { success = false, message = "Please upload an image for the blog." });
+          return Json(new { success = false, message = "Please upload an image for the About." });
         }
 
-        string folderPath = Path.Combine(_env.WebRootPath, "Blogs");
+
+        string folderPath = Path.Combine(_env.WebRootPath, "About");
         Directory.CreateDirectory(folderPath);
 
-        string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(imageUrl.FileName)}";
+        string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
         string filePath = Path.Combine(folderPath, uniqueFileName);
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
-          await imageUrl.CopyToAsync(stream);
+          await image.CopyToAsync(stream);
         }
 
-        model.ImageUrl = "/Blogs/" + uniqueFileName;
+        model.Image = "/About/" + uniqueFileName;
 
-        _db.Blog.Add(model);
+
+        _db.About.Add(model);
         await _db.SaveChangesAsync();
 
-        return Json(new { success = true, message = "Blog created successfully" });
+        return Json(new { success = true, message = "About created successfully" });
       }
       catch (Exception ex)
       {
@@ -114,64 +116,63 @@ namespace TourTravel.Admin.Controllers
       }
     }
 
-
+    // ✅ Edit blog (AJAX)
     [HttpPost("Edit")]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Blog model, IFormFile? imageUrl)
+    public async Task<IActionResult> Edit(About model, IFormFile? image)
     {
       try
       {
-        var existing = await _db.Blog.FindAsync(model.Id);
+        var existing = _db.About.Find(model.Id);
         if (existing == null)
           return Json(new { success = false, message = "Blog not found" });
 
-        // ✅ Check for duplicate SlugUrl excluding the current blog
-        bool slugExists = await _db.Blog
-            .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
+        bool slugExists = await _db.About
+         .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
 
         if (slugExists)
         {
           return Json(new { success = false, message = "Slug URL already exists. Please use a different one." });
         }
 
-        // ✅ Update basic fields
+
         existing.Title = model.Title;
-        existing.Author = model.Author;
-        existing.Content = model.Content;
+        existing.Description = model.Description;
         existing.MetaTitle = model.MetaTitle;
         existing.MetaDescription = model.MetaDescription;
         existing.SlugUrl = model.SlugUrl;
 
+
         // ✅ Only update image if a new file is uploaded
-        if (imageUrl != null && imageUrl.Length > 0)
+        if (image != null && image.Length > 0)
         {
-          string folderPath = Path.Combine(_env.WebRootPath, "Blogs");
+          string folderPath = Path.Combine(_env.WebRootPath, "About");
           Directory.CreateDirectory(folderPath);
 
-          string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(imageUrl.FileName)}";
+          string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
           string filePath = Path.Combine(folderPath, uniqueFileName);
 
           using (var stream = new FileStream(filePath, FileMode.Create))
           {
-            await imageUrl.CopyToAsync(stream);
+            await image.CopyToAsync(stream);
           }
 
-          // 🗑️ Optional: delete old image
-          if (!string.IsNullOrEmpty(existing.ImageUrl))
+          // Optional: delete old image if it exists
+          if (!string.IsNullOrEmpty(existing.Image))
           {
-            string oldFilePath = Path.Combine(_env.WebRootPath, existing.ImageUrl.TrimStart('/'));
+            string oldFilePath = Path.Combine(_env.WebRootPath, existing.Image.TrimStart('/'));
             if (System.IO.File.Exists(oldFilePath))
               System.IO.File.Delete(oldFilePath);
           }
 
-          existing.ImageUrl = "/Blogs/" + uniqueFileName;
+          existing.Image = "/About/" + uniqueFileName;
         }
 
         _db.Update(existing);
         await _db.SaveChangesAsync();
 
-        return Json(new { success = true, message = "Blog updated successfully" });
+        return Json(new { success = true, message = "About updated successfully" });
       }
       catch (Exception ex)
       {
@@ -186,11 +187,11 @@ namespace TourTravel.Admin.Controllers
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int id)
     {
-      var blog = _db.Blog.Find(id);
-      if (blog == null)
+      var about = _db.About.Find(id);
+      if (about == null)
         return NotFound();
 
-      _db.Blog.Remove(blog);
+      _db.About.Remove(about);
       _db.SaveChanges();
 
       return RedirectToAction(nameof(Index));

@@ -1,0 +1,50 @@
+@model TourTravel.Models.FAQ
+@{
+    ViewData["Title"] = "Add FAQ";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header text-black d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa-solid fa-circle-question me-2"></i>Add FAQ</h5>
+            <a href="@Url.Action("Index", "FAQ")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Create" method="post" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Question</label>
+                    <input asp-for="Question" class="form-control" placeholder="Enter question" required />
+                    <span asp-validation-for="Question" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Answer</label>
+                    <textarea asp-for="Answer" id="Answer" class="form-control" rows="5" placeholder="Enter answer" required></textarea>
+                    <span asp-validation-for="Answer" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-floppy-disk me-1"></i> Save
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#Answer'))
+            .catch(error => console.error(error));
+    </script>
+}

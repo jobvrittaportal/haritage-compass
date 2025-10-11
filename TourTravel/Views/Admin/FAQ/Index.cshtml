@@ -1,0 +1,66 @@
+@model IEnumerable<TourTravel.Models.FAQ>
+@{
+    ViewData["Title"] = "FAQ";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+        <h3><i class="fa-solid fa-circle-question me-2"></i>FAQ List</h3>
+        <a href="@Url.Action("Create", "FAQ")" class="btn btn-success">
+            <i class="fa-solid fa-plus me-1"></i> Add New
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th style="width: 130px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Question</td>
+                            <td>@Html.Raw(item.Answer.Length > 80 ? item.Answer.Substring(0, 80) + "..." : item.Answer)</td>
+
+
+                            <td class="text-center">
+                                <!-- Edit Button -->
+                                
+                                <a href="@Url.Action("Edit", "FAQ", new { id = item.Id })"
+                                   class="btn btn-icon btn-sm btn-warning me-1"
+                                   title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+
+
+                                <!-- Delete Button -->
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post"
+                                      class="d-inline-block" onsubmit="return confirm('Are you sure?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-icon btn-sm btn-danger" title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No FAQs found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
