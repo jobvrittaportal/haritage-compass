@@ -1,33 +1,29 @@
-@model TourTravel.Models.FAQ
+@model TourTravel.Models.Gallery
 @{
-    ViewData["Title"] = "Add FAQ";
+    ViewData["Title"] = "Add Image";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header text-black d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fa-solid fa-circle-question me-2"></i>Add FAQ</h5>
-            <a href="@Url.Action("Index", "FAQ")" class="btn btn-light btn-sm">
+            <h5 class="mb-0"><i class="fa-solid fa-image me-2"></i>Add Image</h5>
+            <a href="@Url.Action("Index", "Gallery")" class="btn btn-light btn-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
         </div>
 
         <div class="card-body">
-            <form id="faqForm" asp-action="Create" method="post" novalidate>
+            <form id="galleryForm" asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
                 @Html.AntiForgeryToken()
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Question<span class="text-danger">*</span></label>
-                    <input asp-for="Question" id="Question" class="form-control" placeholder="Enter question" required />
-                    <span asp-validation-for="Question" class="text-danger"></span>
+                    <label class="form-label fw-semibold">Image <span class="text-danger">*</span></label>
+                    <input type="file" id="ImageFile" name="imageUrl" class="form-control" accept="image/*" required />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Answer<span class="text-danger">*</span></label>
-                    <textarea asp-for="Answer" id="Answer" class="form-control" rows="5" placeholder="Enter answer" required></textarea>
-                    <span asp-validation-for="Answer" class="text-danger"></span>
-                </div>
+                <div id="previewContainer" class="mb-3"></div>
 
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-success">
@@ -42,7 +38,7 @@
     </div>
 </div>
 
-<!-- ✅ Toast Container (Top Right) -->
+<!-- Toast -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
     <div id="toastContainer"></div>
 </div>
@@ -51,18 +47,21 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
-        let editor;
+        // Preview Image
+        $('#ImageFile').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewContainer').html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: cover;" />`);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
-        // ✅ Initialize CKEditor
-        ClassicEditor
-            .create(document.querySelector('#Answer'))
-            .then(newEditor => editor = newEditor)
-            .catch(error => console.error(error));
-
-        // ✅ Toast Function 
+        // Toast Function
         function showToast(message, type = 'bg-primary') {
             const toastId = 'toast' + Date.now();
             const toastHtml = `
@@ -75,34 +74,25 @@
                             </div>
                         </div>`;
             $('#toastContainer').prepend(toastHtml);
-
             const toastEl = document.getElementById(toastId);
             const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
             bsToast.show();
             toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
         }
 
-        // ✅ Clear button
-        $('#clearBtn').click(() => {
-            $('#Question').val('');
-            if (editor) editor.setData('');
-            $('.text-danger').text('');
+        // Clear Form
+        $('#clearBtn').click(function () {
+            $('#ImageFile').val('');
+            $('#previewContainer').empty();
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-        // ✅ Validate & Submit
-        $('#faqForm').submit(function (e) {
-            const question = $('#Question').val().trim();
-            const answer = editor ? editor.getData().trim() : '';
-
-            if (!question || !answer) {
+        // Form Validation
+        $('#galleryForm').submit(function (e) {
+            if (!$('#ImageFile').val()) {
                 e.preventDefault();
-                showToast('Please fill in both Question and Answer fields.', 'bg-warning');
-                return;
+                showToast('Please select an image to upload.', 'bg-warning');
             }
-
-            // Optional: show a small saving message
-            showToast('Submitting FAQ...', 'bg-primary');
         });
     </script>
 }

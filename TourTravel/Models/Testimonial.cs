@@ -1,4 +1,4 @@
-﻿namespace TourTravel.Models
+namespace TourTravel.Models
 {
     public class Testimonial : Base
     {
