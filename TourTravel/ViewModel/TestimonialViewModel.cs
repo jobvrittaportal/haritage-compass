@@ -1,4 +1,4 @@
-﻿namespace TourTravel.ViewModel
+namespace TourTravel.ViewModel
 {
     public class TestimonialViewModel 
     {

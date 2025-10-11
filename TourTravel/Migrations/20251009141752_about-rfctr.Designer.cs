@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace TourTravel.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251009141752_about-rfctr")]
+    partial class aboutrfctr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,17 +188,6 @@ namespace TourTravel.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("MetaDescription")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("MetaTitle")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SlugUrl")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -301,17 +293,6 @@ namespace TourTravel.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("MetaDescription")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("MetaTitle")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SlugUrl")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -322,33 +303,6 @@ namespace TourTravel.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Blog");
-                });
-
-            modelBuilder.Entity("TourTravel.Models.FAQ", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FAQ");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Page", b =>
@@ -409,60 +363,6 @@ namespace TourTravel.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("TourTravel.Models.PrivacyPolicy", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PrivacyPolicy");
-                });
-
-            modelBuilder.Entity("TourTravel.Models.TermsOfService", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TermsOfService");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Testimonial", b =>
