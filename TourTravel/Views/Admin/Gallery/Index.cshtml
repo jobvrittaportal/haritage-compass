@@ -1,15 +1,13 @@
-@using System.Text.RegularExpressions
-
-@model IEnumerable<TourTravel.Models.TermsOfService>
+@model IEnumerable<TourTravel.Models.Gallery>
 @{
-    ViewData["Title"] = "Terms Of Service";
+    ViewData["Title"] = "Gallery";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between mb-3 align-items-center">
-        <h3></>Terms Of Service </h3>
-        <a href="@Url.Action("Create", "TermsOfService")" class="btn btn-success">
+        <h3>Gallery</h3>
+        <a href="@Url.Action("Create", "Gallery")" class="btn btn-success">
             <i class="fa-solid fa-plus me-1"></i> Add New
         </a>
     </div>
@@ -18,8 +16,7 @@
         <table class="table table-hover table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th>Title</th>
-                    <th>Description</th>
+                    <th>Image</th>
                     <th style="width: 130px;">Actions</th>
                 </tr>
             </thead>
@@ -29,19 +26,22 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Title</td>
-                            <td data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="@Regex.Replace(item.Description ?? "", "<.*?>", string.Empty)">
-                                @{
-                                    var plainText = Regex.Replace(item.Description ?? "", "<.*?>", string.Empty);
-                                }
-                                @(plainText.Length > 50 ? plainText.Substring(0, 50) + "..." : plainText)
-                            </td>
 
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="Image" style="width:100px;height:60px;object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No image</span>
+                                }
+                            </td>
                             <td class="text-center">
                                 <!-- Edit Button -->
 
-                                <a href="@Url.Action("Edit", "TermsOfService", new { id = item.Id })"
+                                <a href="@Url.Action("Edit", "Gallery", new { id = item.Id })"
                                    class="btn btn-icon btn-sm btn-warning me-1"
                                    title="Edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -64,22 +64,10 @@
                 else
                 {
                     <tr>
-                        <td colspan="3" class="text-center text-muted">No Term and service found.</td>
+                        <td colspan="3" class="text-center text-muted">No Image found.</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
-
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <script>
-        $(function () {
-            // Initialize Bootstrap tooltips
-            $('[data-bs-toggle="tooltip"]').tooltip();
-        });
-
-    </script>
-}

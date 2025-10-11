@@ -41,10 +41,25 @@
                     <tr>
                         <td>@item.Title</td>
                         <td>@item.MetaTitle</td>
-                        <td>@item.MetaDescription</td>
+                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.MetaDescription">
+                            @(item.MetaDescription?.Length > 50
+                                ? item.MetaDescription.Substring(0, 50) + "..."
+                                : item.MetaDescription)
+                        </td>
+
                         <td>@item.SlugUrl</td>
-                        <td>@item.KeyFeatures</td>
-                        <td>@Html.Raw(item.Description)</td>
+                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.KeyFeatures">
+                            @(item.KeyFeatures?.Length > 50
+                                ? item.KeyFeatures.Substring(0, 50) + "..."
+                                : item.KeyFeatures)
+                        </td>
+
+                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@Html.Raw(item.Description)">
+                            @Html.Raw(item.Description?.Length > 50
+                                     ? item.Description.Substring(0, 50) + "..."
+                                     : item.Description)
+                        </td>
+
                         <td>
                             @if (!string.IsNullOrEmpty(item.Image))
                             {
@@ -341,5 +356,10 @@
                 });
             });
         });
+        $(function () {
+            // Initialize Bootstrap tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
     </script>
 }

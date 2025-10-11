@@ -17,4 +17,5 @@ public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, stri
   public DbSet<FAQ> FAQ { get; set; }
   public DbSet<TermsOfService> TermsOfService { get; set; }
   public DbSet<PrivacyPolicy> PrivacyPolicy { get; set; }
+  public DbSet<Gallery> Gallery { get; set; }
 }

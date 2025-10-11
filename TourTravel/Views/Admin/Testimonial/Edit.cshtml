@@ -1,0 +1,129 @@
+@model TourTravel.Models.Testimonial
+@{
+    ViewData["Title"] = "Edit Testimonial";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header text-black d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa-solid fa-image me-2"></i>Edit Testimonial</h5>
+            <a href="@Url.Action("Index", "Testimonial")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form id="galleryEditForm" asp-action="Edit" method="post" enctype="multipart/form-data" novalidate>
+                @Html.AntiForgeryToken()
+
+
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Title</label><span class="text-danger">*</span>
+                    <input asp-for="AuthorName" id="AuthorName" class="form-control" placeholder="Enter AuthorName" required />
+                    <span asp-validation-for="AuthorName" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Role</label><span class="text-danger">*</span>
+                    <input asp-for="Role" id="Role" class="form-control" placeholder="Enter Role" required />
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Rating</label><span class="text-danger">*</span>
+                    <input asp-for="Rating" id="Rating" class="form-control" placeholder="Enter Role" required />
+                    <span asp-validation-for="Rating" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Image <span class="text-danger">*</span></label>
+                    <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+
+                <div id="previewContainer" class="mb-3">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" style="max-width: 200px; max-height: 150px; object-fit: cover;" />
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Quote</label><span class="text-danger">*</span>
+                    <textarea asp-for="Quote" id="Quote" class="form-control" placeholder="Enter description" required></textarea>
+                    <span asp-validation-for="Quote" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Update
+                    </button>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">
+                        <i class="fa-solid fa-eraser me-1"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Preview Image
+        $('#ImageFile').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewContainer').html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: cover;" />`);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function showToast(message, type = 'bg-primary') {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
+                     role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body fw-semibold">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>`;
+            $('#toastContainer').prepend(toastHtml);
+            const toastEl = document.getElementById(toastId);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        }
+
+        $('#clearBtn').click(function () {
+            $('#ImageFile').val('');
+            $('#previewContainer').empty();
+            showToast('Form cleared successfully.', 'bg-info');
+        });
+
+        $('#galleryEditForm').submit(function (e) {
+            if (!$('#ImageFile').val() && !$('#previewContainer img').length) {
+                e.preventDefault();
+                showToast('Please select an image to upload.', 'bg-warning');
+            }
+        });
+    </script>
+}

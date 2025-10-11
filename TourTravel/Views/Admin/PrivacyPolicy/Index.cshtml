@@ -1,3 +1,5 @@
+@using System.Text.RegularExpressions
+
 @model IEnumerable<TourTravel.Models.PrivacyPolicy>
 @{
     ViewData["Title"] = "Privacy Policy";
@@ -28,8 +30,14 @@
                     {
                         <tr>
                             <td>@item.Title</td>
-                            <td>@item.Description</td>
 
+                            <td data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="@Regex.Replace(item.Description ?? "", "<.*?>", string.Empty)">
+                                @{
+                                    var plainText = Regex.Replace(item.Description ?? "", "<.*?>", string.Empty);
+                                }
+                                @(plainText.Length > 50 ? plainText.Substring(0, 50) + "..." : plainText)
+                            </td>
 
                             <td class="text-center">
                                 <!-- Edit Button -->
@@ -64,3 +72,16 @@
         </table>
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <script>
+        $(function () {
+            // Initialize Bootstrap tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+}

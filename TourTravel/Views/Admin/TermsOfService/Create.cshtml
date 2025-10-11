@@ -7,44 +7,97 @@
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header text-black d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Add </h5>
+            <h5 class="mb-0">Add Terms Of Service</h5>
             <a href="@Url.Action("Index", "TermsOfService")" class="btn btn-light btn-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
         </div>
 
         <div class="card-body">
-            <form asp-action="Create" method="post" novalidate>
+            <form id="termsOfService" asp-action="Create" method="post" novalidate>
                 @Html.AntiForgeryToken()
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Title</label>
-                    <input asp-for="Title" class="form-control" placeholder="Enter Title" required />
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <label class="form-label fw-semibold">Title</label><span class="text-danger">*</span>
+                    <input asp-for="Title" id="Title" class="form-control" placeholder="Enter Title" required />
+                    <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Description</label>
-                    <textarea asp-for="Description" id="Answer" class="form-control" rows="5" placeholder="Enter answer" required></textarea>
+                    <label class="form-label fw-semibold">Description</label><span class="text-danger">*</span>
+                    <textarea asp-for="Description" id="Description" class="form-control" rows="5" placeholder="Enter description" required></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-success">
                     <i class="fa-solid fa-floppy-disk me-1"></i> Save
                 </button>
+                <button type="button" id="clearBtn" class="btn btn-secondary">
+                    <i class="fa-solid fa-eraser me-1"></i> Clear
+                </button>
             </form>
         </div>
     </div>
 </div>
 
+<!-- ✅ Toast Container -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
-    <!-- CKEditor 5 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
     <script>
+        let editor;
+
+        // ✅ Initialize CKEditor correctly
         ClassicEditor
             .create(document.querySelector('#Description'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
             .catch(error => console.error(error));
+
+        // ✅ Toast function
+        function showToast(message, type = 'bg-primary') {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
+                            role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body fw-semibold">${message}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>`;
+            $('#toastContainer').prepend(toastHtml);
+            const toastEl = document.getElementById(toastId);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        }
+
+        // ✅ Clear button
+        $('#clearBtn').click(() => {
+            $('#Title').val('');
+            if (editor) editor.setData('');
+            $('.text-danger').text('');
+            showToast('Form cleared successfully.', 'bg-info');
+        });
+
+        // ✅ Form validation
+        $('#termsOfService').submit(function (e) {
+            const title = $('#Title').val().trim();
+            const description = editor ? editor.getData().trim() : '';
+
+            if (!title || !description) {
+                e.preventDefault();
+                showToast('Please fill in both Title and Description fields.', 'bg-warning');
+            }
+        });
     </script>
 }
