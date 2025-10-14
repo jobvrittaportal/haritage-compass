@@ -2,22 +2,18 @@
 
 namespace TourTravel.ViewComponents
 {
-    //public class TourCardsViewComponent(MyDbContext db) : ViewComponent
-    //{
-
-    //    public IViewComponentResult Invoke(int take = 3)
-    //    {
-    //        // fetch packages (top 3 for homepage, or all for other pages)
-    //        var tours = db.TourPackages.Take(take).ToList();
-    //        return View(tours);
-    //    }
-    //}
-
-    public class TourCardsViewComponent : ViewComponent
+    public class TourCardsViewComponent(MyDbContext db) : ViewComponent
     {
-        public IViewComponentResult Invoke()
+
+        public IViewComponentResult Invoke(bool ShowHeading, int take, string columnClass = "col-md-6 col-lg-4")
         {
-            return View();
+
+            var tours = db.TourCardsView.Take(take).ToList();
+            ViewData["ShowHeading"] = ShowHeading;
+            ViewData["ColumnClass"] = columnClass;
+
+            return View(tours);
         }
     }
+
 }

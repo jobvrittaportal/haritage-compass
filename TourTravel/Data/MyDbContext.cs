@@ -18,4 +18,6 @@ public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, stri
   public DbSet<TermsOfService> TermsOfService { get; set; }
   public DbSet<PrivacyPolicy> PrivacyPolicy { get; set; }
   public DbSet<Gallery> Gallery { get; set; }
+  public DbSet<Destinations> Destinations { get; set; }
+  public DbSet<DestinationGallery> DestinationGallery { get; set; }
 }

@@ -74,19 +74,8 @@
                         <li class="nav-item ">
                             <a class="nav-link" asp-controller="Home" asp-action="Index" >Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Destinations</a>
-                            <ul class="dropdown-menu fade-up">
-                                <li><a class="dropdown-item" asp-controller="Destinations" asp-action="Index">Destinations</a></li>
-                                @* <li><a class="dropdown-item" href="/">Destinations 02</a></li>
-                                <li><a class="dropdown-item" href="/">Destinations 03</a></li> *@
-                                <li>
-                                    <a class="dropdown-item" href="@Url.Action("DestinationDetails", "Destinations")">
-                                        Destination Details
-                                    </a>
-
-                                </li>
-                            </ul>
+                        <li class="nav-item ">
+                            <a class="nav-link " asp-controller="Destinations" asp-action="Index" >Destinations</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle"  data-bs-toggle="dropdown">
@@ -94,12 +83,12 @@
                             </a>
                             <ul class="dropdown-menu fade-up">
                                 <li><a class="dropdown-item" asp-controller="Tours" asp-action="Index">Tour Package</a></li>
-                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageOffer">Tour Package Offer</a></li>
-                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageCart">Tour Package Cart</a></li>
-                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageBookings">Tour Package Booking</a></li>
-                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageConfirm">Tour Package Confirm</a></li>
-                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageSearch">Tour Package Search</a></li>
                                 <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageDetails">Tour Package Details</a></li>
+                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageSearch">Tour Package Search</a></li>
+                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageOffer">Tour Package Offer</a></li>
+                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageBookings">Tour Package Booking</a></li>
+                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageCart">Tour Package Cart</a></li>
+                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageConfirm">Tour Package Confirm</a></li>
                             </ul>
                         </li>
 
