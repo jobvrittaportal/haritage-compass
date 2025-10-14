@@ -23,6 +23,10 @@ public class AccountController : Controller
   [ValidateAntiForgeryToken]
   public async Task<IActionResult> Login(string email, string password)
   {
+
+    email = email?.Trim().Replace(" ", "");
+    password = password?.Trim(); 
+
     // ✅ Validate required fields
     if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
     {
