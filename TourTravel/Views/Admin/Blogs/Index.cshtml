@@ -5,105 +5,94 @@
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
-<!-- ✅ Include Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h3>Blogs</h3>
-        <div>
-            <input type="text" id="searchBlog" class="form-control d-inline-block"
-                   placeholder="Search by Title or Author"
-                   value="@ViewBag.Search"
-                   style="width: 220px;" />
-            <button class="btn btn-primary" id="btnSearchBlog">Search</button>
-            <button class="btn btn-success" id="btnAddBlog">Add Blog</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Blogs</h4>
+
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 140px;">
+                    <input type="text" name="search" value="@ViewBag.Search"
+                           class="form-control" placeholder="Search" />
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <a href="@Url.Action("Create", "Blogs")" class="btn btn-primary">
+                <i class="fa fa-plus"></i> New
+            </a>
         </div>
     </div>
 
-    <table class="table table-bordered table-hover align-middle">
-        <thead class="table-dark">
+    <table class="table table-striped align-middle">
+        <thead>
             <tr>
                 <th>Meta Title</th>
                 <th>Meta Description</th>
                 <th>Title</th>
                 <th>Author</th>
-                <th>Slug Url</th>
+                <th>Slug URL</th>
                 <th>Image</th>
-                <th style="width: 120px;">Actions</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.MetaTitle</td>
-                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.MetaDescription">
-                            @(item.MetaDescription?.Length > 15
-                                ? item.MetaDescription.Substring(0, 50) + "..."
-                                : item.MetaDescription)
-                        </td>
-                        <td>@item.Title</td>
-                        <td>@item.Author</td>
-                        <td>@item.SlugUrl</td>
-                      
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                <img src="@item.ImageUrl" alt="Image" style="width:100px;height:60px;object-fit:cover;" />
-                            }
-                            else
-                            {
-                                <span class="text-muted">No image</span>
-                            }
-                        </td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-primary me-1 btnEditBlog" data-id="@item.Id" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline deleteForm">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            }
-            else
+            @foreach (var item in Model)
             {
                 <tr>
-                    <td colspan="4" class="text-center text-muted">No blogs found.</td>
+                    <td>@item.MetaTitle</td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.MetaDescription">
+                        @(item.MetaDescription?.Length > 30
+                            ? item.MetaDescription.Substring(0, 30) + "..."
+                            : item.MetaDescription)
+                    </td>
+                    <td>@item.Title</td>
+                    <td>@item.Author</td>
+                    <td>@item.SlugUrl</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="Blog Image" width="50" height="30" class="rounded" />
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Edit", "Blogs", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this blog?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <!-- ✅ Pagination -->
+    <!-- Pagination -->
     @if (ViewBag.TotalPages > 1)
     {
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item @(ViewBag.Page <= 1 ? "disabled" : "")">
-                    <a class="page-link"
-                       href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page - 1 })">Previous</a>
+                    <a class="page-link" href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page - 1 })">Previous</a>
                 </li>
 
                 @for (int i = 1; i <= ViewBag.TotalPages; i++)
                 {
                     <li class="page-item @(ViewBag.Page == i ? "active" : "")">
-                        <a class="page-link"
-                           href="@Url.Action("Index", new { search = ViewBag.Search, page = i })">@i</a>
+                        <a class="page-link" href="@Url.Action("Index", new { search = ViewBag.Search, page = i })">@i</a>
                     </li>
                 }
 
                 <li class="page-item @(ViewBag.Page >= ViewBag.TotalPages ? "disabled" : "")">
-                    <a class="page-link"
-                       href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page + 1 })">Next</a>
+                    <a class="page-link" href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page + 1 })">Next</a>
                 </li>
             </ul>
         </nav>
@@ -111,252 +100,15 @@
 </div>
 
 <!-- ✅ Toast Container -->
-<!-- ✅ Toast Container (Top-Right Corner) -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
     <div id="toastContainer"></div>
 </div>
 
-
-<!-- ✅ Modal for Create/Edit -->
-<div class="modal fade" id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-light border-0">
-                <h5 class="modal-title fw-semibold" id="blogModalLabel">Add/Edit Blog</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <form id="blogForm" enctype="multipart/form-data" method="post" novalidate>
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" id="blogId" name="Id" />
-
-                    <div class="row g-3">
-                        <div class="mb-3">
-                            <label class="form-label">Meta Title</label>
-                            <input id="MetaTitle" name="MetaTitle" class="form-control" required />
-                        </div>
-                       
-
-                        <div class="mb-3">
-                            <label class="form-label">Meta Description<span class="text-danger">*</span></label>
-                            <textarea id="MetaDescription" name="MetaDescription" class="form-control" required></textarea>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Title<span class="text-danger">*</span></label>
-                            <input id="Title" name="Title" class="form-control" required />
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Author<span class="text-danger">*</span></label>
-                            <input id="Author" name="Author" class="form-control" required />
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Slug URL<span class="text-danger">*</span></label>
-                            <input id="SlugUrl" name="SlugUrl" class="form-control" required />
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">
-                                Upload Image <span class="text-muted">(Width: 800px × Height: 600px)</span>
-                            </label>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="file" id="imageUrl" name="imageUrl" class="form-control" accept="image/*" />
-                            </div>
-                         @*    <div id="previewContainer" class="mt-2"></div> *@
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Content<span class="text-danger">*</span></label>
-                            <textarea id="Content" name="Content" class="form-control" required></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 text-end">
-                        <button type="submit" class="btn btn-primary px-4">SAVE</button>
-                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">CLOSE</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ✅ CKEditor 5 -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
-        let editorInstance;
-
-        $(function () {
-
-            ClassicEditor
-                .create(document.querySelector('#Content'), {
-                    toolbar: [
-                        'undo', 'redo', '|',
-                        'bold', 'italic', 'underline', '|',
-                        'bulletedList', 'numberedList', '|',
-                        'link', 'blockQuote', '|',
-                        'insertTable', 'alignment:left', 'alignment:center', 'alignment:right'
-                    ]
-                })
-                .then(editor => {
-                    editorInstance = editor;
-
-                    // ✅ Set height dynamically after initialization
-                    editor.ui.view.editable.element.style.minHeight = '200px'; // You can change to 600px, 800px, etc.
-                })
-                .catch(error => console.error('CKEditor initialization error:', error));
-
-
-            // ✅ Toast Function
-            // ✅ Toast Function (Top Slide)
-           
-                function showToast(message, type = 'bg-primary') {
-                    const toastId = 'toast' + Date.now();
-                    const toastHtml = `
-                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 mb-2"
-                             role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="d-flex">
-                                <div class="toast-body">${message}</div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                        data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                        </div>
-                    `;
-                    $('#toastContainer').prepend(toastHtml);
-                    const toastEl = document.getElementById(toastId);
-                    const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
-                    bsToast.show();
-                    toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-                }
-
-
-            // 🔍 Search
-            $('#btnSearchBlog').click(function () {
-                const search = $('#searchBlog').val();
-                window.location.href = '@Url.Action("Index", "Blogs")' + '?search=' + encodeURIComponent(search);
-            });
-
-            $('#searchBlog').keypress(function (e) {
-                if (e.which === 13) $('#btnSearchBlog').click();
-            });
-
-            // ➕ Add Blog
-            $('#btnAddBlog').click(function () {
-                $('#blogModalLabel').text('Add Blog');
-                $('#blogForm')[0].reset();
-                $('#blogId').val('');
-                $('#previewContainer').empty();
-                $('#blogModal').modal('show');
-            });
-
-            // ✏️ Edit Blog
-            $('.btnEditBlog').click(function () {
-                const id = $(this).data('id');
-                $.get('@Url.Action("GetBlogById", "Blogs")', { id: id }, function (data) {
-                    if (data) {
-                        $('#blogModalLabel').text('Edit Blog');
-                        $('#blogId').val(data.id);
-                        $('#Title').val(data.title);
-                        $('#Author').val(data.author);
-                        $('#Content').val(data.content);
-                        $('#MetaTitle').val(data.metaTitle);
-                        $('#MetaDescription').val(data.metaDescription);
-                        $('#SlugUrl').val(data.slugUrl);
-                        if (editorInstance) editorInstance.setData(data.content || '');
-                        $('#previewContainer').html(data.imageUrl ? `<img src="${data.imageUrl}" style="width:150px;height:100px;object-fit:cover;" />` : '');
-                        $('#blogModal').modal('show');
-                    }
-                });
-            });
-
-            // 🖼️ Image Preview
-            $('#imageUrl').on('change', function (e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        $('#previewContainer').html(`<img src="${e.target.result}" style="width:150px;height:100px;object-fit:cover;" />`);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // 💾 Submit Blog (AJAX)
-            $('#blogForm').submit(function (e) {
-                e.preventDefault();
-
-                // ✅ Update CKEditor data
-                if (editorInstance) {
-                    $('#Content').val(editorInstance.getData());
-                }
-                // ✅ Manual validation (since novalidate disables browser check)
-                const title = $('#Title').val().trim();
-                const author = $('#Author').val().trim();
-                const content = $('#Content').val().trim();
-                const metaTitle = $('#MetaTitle').val().trim();
-                const metaDescription = $('#MetaDescription').val().trim();
-            //    const slugUrl = $('#SlugUrl').val().trim();
-
-                if (!title || !author || !content || !metaTitle || !metaDescription ) {
-                    showToast('Please fill all required fields.', 'bg-warning');
-                    return;
-                }
-
-                const formData = new FormData(this);
-                const id = $('#blogId').val();
-                const url = id ? '@Url.Action("Edit", "Blogs")' : '@Url.Action("Create", "Blogs")';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res) {
-                        if (res.success) {
-                            $('#blogModal').modal('hide');
-                            showToast(res.message, 'bg-success');
-                            location.reload();
-                        } else {
-                            showToast(res.message, 'bg-danger');
-                        }
-                    },
-                    error: function () {
-                        showToast('Something went wrong while saving the blog.', 'bg-danger');
-                    }
-                });
-            });
-
-            // 🗑️ Delete Blog (AJAX)
-            $('.deleteForm').submit(function (e) {
-                e.preventDefault();
-                if (!confirm('Are you sure you want to delete this blog?')) return;
-
-                const form = $(this);
-                $.ajax({
-                    url: form.attr('action'),
-                    type: 'POST',
-                    data: form.serialize(),
-                    success: function (res) {
-                        showToast('Blog deleted successfully', 'bg-success');
-                        location.reload();
-                    },
-                    error: function () {
-                        showToast('Failed to delete blog', 'bg-danger');
-                    }
-                });
-            });
-
-        });
         $('[data-bs-toggle="tooltip"]').tooltip();
-
     </script>
 }

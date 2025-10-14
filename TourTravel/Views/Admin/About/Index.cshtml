@@ -1,99 +1,75 @@
 @model IEnumerable<TourTravel.Models.About>
 
 @{
-    ViewData["Title"] = "About Us";
+    ViewData["Title"] = "About List";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h3>About Us</h3>
-        <div>
-            <input type="text" id="searchAbout" class="form-control d-inline-block"
-                   placeholder="Search"
-                   value="@ViewBag.Search"
-                   style="width: 220px;" />
-            <button class="btn btn-primary" id="btnSearchAbout">Search</button>
-            <button class="btn btn-success" id="btnAddAbout">Add</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Left side -->
+        <h4 class="mb-0">About Us</h4>
+
+        <!-- Right side (search + New button) -->
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 170px;">
+                    <input type="text" name="search" value="@ViewBag.Search"
+                           class="form-control" placeholder="Search" />
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            <a href="@Url.Action("Create", "About")" class="btn btn-primary">
+                <i class="fa fa-plus"></i> New
+            </a>
         </div>
     </div>
 
-    <table class="table table-bordered table-hover align-middle">
-        <thead class="table-dark">
+ 
+
+    <table class="table table-striped align-middle">
+        <thead class="">
             <tr>
                 <th>Title</th>
-                <th>Meta Title</th>
-                <th>Meta Description</th>
-                <th>Slug Url</th>
                 <th>Key Features</th>
-                <th>Description</th>
+                <th>Slug URL</th>
                 <th>Image</th>
-                <th style="width: 120px;">Actions</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Title</td>
-                        <td>@item.MetaTitle</td>
-                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.MetaDescription">
-                            @(item.MetaDescription?.Length > 50
-                                ? item.MetaDescription.Substring(0, 50) + "..."
-                                : item.MetaDescription)
-                        </td>
-
-                        <td>@item.SlugUrl</td>
-                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.KeyFeatures">
-                            @(item.KeyFeatures?.Length > 50
-                                ? item.KeyFeatures.Substring(0, 50) + "..."
-                                : item.KeyFeatures)
-                        </td>
-
-                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="@Html.Raw(item.Description)">
-                            @Html.Raw(item.Description?.Length > 50
-                                     ? item.Description.Substring(0, 50) + "..."
-                                     : item.Description)
-                        </td>
-
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.Image))
-                            {
-                                <img src="@item.Image" alt="Image" style="width:100px;height:60px;object-fit:cover;" />
-                            }
-                            else
-                            {
-                                <span class="text-muted">No image</span>
-                            }
-                        </td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-primary me-1 btnEditAbout" data-id="@item.Id" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline deleteForm">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            }
-            else
+            @foreach (var item in Model)
             {
                 <tr>
-                    <td colspan="5" class="text-center text-muted">No About found.</td>
+                    <td>@item.Title</td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="@item.KeyFeatures">@Html.Raw(item.KeyFeatures?.Length > 20 ? item.KeyFeatures.Substring(0, 20) + "..." : item.KeyFeatures)</td>
+                    <td>@item.SlugUrl</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Image))
+                        {
+                            <img src="@item.Image" alt="About Image" width="50" height="30" class="rounded" />
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Edit", "About", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                            @Html.AntiForgeryToken()
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 
+    <!-- Pagination -->
+    <!-- ✅ Pagination -->
     @if (ViewBag.TotalPages > 1)
     {
         <nav aria-label="Page navigation">
@@ -119,247 +95,18 @@
         </nav>
     }
 </div>
-
-<!-- ✅ Toast Container (TOP RIGHT) -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
-    <div id="toastContainer"></div>
 </div>
 
-<!-- ✅ Modal for Create/Edit -->
-<div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header text-white">
-                <h5 class="modal-title" id="aboutModalLabel">Add About</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="aboutForm" enctype="multipart/form-data" method="post" novalidate>
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" id="aboutId" name="Id" />
-                    <div class="row g-3">
-
-                    <div class="mb-3">
-                        <label class="form-label">Meta Title</label>
-                        <input id="MetaTitle" name="MetaTitle" class="form-control" required />
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label class="form-label">Meta Description<span class="text-danger">*</span></label>
-                        <textarea id="MetaDescription" name="MetaDescription" class="form-control" required></textarea>
-                    </div>
-                    <div class="col-md-6">
-
-                        <label class="form-label">Title</label>
-                        <input id="Title" name="Title" class="form-control" required />
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label class="form-label">Key Features</label>
-                        <input id="KeyFeatures" name="KeyFeatures" class="form-control" required />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Slug URL<span class="text-danger">*</span></label>
-                        <input id="SlugUrl" name="SlugUrl" class="form-control" required />
-                    </div>
-                    <div class="col-md-6">
-
-                            <label class="form-label">
-                                Upload Image <span class="text-muted">(Width: 600px × Height: 600px)</span>
-                            </label>
-                        <input type="file" id="image" name="image" class="form-control" accept="image/*" />
-                        @*   <div id="previewContainer" class="mt-2"></div> *@
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea id="Description" name="Description" class="form-control"  required></textarea>
-                    </div>
-                    </div>
-
-                  
-
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- ✅ CKEditor 5 -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
-        let editorInstance;
-
-        $(function () {
-
-            // ✅ Initialize CKEditor
-            ClassicEditor
-                .create(document.querySelector('#Description'), {
-                    toolbar: [
-                        'undo', 'redo', '|',
-                        'bold', 'italic', 'underline', '|',
-                        'bulletedList', 'numberedList', '|',
-                        'link', 'blockQuote', '|',
-                        'insertTable', 'alignment:left', 'alignment:center', 'alignment:right'
-                    ]
-                })
-                .then(editor => {
-                    editorInstance = editor;
-
-                    // ✅ Set height dynamically after initialization
-                    editor.ui.view.editable.element.style.minHeight = '200px'; // You can change to 600px, 800px, etc.
-                })
-                .catch(error => console.error('CKEditor initialization error:', error));
-
-
-            // ✅ Toast Function
-            function showToast(message, type = 'bg-primary') {
-                const toastId = 'toast' + Date.now();
-                const toastHtml = `
-                            <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
-                                 role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="d-flex">
-                                    <div class="toast-body fw-semibold">${message}</div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                            data-bs-dismiss="toast" aria-label="Close"></button>
-                                </div>
-                            </div>`;
-                $('#toastContainer').prepend(toastHtml);
-
-                const toastEl = document.getElementById(toastId);
-                const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
-                bsToast.show();
-                toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-            }
-
-            // ✅ Search
-            $('#btnSearchAbout').click(function () {
-                const search = $('#searchAbout').val();
-                window.location.href = '@Url.Action("Index", "About")' + '?search=' + encodeURIComponent(search);
-            });
-            $('#searchAbout').keypress(function (e) {
-                if (e.which === 13) $('#btnSearchAbout').click();
-            });
-
-            // ✅ Add About
-            $('#btnAddAbout').click(function () {
-                $('#aboutModalLabel').text('Add About');
-                $('#aboutForm')[0].reset();
-                $('#aboutId').val('');
-                $('#previewContainer').empty();
-                if (editorInstance) editorInstance.setData('');
-                $('#aboutModal').modal('show');
-            });
-
-            // ✅ Edit About
-            $('.btnEditAbout').click(function () {
-                const id = $(this).data('id');
-                $.get('@Url.Action("GetAboutById", "About")', { id: id }, function (data) {
-                    if (data) {
-                        $('#aboutModalLabel').text('Edit About');
-                        $('#aboutId').val(data.id);
-                        $('#Title').val(data.title);
-                        $('#KeyFeatures').val(data.keyFeatures);
-                        $('#MetaTitle').val(data.metaTitle);
-                        $('#MetaDescription').val(data.metaDescription);
-                        $('#SlugUrl').val(data.slugUrl);
-                        if (editorInstance) editorInstance.setData(data.description || '');
-                        $('#previewContainer').html(data.image ? `<img src="${data.image}" style="width:150px;height:100px;object-fit:cover;" />` : '');
-                        $('#aboutModal').modal('show');
-                    }
-                });
-            });
-
-            // ✅ Image Preview
-            $('#image').on('change', function (e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        $('#previewContainer').html(`<img src="${e.target.result}" style="width:150px;height:100px;object-fit:cover;" />`);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // ✅ Submit About (AJAX)
-            $('#aboutForm').submit(function (e) {
-                e.preventDefault();
-
-                // ✅ Update CKEditor data
-                if (editorInstance) {
-                    $('#Description').val(editorInstance.getData());
-                }
-
-                // ✅ Manual validation (since novalidate disables browser check)
-                const title = $('#Title').val().trim();
-                const keyFeatures = $('#KeyFeatures').val().trim();
-                const description = $('#Description').val().trim();
-                const metaTitle = $('#MetaTitle').val().trim();
-                const metaDescription = $('#MetaDescription').val().trim();
-
-                if (!title || !keyFeatures || !description) {
-                    showToast('Please fill all required fields.', 'bg-warning');
-                    return;
-                }
-
-                const formData = new FormData(this);
-                const id = $('#aboutId').val();
-                const url = id ? '@Url.Action("Edit", "About")' : '@Url.Action("Create", "About")';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res) {
-                        if (res.success) {
-                            $('#aboutModal').modal('hide');
-                            showToast(res.message || 'Saved successfully!', 'bg-success');
-                            setTimeout(() => location.reload(), 1200);
-                        } else {
-                            showToast(res.message || 'Failed to save data.', 'bg-danger');
-                        }
-                    },
-                    error: function () {
-                        showToast('Something went wrong while saving.', 'bg-danger');
-                    }
-                });
-            });
-
-
-            // ✅ Delete About (AJAX)
-            $('.deleteForm').submit(function (e) {
-                e.preventDefault();
-                if (!confirm('Are you sure you want to delete this?')) return;
-                const form = $(this);
-                $.ajax({
-                    url: form.attr('action'),
-                    type: 'POST',
-                    data: form.serialize(),
-                    success: function () {
-                        showToast('Deleted successfully', 'bg-success');
-                        location.reload();
-                    },
-                    error: function () {
-                        showToast('Failed to delete', 'bg-danger');
-                    }
-                });
-            });
-        });
-        $(function () {
-            // Initialize Bootstrap tooltips
-            $('[data-bs-toggle="tooltip"]').tooltip();
-        });
+    
+        $('[data-bs-toggle="tooltip"]').tooltip();
 
     </script>
 }

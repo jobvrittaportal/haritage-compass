@@ -1,21 +1,21 @@
-@model TourTravel.Models.Blog
+@model TourTravel.Models.About
 
 @{
-    ViewData["Title"] = "Add Blog";
+    ViewData["Title"] = "Add About";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
 <div class="container mt-4">
     <div class="card shadow border-0">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fa-solid fa-newspaper me-2"></i>Add Blog</h5>
-            <a href="@Url.Action("Index", "Blogs")" class="btn btn-light btn-sm">
+        <div class="card-header text-black d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa-solid fa-circle-info me-2"></i>Add About</h5>
+            <a href="@Url.Action("Index", "About")" class="btn btn-light btn-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
         </div>
 
         <div class="card-body">
-            <form id="blogForm" enctype="multipart/form-data" method="post" asp-action="Create" novalidate>
+            <form id="aboutForm" enctype="multipart/form-data" method="post" asp-action="Create" novalidate>
                 @Html.AntiForgeryToken()
 
                 <div class="mb-3">
@@ -25,9 +25,15 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Author <span class="text-danger">*</span></label>
-                    <input asp-for="Author" class="form-control" id="Author" placeholder="Enter author name" required />
-                    <span asp-validation-for="Author" class="text-danger"></span>
+                    <label class="form-label fw-semibold">Key Features <span class="text-danger">*</span></label>
+                    <textarea asp-for="KeyFeatures" id="KeyFeatures" class="form-control" rows="4" placeholder="Enter key features" required></textarea>
+                    <span asp-validation-for="KeyFeatures" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                    <textarea asp-for="Description" id="Description" class="form-control" rows="6" placeholder="Enter detailed description" required></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
@@ -49,25 +55,24 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
-                    <textarea asp-for="Content" id="Content" class="form-control" rows="6" placeholder="Enter blog content" required></textarea>
-                    <span asp-validation-for="Content" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
                     <label class="form-label fw-semibold">Upload Image (800×600) <span class="text-danger">*</span></label>
                     <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn btn-success">Save</button>
-                    <button type="button" id="clearBtn" class="btn btn-outline-secondary">Clear</button>
+                    <button type="submit" class="btn btn-success">
+                     Save
+                    </button>
+                    <button type="button" id="clearBtn" class="btn btn-outline-secondary">
+                       Clear
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- ✅ Toast Container -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
     <div id="toastContainer"></div>
 </div>
@@ -80,46 +85,55 @@
 
     <script>
         let editor;
+
+        // ✅ Initialize CKEditor for Description only
         ClassicEditor
-            .create(document.querySelector('#Content'))
+            .create(document.querySelector('#Description'))
             .then(newEditor => editor = newEditor)
             .catch(error => console.error(error));
 
+        // ✅ Toast Function
         function showToast(message, type = 'bg-primary') {
             const toastId = 'toast' + Date.now();
-            const html = `<div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2">
-                                    <div class="d-flex">
-                                        <div class="toast-body fw-semibold">${message}</div>
-                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                                    </div>
-                                  </div>`;
-            $('#toastContainer').prepend(html);
-            const el = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(el, { delay: 3000 });
-            toast.show();
-            el.addEventListener('hidden.bs.toast', () => el.remove());
+            const toastHtml = `
+                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
+                             role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body fw-semibold">${message}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>`;
+            $('#toastContainer').prepend(toastHtml);
+            const toastEl = document.getElementById(toastId);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
         }
 
+        // ✅ Clear Button
         $('#clearBtn').click(() => {
-            $('#blogForm')[0].reset();
+            $('#aboutForm')[0].reset();
             if (editor) editor.setData('');
             $('.text-danger').text('');
         });
 
-        $('#blogForm').submit(function (e) {
+        // ✅ Form Submit with AJAX
+        $('#aboutForm').submit(function (e) {
             e.preventDefault();
+
             const title = $('#Title').val().trim();
-            const author = $('#Author').val().trim();
+            const keyFeatures = $('#KeyFeatures').val().trim();
             const metaTitle = $('#MetaTitle').val().trim();
             const metaDescription = $('#MetaDescription').val().trim();
             const slug = $('#SlugUrl').val().trim();
-            const content = editor ? editor.getData().trim() : '';
+            const description = editor ? editor.getData().trim() : '';
 
-            if (!title || !author || !metaTitle || !metaDescription || !slug || !content) {
+            if (!title || !keyFeatures || !metaTitle || !metaDescription || !slug || !description) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-
+            // ✅ Validate image type
             const imageFile = $('#image')[0].files[0];
             if (imageFile) {
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
@@ -130,10 +144,10 @@
             }
 
             const formData = new FormData(this);
-            formData.set('Content', content);
+            formData.set('Description', description);
 
             $.ajax({
-                url: '/admin/Blogs/Create',
+                url: '/admin/About/Create',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -141,7 +155,7 @@
                 success: function (res) {
                     if (res.success) {
                         showToast(res.message, 'bg-success');
-                        setTimeout(() => window.location.href = '/admin/Blogs', 1500);
+                        setTimeout(() => window.location.href = '/admin/About', 1500);
                     } else {
                         showToast(res.message, 'bg-danger');
                     }

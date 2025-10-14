@@ -18,64 +18,56 @@ namespace TourTravel.Admin.Controllers
       _env = env;
     }
 
-    //  Blog List + Search + Pagination
+    // ✅ About List + Search + Pagination
     [HttpGet]
-    [Authorize]
-    public IActionResult Index(string? search, int page = 1, int pageSize = 5)
+    public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 5)
     {
       var query = _db.About.AsQueryable();
 
-      // 🔍 Search filter by Title or Author
+      // 🔍 Search filter by Title
       if (!string.IsNullOrEmpty(search))
       {
-        query = query.Where(b => b.Title.Contains(search) );
+        query = query.Where(b => b.Title.Contains(search));
       }
 
-      int totalItems = query.Count();
-      var about = query
+      int totalItems = await query.CountAsync();
+      var aboutList = await query
           .OrderByDescending(b => b.Id)
           .Skip((page - 1) * pageSize)
           .Take(pageSize)
-          .ToList();
+          .ToListAsync();
 
       ViewBag.Search = search;
       ViewBag.Page = page;
       ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-      return View("~/Views/Admin/About/Index.cshtml", about);
+      return View("~/Views/Admin/About/Index.cshtml", aboutList);
     }
 
-    // ✅ Get single blog for editing (AJAX)
-    [HttpGet("GetAboutById")]
-    [Authorize]
-    public IActionResult GetAboutById(int id)
+    // ✅ Render Create Form
+    [HttpGet("Create")]
+    public IActionResult Create()
     {
-      var about = _db.About.Find(id);
-      if (about == null)
-        return Json(new { success = false, message = "About not found" });
-
-      return Json(new
-      {
-        success = true,
-        id = about.Id,
-        title = about.Title,
-        description = about.Description,
-        KeyFeatures = about.KeyFeatures,
-        MetaTitle = about.MetaTitle,
-        MetaDescription = about.MetaDescription,
-        SlugUrl = about.SlugUrl,
-        image = about.Image
-      });
+      return View("~/Views/Admin/About/Create.cshtml");
     }
 
-    // ✅ Create blog (AJAX)
+    // ✅ Create About (AJAX)
     [HttpPost("Create")]
-    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(About model, IFormFile? image)
     {
       try
       {
+        // Validate
+        if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
+        {
+          return Json(new { success = false, message = "Please fill all required fields." });
+        }
+
+        if (image == null || image.Length == 0)
+        {
+          return Json(new { success = false, message = "Please upload an image for the About section." });
+        }
 
         // ✅ Check if SlugUrl already exists (case-insensitive)
         bool slugExists = await _db.About
@@ -85,12 +77,8 @@ namespace TourTravel.Admin.Controllers
         {
           return Json(new { success = false, message = "Slug URL already exists. Please use a different one." });
         }
-        if (image == null || image.Length == 0)
-        {
-          return Json(new { success = false, message = "Please upload an image for the About." });
-        }
 
-
+        // ✅ Save image
         string folderPath = Path.Combine(_env.WebRootPath, "About");
         Directory.CreateDirectory(folderPath);
 
@@ -104,11 +92,10 @@ namespace TourTravel.Admin.Controllers
 
         model.Image = "/About/" + uniqueFileName;
 
-
         _db.About.Add(model);
         await _db.SaveChangesAsync();
 
-        return Json(new { success = true, message = "About created successfully" });
+        return Json(new { success = true, message = "About created successfully." });
       }
       catch (Exception ex)
       {
@@ -116,35 +103,45 @@ namespace TourTravel.Admin.Controllers
       }
     }
 
-    // ✅ Edit blog (AJAX)
+    // ✅ Render Edit Form
+    [HttpGet("Edit/{id}")]
+    public async Task<IActionResult> Edit(int id)
+    {
+      var about = await _db.About.FindAsync(id);
+      if (about == null)
+        return NotFound();
+
+      return View("~/Views/Admin/About/Edit.cshtml", about);
+    }
+
+    // ✅ Edit About (AJAX)
     [HttpPost("Edit")]
-    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(About model, IFormFile? image)
     {
       try
       {
-        var existing = _db.About.Find(model.Id);
+        var existing = await _db.About.FindAsync(model.Id);
         if (existing == null)
-          return Json(new { success = false, message = "Blog not found" });
+          return Json(new { success = false, message = "Record not found." });
 
+        // ✅ Check if Slug already exists for another record
         bool slugExists = await _db.About
-         .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
+            .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
 
         if (slugExists)
         {
           return Json(new { success = false, message = "Slug URL already exists. Please use a different one." });
         }
 
-
         existing.Title = model.Title;
         existing.Description = model.Description;
+        existing.KeyFeatures = model.KeyFeatures;
         existing.MetaTitle = model.MetaTitle;
         existing.MetaDescription = model.MetaDescription;
         existing.SlugUrl = model.SlugUrl;
 
-
-        // ✅ Only update image if a new file is uploaded
+        // ✅ Update image if new one uploaded
         if (image != null && image.Length > 0)
         {
           string folderPath = Path.Combine(_env.WebRootPath, "About");
@@ -158,12 +155,12 @@ namespace TourTravel.Admin.Controllers
             await image.CopyToAsync(stream);
           }
 
-          // Optional: delete old image if it exists
+          // Delete old image if exists
           if (!string.IsNullOrEmpty(existing.Image))
           {
-            string oldFilePath = Path.Combine(_env.WebRootPath, existing.Image.TrimStart('/'));
-            if (System.IO.File.Exists(oldFilePath))
-              System.IO.File.Delete(oldFilePath);
+            string oldPath = Path.Combine(_env.WebRootPath, existing.Image.TrimStart('/'));
+            if (System.IO.File.Exists(oldPath))
+              System.IO.File.Delete(oldPath);
           }
 
           existing.Image = "/About/" + uniqueFileName;
@@ -172,7 +169,7 @@ namespace TourTravel.Admin.Controllers
         _db.Update(existing);
         await _db.SaveChangesAsync();
 
-        return Json(new { success = true, message = "About updated successfully" });
+        return Json(new { success = true, message = "About updated successfully." });
       }
       catch (Exception ex)
       {
@@ -180,20 +177,27 @@ namespace TourTravel.Admin.Controllers
       }
     }
 
-
-    // ✅ Delete blog (non-AJAX)
+    // ✅ Delete About
     [HttpPost("Delete/{id}")]
-    [Authorize]
     [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-      var about = _db.About.Find(id);
+      var about = await _db.About.FindAsync(id);
       if (about == null)
         return NotFound();
 
-      _db.About.Remove(about);
-      _db.SaveChanges();
+      // Delete image file
+      if (!string.IsNullOrEmpty(about.Image))
+      {
+        string filePath = Path.Combine(_env.WebRootPath, about.Image.TrimStart('/'));
+        if (System.IO.File.Exists(filePath))
+          System.IO.File.Delete(filePath);
+      }
 
+      _db.About.Remove(about);
+      await _db.SaveChangesAsync();
+
+      TempData["Success"] = "About deleted successfully.";
       return RedirectToAction(nameof(Index));
     }
   }

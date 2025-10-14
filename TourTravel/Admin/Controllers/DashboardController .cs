@@ -5,7 +5,7 @@ namespace TourTravel.Admin.Controllers
 {
   public class DashboardController : Controller
   {
-
+    [Authorize]
     [Route("admin/Dashboard")]
     public IActionResult Index()
     {
