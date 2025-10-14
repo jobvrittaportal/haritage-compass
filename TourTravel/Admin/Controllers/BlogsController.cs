@@ -133,16 +133,16 @@ namespace TourTravel.Admin.Controllers
           return Json(new { success = false, message = "Slug URL already exists." });
 
         // ✅ Validate file size (max 5MB)
-        if (image.Length > 5 * 1024 * 1024)
-          return Json(new { success = false, message = "Image size must be less than 5MB." });
+        //if (image.Length > 5 * 1024 * 1024)
+        //  return Json(new { success = false, message = "Image size must be less than 5MB." });
 
-        // ✅ Validate dimensions
-        using (var stream = image.OpenReadStream())
-        using (var img = Image.FromStream(stream))
-        {
-          if (img.Width != 800 || img.Height != 600)
-            return Json(new { success = false, message = "Image dimensions must be 800x600." });
-        }
+        //// ✅ Validate dimensions
+        //using (var stream = image.OpenReadStream())
+        //using (var img = Image.FromStream(stream))
+        //{
+        //  if (img.Width != 800 || img.Height != 600)
+        //    return Json(new { success = false, message = "Image dimensions must be 800x600." });
+        //}
 
 
         existing.Title = model.Title;

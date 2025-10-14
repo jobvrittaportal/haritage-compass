@@ -6,8 +6,8 @@
 
 <div class="container mt-4">
     <div class="card shadow border-0">
-        <div class="card-header text-dark d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Edit FAQ</h5>
+        <div class="card-header text-black d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Edit FAQ</h5>
             <a href="@Url.Action("Index", "FAQ")" class="btn btn-light btn-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
@@ -16,39 +16,51 @@
         <div class="card-body">
             <form id="faqForm" asp-action="Edit" method="post" novalidate>
                 @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="Id" />
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Question</label>
-                    <input asp-for="Question" class="form-control" placeholder="Enter question" required />
+                    <label class="form-label fw-semibold">Question<span class="text-danger">*</span></label>
+                    <input asp-for="Question" id="Question" class="form-control" placeholder="Enter question" required />
                     <span asp-validation-for="Question" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Answer</label>
-                    <textarea asp-for="Answer" id="Answer" class="form-control" rows="5" required></textarea>
+                    <label class="form-label fw-semibold">Answer<span class="text-danger">*</span></label>
+                    <textarea asp-for="Answer" id="Answer" class="form-control" rows="5" placeholder="Enter answer" required></textarea>
                     <span asp-validation-for="Answer" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    Update
-                </button>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success">
+                        Save
+                    </button>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">
+                        Clear
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- ✅ Toast Container (Top Right) -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
-    <!-- CKEditor 5 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
     <script>
+        let editor;
+
+        // ✅ Initialize CKEditor
         ClassicEditor
             .create(document.querySelector('#Answer'))
+            .then(newEditor => editor = newEditor)
             .catch(error => console.error(error));
-
-
 
         // ✅ Toast Function
         function showToast(message, type = 'bg-primary') {
@@ -104,5 +116,6 @@
                 }
             });
         });
+
     </script>
 }
