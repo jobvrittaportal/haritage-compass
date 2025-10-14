@@ -2,26 +2,15 @@
 @await Component.InvokeAsync("HeroSection")
 <div class="blog-area py-120">
     <div class="container">
+        @* <div class="widget search">
+            <h5 class="widget-title">Search</h5>
+            <form class="search-form">
+                <input type="text" class="form-control" placeholder="Search Here...">
+                <button type="submit"><i class="far fa-search"></i></button>
+            </form>
+        </div> *@
         @await Component.InvokeAsync("Blog", new { showHeading = false, take = 6 })
-        <div class="pagination-area">
-            <div aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
-                        </a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+      
     </div>
 </div>
 <!-- blog-area end -->
