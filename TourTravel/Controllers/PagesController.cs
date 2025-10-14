@@ -66,7 +66,9 @@ namespace TourTravel.Controllers
         {
             ViewBag.Title = "FAQ";
             ViewBag.Page = "Faq";
-            return View();
+            var fAQ = db.FAQ.ToList();
+
+            return View(fAQ);
         }
         public IActionResult Gallery()
         {

@@ -27,12 +27,8 @@
                             <div class="blog-details">
                                 <h3 class="blog-details-title mb-20">@Model.Blog.Title</h3>
                                 <p class="mb-10">
-                                    @Model.Blog.Content
-                                    @* Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, e
-                                    aque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam 
-                                    voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione v
-                                    oluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipi
-                                    sci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. *@
+                                    @Html.Raw(@Model.Blog.Content)
+                                    
                                 </p>
                                 @* <blockquote class="blockqoute">
                                     On the other hand we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment so blinded.

@@ -20,8 +20,9 @@
                         <h2 class="site-title">@Model.Title</h2>
                     </div>
                     <p class="about-text">
-                        @Model.Description
+                        @Html.Raw(Model.Description)
                     </p>
+
                     <div class="about-list-wrapper">
                         <ul class="about-list list-unstyled">
                             @if (!string.IsNullOrEmpty(Model.KeyFeatures))
