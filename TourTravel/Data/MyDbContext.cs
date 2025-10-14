@@ -20,4 +20,9 @@ public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, stri
   public DbSet<Gallery> Gallery { get; set; }
   public DbSet<Destinations> Destinations { get; set; }
   public DbSet<DestinationGallery> DestinationGallery { get; set; }
+  public DbSet<State> State { get; set; }
+  public DbSet<City> City { get; set; }
+  public DbSet<Country> Country { get; set; }
+  public DbSet<Package> Package { get; set; }
+
 }

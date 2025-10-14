@@ -123,14 +123,46 @@
             const imageFile = $('#image')[0].files[0];
             if (imageFile) {
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
                 if (!allowedTypes.includes(imageFile.type)) {
                     showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
                     return;
                 }
-            }
 
-            const formData = new FormData(this);
-            formData.set('Content', content);
+                if (imageFile.size > maxSize) {
+                    showToast('Image size must be less than 5MB.', 'bg-danger');
+                    return;
+                }
+
+                // Validate image dimensions
+                const img = new Image();
+                img.src = URL.createObjectURL(imageFile);
+
+                img.onload = function () {
+                    if (img.width !== 800 || img.height !== 600) {
+                        showToast('Image dimensions must be 800x600.', 'bg-danger');
+                        return;
+                    }
+
+                    // ✅ If everything is valid, submit form
+                    submitForm(content);
+                };
+
+                img.onerror = function () {
+                    showToast('Invalid image file.', 'bg-danger');
+                    return;
+                };
+            } else {
+                // No image uploaded, just submit
+                submitForm(content);
+            }
+        });
+
+        // ✅ Separate function to submit form
+        function submitForm(description) {
+            const formData = new FormData($('#blogForm')[0]);
+            formData.set('content', description);
 
             $.ajax({
                 url: '/admin/Blogs/Create',
@@ -150,6 +182,30 @@
                     showToast('An error occurred while saving.', 'bg-danger');
                 }
             });
-        });
+        }
+
+
+        // const formData = new FormData(this);
+        //     formData.set('Content', content);
+
+        //     $.ajax({
+        //         url: '/admin/Blogs/Create',
+        //         type: 'POST',
+        //         data: formData,
+        //         processData: false,
+        //         contentType: false,
+        //         success: function (res) {
+        //             if (res.success) {
+        //                 showToast(res.message, 'bg-success');
+        //                 setTimeout(() => window.location.href = '/admin/Blogs', 1500);
+        //             } else {
+        //                 showToast(res.message, 'bg-danger');
+        //             }
+        //         },
+        //         error: function () {
+        //             showToast('An error occurred while saving.', 'bg-danger');
+        //         }
+        //     });
+        // });
     </script>
 }

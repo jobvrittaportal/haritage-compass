@@ -14,7 +14,7 @@
         </div>
 
         <div class="card-body">
-            <form asp-action="Edit" method="post" novalidate>
+            <form id="faqForm" asp-action="Edit" method="post" novalidate>
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
 
@@ -47,5 +47,62 @@
         ClassicEditor
             .create(document.querySelector('#Answer'))
             .catch(error => console.error(error));
+
+
+
+        // ✅ Toast Function
+        function showToast(message, type = 'bg-primary') {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
+                                             role="alert" aria-live="assertive" aria-atomic="true">
+                                            <div class="d-flex">
+                                                <div class="toast-body fw-semibold">${message}</div>
+                                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                                        data-bs-dismiss="toast" aria-label="Close"></button>
+                                            </div>
+                                        </div>`;
+            $('#toastContainer').prepend(toastHtml);
+
+            const toastEl = document.getElementById(toastId);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        }
+
+        // ✅ Clear button
+        $('#clearBtn').click(() => {
+            $('#Question').val('');
+            if (editor) editor.setData('');
+            $('.text-danger').text('');
+        });
+
+        $('#faqForm').submit(function (e) {
+            e.preventDefault();
+
+            const question = $('#Question').val().trim();
+            const answer = editor ? editor.getData().trim() : '';
+
+            if (!question || !answer) {
+                showToast('Please fill in both Question and Answer fields.', 'bg-danger');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Edit", "FAQ")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    showToast('FAQ Updated successfully!', 'bg-success');
+                    setTimeout(() => window.location.href = '/admin/faq', 1500);
+
+                    $('#faqForm')[0].reset();
+                    if (editor) editor.setData('');
+                },
+                error: function () {
+                    showToast('Something went wrong!', 'bg-danger');
+                }
+            });
+        });
     </script>
 }

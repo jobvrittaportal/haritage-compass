@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
+using System.Drawing; // For System.Drawing.Image
+
 
 namespace TourTravel.Admin.Controllers
 {
@@ -67,6 +69,19 @@ namespace TourTravel.Admin.Controllers
         if (slugExists)
           return Json(new { success = false, message = "Slug URL already exists." });
 
+
+        // ✅ Validate file size (max 5MB)
+        if (image.Length > 5 * 1024 * 1024)
+          return Json(new { success = false, message = "Image size must be less than 5MB." });
+
+        // ✅ Validate dimensions
+        using (var stream = image.OpenReadStream())
+        using (var img = Image.FromStream(stream))
+        {
+          if (img.Width != 800 || img.Height != 600)
+            return Json(new { success = false, message = "Image dimensions must be 800x600." });
+        }
+
         string folderPath = Path.Combine(_env.WebRootPath, "Blogs");
         Directory.CreateDirectory(folderPath);
 
@@ -116,6 +131,19 @@ namespace TourTravel.Admin.Controllers
             .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
         if (slugExists)
           return Json(new { success = false, message = "Slug URL already exists." });
+
+        // ✅ Validate file size (max 5MB)
+        if (image.Length > 5 * 1024 * 1024)
+          return Json(new { success = false, message = "Image size must be less than 5MB." });
+
+        // ✅ Validate dimensions
+        using (var stream = image.OpenReadStream())
+        using (var img = Image.FromStream(stream))
+        {
+          if (img.Width != 800 || img.Height != 600)
+            return Json(new { success = false, message = "Image dimensions must be 800x600." });
+        }
+
 
         existing.Title = model.Title;
         existing.Content = model.Content;

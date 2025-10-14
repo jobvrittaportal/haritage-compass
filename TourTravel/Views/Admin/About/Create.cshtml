@@ -133,17 +133,49 @@
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-            // ✅ Validate image type
+
             const imageFile = $('#image')[0].files[0];
             if (imageFile) {
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
                 if (!allowedTypes.includes(imageFile.type)) {
                     showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
                     return;
                 }
-            }
 
-            const formData = new FormData(this);
+                if (imageFile.size > maxSize) {
+                    showToast('Image size must be less than 5MB.', 'bg-danger');
+                    return;
+                }
+
+                // Validate image dimensions
+                const img = new Image();
+                img.src = URL.createObjectURL(imageFile);
+
+                img.onload = function () {
+                    if (img.width !== 800 || img.height !== 600) {
+                        showToast('Image dimensions must be 800x600.', 'bg-danger');
+                        return;
+                    }
+
+                    // ✅ If everything is valid, submit form
+                    submitForm(description);
+                };
+
+                img.onerror = function () {
+                    showToast('Invalid image file.', 'bg-danger');
+                    return;
+                };
+            } else {
+                // No image uploaded, just submit
+                submitForm(description);
+            }
+        });
+
+        // ✅ Separate function to submit form
+        function submitForm(description) {
+            const formData = new FormData($('#aboutForm')[0]);
             formData.set('Description', description);
 
             $.ajax({
@@ -164,6 +196,7 @@
                     showToast('An error occurred while saving.', 'bg-danger');
                 }
             });
-        });
+        }
+
     </script>
 }

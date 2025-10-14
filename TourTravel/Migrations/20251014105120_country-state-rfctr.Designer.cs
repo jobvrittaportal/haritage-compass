@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace TourTravel.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251014105120_country-state-rfctr")]
+    partial class countrystaterfctr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,7 +208,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("About", (string)null);
+                    b.ToTable("About");
                 });
 
             modelBuilder.Entity("TourTravel.Models.ApplicationUser", b =>
@@ -321,7 +324,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blog", (string)null);
+                    b.ToTable("Blog");
                 });
 
             modelBuilder.Entity("TourTravel.Models.City", b =>
@@ -353,7 +356,7 @@ namespace TourTravel.Migrations
 
                     b.HasIndex("StateId");
 
-                    b.ToTable("City", (string)null);
+                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Country", b =>
@@ -391,7 +394,7 @@ namespace TourTravel.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Country", (string)null);
+                    b.ToTable("Country");
                 });
 
             modelBuilder.Entity("TourTravel.Models.FAQ", b =>
@@ -418,7 +421,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FAQ", (string)null);
+                    b.ToTable("FAQ");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Gallery", b =>
@@ -441,7 +444,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gallery", (string)null);
+                    b.ToTable("Gallery");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Page", b =>
@@ -471,7 +474,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pages", (string)null);
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Permission", b =>
@@ -501,7 +504,7 @@ namespace TourTravel.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("TourTravel.Models.PrivacyPolicy", b =>
@@ -528,7 +531,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PrivacyPolicy", (string)null);
+                    b.ToTable("PrivacyPolicy");
                 });
 
             modelBuilder.Entity("TourTravel.Models.State", b =>
@@ -560,7 +563,7 @@ namespace TourTravel.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("State", (string)null);
+                    b.ToTable("State");
                 });
 
             modelBuilder.Entity("TourTravel.Models.TermsOfService", b =>
@@ -587,7 +590,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TermsOfService", (string)null);
+                    b.ToTable("TermsOfService");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Testimonial", b =>
@@ -624,7 +627,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Testimonial", (string)null);
+                    b.ToTable("Testimonial");
                 });
 
             modelBuilder.Entity("TourTravel.Models.TourCardsView", b =>
@@ -667,7 +670,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TourCardsView", (string)null);
+                    b.ToTable("TourCardsView");
                 });
 
             modelBuilder.Entity("TourTravel.Models.TourGuideView", b =>
@@ -718,7 +721,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TourGuideView", (string)null);
+                    b.ToTable("TourGuideView");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Role", b =>
