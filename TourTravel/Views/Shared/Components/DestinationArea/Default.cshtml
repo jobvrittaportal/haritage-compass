@@ -1,7 +1,8 @@
-﻿ <!-- destination area -->
+﻿@model List<TourTravel.Models.Destinations>
 @{
     bool showHeading = ViewData["ShowHeading"] as bool? ?? true;
 }
+
 <div class="destination-area pt-120">
     <div class="container">
         <div class="row">
@@ -19,80 +20,25 @@
                 </div>
             }
         </div>
+
         <div class="row align-items-center">
-            <div class="col-md-12 col-lg-6">
-                <div class="destination-item">
-                    <div class="destination-img">
-                        <img src="assets/img/destination/a.jpg" alt="">
+            @foreach (var dest in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="destination-item">
+                        <div class="destination-img">
+                            <img src="@dest.DestinationImgUrl" alt="@dest.DestinationName" style="width:370px; height:360px;">
+                        </div>
+                        <div class="destination-info">
+                            <h3>@dest.DestinationName</h3>
+                            <span>Starting From ₹@dest.StartingPrice</span>
+                        </div>
+                        <a asp-controller="Destinations" asp-action="DestinationDetails" asp-route-id="@dest.Id" class="destination-btn">
+                            <i class="far fa-arrow-right"></i>
+                        </a>
                     </div>
-                    <div class="destination-info">
-                        <h3>New York</h3>
-                        <span>Starting From $1500</span>
-                    </div>
-                    <a asp-controller="Destinations" asp-action="DestinationDetails" class="destination-btn"><i class="far fa-arrow-right"></i></a>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="destination-item">
-                    <div class="destination-img">
-                        <img src="assets/img/destination/b.jpg" alt="">
-                    </div>
-                    <div class="destination-info">
-                        <h3>Paris</h3>
-                        <span>Starting From $1500</span>
-                    </div>
-                    <a asp-controller="Destinations" asp-action="DestinationDetails" class="destination-btn"><i class="far fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="destination-item">
-                    <div class="destination-img">
-                        <img src="assets/img/destination/c.jpg" alt="">
-                    </div>
-                    <div class="destination-info">
-                        <h3>London</h3>
-                        <span>Starting From $1500</span>
-                    </div>
-                    <a asp-controller="Destinations" asp-action="DestinationDetails" class="destination-btn"><i class="far fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="destination-item">
-                    <div class="destination-img">
-                        <img src="assets/img/destination/b.jpg" alt="">
-                    </div>
-                    <div class="destination-info">
-                        <h3>Grand Cayon</h3>
-                        <span>Starting From $1500</span>
-                    </div>
-                    <a asp-controller="Destinations" asp-action="DestinationDetails" class="destination-btn"><i class="far fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="destination-item">
-                    <div class="destination-img">
-                        <img src="assets/img/destination/c.jpg" alt="">
-                    </div>
-                    <div class="destination-info">
-                        <h3>Sydney</h3>
-                        <span>Starting From $1500</span>
-                    </div>
-                    <a asp-controller="Destinations" asp-action="DestinationDetails" class="destination-btn"><i class="far fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="destination-item">
-                    <div class="destination-img">
-                        <img src="assets/img/destination/a.jpg" alt="">
-                    </div>
-                    <div class="destination-info">
-                        <h3>Glacier Park</h3>
-                        <span>Starting From $1500</span>
-                    </div>
-                    <a asp-controller="Destinations" asp-action="DestinationDetails" class="destination-btn"><i class="far fa-arrow-right"></i></a>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>
-<!-- destination area end -->

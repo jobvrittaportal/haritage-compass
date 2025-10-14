@@ -1,21 +1,21 @@
-﻿  <!-- destination-details -->
+﻿@model TourTravel.ViewModel.DestinationDetailsViewModel
 
- @await Component.InvokeAsync("HeroSection")
+@await Component.InvokeAsync("HeroSection")
 <div class="destination-single py-120">
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
                 <div class="destination-single-img">
-                    <img src="/assets/img/destination/single.jpg" alt="">
+                    <img src="@Model.Destination.DestinationImgUrl" alt="@Model.Destination.DestinationName">
                 </div>
-                <h2 class="destination-single-title">Norway Lake View</h2>
+                <h2 class="destination-single-title">@Model.Destination.DestinationName</h2>
                 <p class="mt-20">
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                    @Model.Destination.DestinationInfo
                 </p>
                 <p class="mt-20">
-                    All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.
+                    @Model.Destination.DestinationInfo
                 </p>
-                <div class="destination-single-middle-img">
+                @* <div class="destination-single-middle-img">
                     <div class="row">
                         <div class="col-md-4">
                             <img src="/assets/img/destination/2.jpg" alt="">
@@ -27,96 +27,60 @@
                             <img src="/assets/img/destination/4.jpg" alt="">
                         </div>
                     </div>
-                </div>
-
-                <p class="mt-20">
-                    But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.
-                </p>
-
-                <div class="destination-country-info">
-                    <h3>Country Information</h3>
-                    <p class="mt-10">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
-                    </p>
-                    <ul class="country-info-list clearfix">
-                        <li><i class="fas fa-globe"></i><span>Country</span>Norway</li>
-                        <li><i class="far fa-id-card"></i><span>Visa Requirements</span>Yes Required</li>
-                        <li><i class="far fa-comments"></i><span>Languages Spoken</span>English & Norwegian</li>
-                        <li><i class="fas fa-map-marker-alt"></i><span>Address</span>Norway City, Norway</li>
-                        <li><i class="fas fa-dollar-sign"></i><span>Currency Used</span>USD</li>
-                        <li><i class="fas fa-phone"></i><span>Support Phone</span><a href="tel:+21234567789">+2 123 4567 789</a></li>
-                        <li><i class="far fa-envelope-open"></i><span>Support Email</span><a href="mailto:info@example.com">info@example.com</a></li>
-                        <li><i class="far fa-map"></i><span>Area</span>427.63 km2</li>
-                    </ul>
-                </div>
+                </div> *@
 
                 <div class="destination-single-gallery">
                     <h3>Destination Gallery</h3>
                     <p class="mt-10">
-                        Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
+                        Capture the essence of this beautiful destination through our gallery. Each photograph tells a story —
+                        from breathtaking landscapes and iconic landmarks to vibrant local life. Let these images inspire your
+                        next adventure and give you a glimpse of what makes this place truly unforgettable.
                     </p>
                     <div class="row mt-20 popup-gallery">
-                        <div class="col-md-8">
-                            <div class="destination-single-gallery-img">
-                                <img src="/assets/img/destination/1.jpg" alt="">
-                                <a class="popup-img" href="assets/img/destination/1.jpg"><i class="far fa-plus"></i></a>
+                        @foreach (var img in Model.GalleryImages)
+                        {
+                            <div class="col-md-4">
+                                <div class="destination-single-gallery-img">
+                                    <img src="@img.GalleryImgUrl" alt="Gallery image" />
+                                    <a class="popup-img" href="@img.GalleryImgUrl"><i class="far fa-plus"></i></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="destination-single-gallery-img">
-                                <img src="/assets/img/destination/13.jpg" alt="">
-                                <a class="popup-img" href="assets/img/destination/13.jpg"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="destination-single-gallery-img">
-                                <img src="/assets/img/destination/14.jpg" alt="">
-                                <a class="popup-img" href="assets/img/destination/14.jpg"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="destination-single-gallery-img">
-                                <img src="/assets/img/destination/15.jpg" alt="">
-                                <a class="popup-img" href="assets/img/destination/15.jpg"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="destination-single-gallery-img">
-                                <img src="/assets/img/destination/16.jpg" alt="">
-                                <a class="popup-img" href="assets/img/destination/16.jpg"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
 
                 <div class="destination-single-map">
                     <h3>Location Map</h3>
                     <p class="mt-20">
-                        On the other hand, we denounce with righteous indignation and dislike men who are so beguiled
-                        and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain.
+                        Use the map below to easily locate nearby attractions, restaurants, and hidden gems waiting to be discovered.
+                        Whether you’re planning your next adventure or simply exploring virtually, this map will help you get a closer
+                        look at everything that makes this place truly special.
                     </p>
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96708.34194156103!2d-74.03927096447748!3d40.759040329405195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4a01c8df6fb3cb8!2sSolomon%20R.%20Guggenheim%20Museum!5e0!3m2!1sen!2sbd!4v1619410634508!5m2!1sen!2s" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    @if (!string.IsNullOrEmpty(Model.Destination.MapUrl))
+                    {
+                        <iframe src="@Model.Destination.MapUrl" width="100%" height="450" style="border:0;" allowfullscreen loading="lazy"></iframe>
+                    }
+
                 </div>
             </div>
+
             <div class="col-lg-4">
                 @await Component.InvokeAsync("PackageCategories")
                 @await Component.InvokeAsync("FeaturedTours")
-                    <div class="widget">
-                        <h4 class="widget-title">Download</h4>
-                        <div class="widget-download">
-                            <a href="#"><i class="far fa-file-pdf"></i> Travel Direction</a>
-                            <a href="#"><i class="far fa-file-pdf"></i> Country Info</a>
-                        </div>
+                <div class="widget">
+                    <h4 class="widget-title">Download</h4>
+                    <div class="widget-download">
+                        <a href="#"><i class="far fa-file-pdf"></i> Travel Direction</a>
+                        <a href="#"><i class="far fa-file-pdf"></i> Country Info</a>
                     </div>
-                    <div class="widget-banner">
-                        <img src="/assets/img/widget/banner.jpg" alt="">
-                        <div class="banner-content">
-                            <h2>Get <span>35% Off</span> On Norway Lake Tour</h2>
-                        </div>
+                </div>
+                <div class="widget-banner">
+                    <img src="/assets/img/widget/banner.jpg" alt="">
+                    <div class="banner-content">
+                        <h2>Get <span>35% Off</span> On Norway Lake Tour</h2>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- destination-details end -->

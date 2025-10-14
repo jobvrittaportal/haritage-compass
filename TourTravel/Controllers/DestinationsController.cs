@@ -2,21 +2,36 @@
 
 namespace TourTravel.Controllers
 {
-    public class DestinationsController : Controller
+    public class DestinationsController(MyDbContext db) : Controller
     {
-        public IActionResult Index(bool showHeading )
+        public IActionResult Index()
         {
 
             ViewBag.Title = "Destinations";
             ViewBag.Page = "Destinations";
-            ViewData["ShowHeading"] = showHeading;
             return View();
         }
-        public IActionResult DestinationDetails()
+        public IActionResult DestinationDetails(int Id)
         {
             ViewBag.Title = "Destination Detail";
             ViewBag.Page = "Destination Detail";
-            return View();
+            var destination = db.Destinations.FirstOrDefault(d => d.Id == Id);
+            if (destination == null)
+            {
+                return NotFound();
+            }
+
+            var galleryImages = db.DestinationGallery
+                                  .Where(g => g.DestinationId == Id)
+                                  .ToList();
+
+            var viewModel = new TourTravel.ViewModel.DestinationDetailsViewModel
+            {
+                Destination = destination,
+                GalleryImages = galleryImages
+            };
+
+            return View(viewModel);
         }
     }
 }

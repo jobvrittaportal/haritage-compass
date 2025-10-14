@@ -20,7 +20,7 @@
                         </p>
                         <div class="hero-btn wow animate__animated animate__fadeInUp" data-wow-duration="1s"
                              data-wow-delay="1s">
-                            <a href="contact.html" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
+                            <a asp-controller="Contact" asp-action="Index" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
                             <a asp-controller="Pages" asp-action="AboutUs" class="theme-btn border-btn">About Us <i class="far fa-arrow-right"></i></a>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                         </p>
                         <div class="hero-btn wow animate__animated animate__fadeInUp" data-wow-duration="1s"
                              data-wow-delay="1s">
-                            <a href="contact.html" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
+                            <a asp-controller="Contact" asp-action="Index" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
                             <a asp-controller="Pages" asp-action="AboutUs" class="theme-btn border-btn">About Us <i class="far fa-arrow-right"></i></a>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         </p>
                         <div class="hero-btn wow animate__animated animate__fadeInUp" data-wow-duration="1s"
                              data-wow-delay="1s">
-                            <a href="contact.html" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
+                            <a asp-controller="Contact" asp-action="Index" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
                             <a asp-controller="Pages" asp-action="AboutUs" class="theme-btn border-btn">About Us <i class="far fa-arrow-right"></i></a>
                         </div>
                     </div>
@@ -146,24 +146,7 @@
 @await Component.InvokeAsync("DestinationArea", new { showHeading = true })
 
 <!-- Tour Area-->
-<div class="tour-area py-120">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 mx-auto">
-                <div class="site-heading text-center">
-                    <span class="site-title-tagline">Top Tour</span>
-                    <h2 class="site-title">Top Tour Package</h2>
-                    <p>
-                        It is a long established fact that a reader will be distracted by the readable content
-                        of a page when looking at its layout.
-                    </p>
-                </div>
-            </div>
-        </div>
-        @* @await Component.InvokeAsync("TourCards", new { take = 3 }) *@
-        @await Component.InvokeAsync("TourCards", new { showHeading = true })
-    </div>
-</div>
+@await Component.InvokeAsync("TourCards", new { showHeading = true, take = 3 })
 <!-- Tour Area ends-->
 
 <!-- Counter area-->
