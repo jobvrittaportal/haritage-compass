@@ -110,7 +110,6 @@
             if (editor) editor.setData('');
             $('.text-danger').text('');
         });
-
         $('#blogForm').submit(function (e) {
             e.preventDefault();
             const title = $('#Title').val().trim();
@@ -140,7 +139,7 @@
                     return;
                 }
 
-                // Validate image dimensions
+                // ✅ Validate image dimensions asynchronously
                 const img = new Image();
                 img.src = URL.createObjectURL(imageFile);
 
@@ -150,7 +149,7 @@
                         return;
                     }
 
-                    // ✅ If everything is valid, submit form
+                    // ✅ Dimensions valid, submit form
                     submitForm(content);
                 };
 
@@ -158,16 +157,18 @@
                     showToast('Invalid image file.', 'bg-danger');
                     return;
                 };
+
             } else {
-                // No image uploaded, just submit
+                // No image uploaded, submit form directly
                 submitForm(content);
             }
         });
 
+
         // ✅ Separate function to submit form
-        function submitForm(description) {
+        function submitForm(content) {
             const formData = new FormData($('#blogForm')[0]);
-            formData.set('content', description);
+            formData.set('content', content);
 
             $.ajax({
                 url: '/admin/Blogs/Edit',

@@ -72,16 +72,16 @@ namespace TourTravel.Admin.Controllers
         }
 
         // ✅ Validate file size (max 5MB)
-        if (image.Length > 5 * 1024 * 1024)
-          return Json(new { success = false, message = "Image size must be less than 5MB." });
+        //if (image.Length > 5 * 1024 * 1024)
+        //  return Json(new { success = false, message = "Image size must be less than 5MB." });
 
-        // ✅ Validate dimensions
-        using (var stream = image.OpenReadStream())
-        using (var img = Image.FromStream(stream))
-        {
-          if (img.Width != 800 || img.Height != 600)
-            return Json(new { success = false, message = "Image dimensions must be 800x600." });
-        }
+        //// ✅ Validate dimensions
+        //using (var stream = image.OpenReadStream())
+        //using (var img = Image.FromStream(stream))
+        //{
+        //  if (img.Width != 800 || img.Height != 600)
+        //    return Json(new { success = false, message = "Image dimensions must be 800x600." });
+        //}
 
         // ✅ Check if SlugUrl already exists (case-insensitive)
         bool slugExists = await _db.About

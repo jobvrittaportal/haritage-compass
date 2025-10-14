@@ -59,11 +59,11 @@ namespace TourTravel.Admin.Controllers
 
     [HttpPost("edit/{id}")]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, FAQ model)
+    public IActionResult Edit( FAQ model)
     {
       if (ModelState.IsValid)
       {
-        var existing = _db.FAQ.Find(id);
+        var existing = _db.FAQ.Find(model.Id);
         if (existing == null)
           return NotFound();
 
