@@ -12,5 +12,8 @@
         public string? Instagram { get; set; }
         public string? LinkedIn { get; set; }
         public string? YouTube { get; set; }
+        public string? Introduction { get; set; }
+        public string? Biography { get; set; }
+
     }
 }

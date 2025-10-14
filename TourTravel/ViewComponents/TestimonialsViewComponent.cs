@@ -6,14 +6,14 @@ namespace TourTravel.ViewComponents
 {
     public class TestimonialsViewComponent(MyDbContext db) : ViewComponent
     {
-        public IViewComponentResult Invoke(int take = 6)
+        public IViewComponentResult Invoke(bool showheading, int take)
         {
             var testimonials = db.Testimonial.OrderByDescending(t => t.Id).Take(take).ToList();
 
             var viewModel = new TestimonialViewModel
             {
                 Testimonials = testimonials,
-                ShowHeading = true // or false depending on logic
+                ShowHeading = showheading // or false depending on logic
             };
 
             return View(viewModel);

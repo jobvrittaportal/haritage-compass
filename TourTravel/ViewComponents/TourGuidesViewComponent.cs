@@ -1,20 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
+using TourTravel.Models;
+using TourTravel.ViewModel;
 
 namespace TourTravel.ViewComponents
 {
-    //public class TourGuidesViewComponent(MyDbContext db) : ViewComponent
-    //{
-    //    public IViewComponentResult Invoke(int take = 4)
-    //    {
-    //        var guides = db.TourGuide.Take(take).ToList();
-    //        return View(guides);
-    //    }
-    //}
-    public class TourGuidesViewComponent : ViewComponent
+    public class TourGuidesViewComponent(MyDbContext db) : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(bool showHeading, int take )
         {
-            return View();
+            var TourGuides = db.TourGuideView.OrderByDescending(t => t.Id).Take(take).ToList();
+            foreach(var abc in TourGuides)
+            {
+                if (!string.IsNullOrEmpty(abc.ImageUrl))
+                {
+
+                }
+            }
+
+            var  viewModel = new TourGuideViewModel
+            {
+               TourGuides = TourGuides,
+                ShowHeading = showHeading // or false depending on logic
+            };
+            return View(viewModel);
         }
     }
 }

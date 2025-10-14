@@ -13,10 +13,8 @@
                     <div class="site-heading text-center">
                         <span class="site-title-tagline">Our Blog</span>
                         <h2 class="site-title">Latest News & Blog</h2>
-                        <p>
-                            It is a long established fact that a reader will be distracted by the readable content
-                            of a page when looking at its layout.
-                        </p>
+                    
+
                     </div>
                 </div>
            
@@ -44,77 +42,41 @@
                                     @item.Title
                                 </a>
                             </h5>
-                            <a class="blog-item-more" asp-controller="Blog" asp-action="SingleBlog">Read More <i class="far fa-long-arrow-right"></i></a>
+                            <a class="blog-item-more" asp-controller="Blog" asp-action="SingleBlog" asp-route-id = "@item.Id">Read More <i class="far fa-long-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
-            }
-            @* <div class="col-md-6 col-lg-4">
-                <div class="blog-item">
-                    <div class="blog-item-thumb">
-                        <img src="assets/img/blog/b.jpg" alt="Thumb">
-                    </div>
-                    <div class="blog-item-info">
-                        <div class="blog-item-meta">
-                            <ul>
-                                <li><i class="far fa-user"></i> Nancy Castdo</li>
-                                <li><i class="far fa-calendar-alt"></i> 09 May, 2024</li>
-                            </ul>
-                        </div>
-                        <h5>
-                            <a href="#" class="blog-item-title">
-                                There are many variations of passages
-                                available
-                            </a>
-                        </h5>
-                        <a class="blog-item-more" asp-controller="Blog" asp-action="SingleBlog" >Read More <i class="far fa-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="blog-item">
-                    <div class="blog-item-thumb">
-                        <img src="assets/img/blog/a.jpg" alt="Thumb">
-                    </div>
-                    <div class="blog-item-info">
-                        <div class="blog-item-meta">
-                            <ul>
-                                <li><i class="far fa-user"></i> Nancy Castdo</li>
-                                <li><i class="far fa-calendar-alt"></i> 09 May, 2024</li>
-                            </ul>
-                        </div>
-                        <h5>
-                            <a href="#" class="blog-item-title">
-                                There are many variations of passages
-                                available
-                            </a>
-                        </h5>
-                        <a class="blog-item-more" href="#">Read More <i class="far fa-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="blog-item">
-                    <div class="blog-item-thumb">
-                        <img src="assets/img/blog/c.png" alt="Thumb">
-                    </div>
-                    <div class="blog-item-info">
-                        <div class="blog-item-meta">
-                            <ul>
-                                <li><i class="far fa-user"></i> Nancy Castdo</li>
-                                <li><i class="far fa-calendar-alt"></i> 09 May, 2024</li>
-                            </ul>
-                        </div>
-                        <h5>
-                            <a href="#" class="blog-item-title">
-                                There are many variations of passages
-                                available
-                            </a>
-                        </h5>
-                        <a class="blog-item-more" href="#">Read More <i class="far fa-long-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div> *@
+            }      
         </div>
+        @if (!Model.ShowHeading)
+        {
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(ViewBag.Page <= 1 ? "disabled" : "")">
+                            <a class="page-link"
+                               @* href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page - 1 })" *@
+                            >Previous</a>
+                        </li>
+
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(ViewBag.Page == i ? "active" : "")">
+                                <a class="page-link"
+                                   @* href="@Url.Action("Index", new { search = ViewBag.Search, page = i })" *@
+                                >@i</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(ViewBag.Page >= ViewBag.TotalPages ? "disabled" : "")">
+                            <a class="page-link"
+                               @* href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page + 1 })" *@
+                            >Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        }
     </div>
 </div>

@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TourTravel.Models;
+using TourTravel.ViewModel;
 
 namespace TourTravel.Controllers
 {
-    public class PagesController : Controller
+    public class PagesController(MyDbContext db) : Controller
     {
+        private readonly MyDbContext db = db;
         public IActionResult AboutUs()
         {
             ViewBag.Title = "About Us";
@@ -34,11 +37,21 @@ namespace TourTravel.Controllers
             return View();
         }
 
-        public IActionResult GuideDetails()
+        public IActionResult GuideDetails(int id)
         {
             ViewBag.Title = "Guide Detail";
             ViewBag.Page = "Guide Detail";
-            return View();
+            var guide = db.TourGuideView.FirstOrDefault(g => g.Id == id);
+            if (guide == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new TourGuideDetail
+            {
+                TourGuide = guide
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Testimonials(bool showHeading)

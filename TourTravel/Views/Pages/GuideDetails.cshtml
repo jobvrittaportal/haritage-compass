@@ -1,4 +1,5 @@
-﻿@await Component.InvokeAsync("HeroSection")
+﻿@model TourTravel.ViewModel.TourGuideDetail
+@await Component.InvokeAsync("HeroSection")
 <!-- team single -->
 <div class="team-single pt-120 pb-80">
     <div class="container">
@@ -10,19 +11,36 @@
             </div>
             <div class="col-md-8">
                 <div class="team-details">
-                    <h3>Marie R Lippert</h3>
-                    <p class="mb-3 team-tagline"><strong>Tour Guide</strong></p>
-                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters packages and web page editors now usepackages and web page editors now use.</p>
+                    <h3>@Model.TourGuide.Name</h3>
+                    <p class="mb-3 team-tagline"><strong>@Model.TourGuide.Role</strong></p>
+                    <p>@Model.TourGuide.Introduction</p>
                     <div class="team-details-info">
                         <ul>
-                            <li><a href="#"><i class="far fa-envelope"></i> marie@example.com</a></li>
-                            <li><a href="#"><i class="far fa-phone"></i> +2 123 456 7892</a></li>
+                            <li><a href="#"><i class="far fa-envelope"></i> @Model.TourGuide.Email</a></li>
+                            <li><a href="#"><i class="far fa-phone"></i> @Model.TourGuide.Phone</a></li>
                         </ul>
                     </div>
                     <div class="team-details-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Facebook))
+                        {
+                            <a href="@Model.TourGuide.Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Twitter))
+                        {
+                            <a href="@Model.TourGuide.Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Instagram))
+                        {
+                            <a href="@Model.TourGuide.Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.LinkedIn))
+                        {
+                            <a href="@Model.TourGuide.LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.YouTube))
+                        {
+                            <a href="@Model.TourGuide.YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+                        }
                     </div>
                 </div>
             </div>
@@ -38,11 +56,11 @@
                 <div class="biography">
                     <h4 class="mb-3">Biography</h4>
                     <p class="mb-10">
-                        Sed ut perspiciatis unde omnis totam rem chitecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        @Model.TourGuide.Biography
                     </p>
-                    <p class="mb-10">
+                    @* <p class="mb-10">
                         All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.
-                    </p>
+                    </p> *@
                 </div>
             </div>
             <div class="col-md-5">

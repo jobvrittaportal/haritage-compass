@@ -216,7 +216,7 @@
 <!-- video area end -->
 
 <!-- guide-area -->
-@await Component.InvokeAsync("TourGuides", new { showHeading = true })
+@await Component.InvokeAsync("TourGuides", new { showHeading = true, take = 4 })
 <!-- guide-area ends -->
 
 <!-- cta area -->
@@ -232,7 +232,7 @@
 <!-- cta area end -->
 
 <!--Testimonials start-->
-@await Component.InvokeAsync("Testimonials", new { showHeading = true })
+@await Component.InvokeAsync("Testimonials", new { showheading = true, take = 4 })
 <!--Testimonials ends-->
 
 <!-- partner area -->
@@ -263,5 +263,6 @@
 <!-- partner area end -->
 
 <!-- Blog start -->
-@await Component.InvokeAsync("Blog", new { showHeading = true })
+@await Component.InvokeAsync("Blog", new { showHeading = true, take = 3 })
+
 <!-- Blog ends -->
