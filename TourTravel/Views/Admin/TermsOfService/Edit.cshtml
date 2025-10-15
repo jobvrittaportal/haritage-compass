@@ -92,15 +92,44 @@
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-        // ✅ Form validation
+       
+
+        // ✅ AJAX form submit
         $('#termsOfService').submit(function (e) {
+            e.preventDefault();
+
             const title = $('#Title').val().trim();
             const description = editor ? editor.getData().trim() : '';
 
             if (!title || !description) {
-                e.preventDefault();
-                showToast('Please fill in both Title and Description fields.', 'bg-danger');
+                showToast('Please fill in both Title and Description.', 'bg-danger');
+                return;
             }
+
+            // ✅ Prepare form data
+            const formData = new FormData(this);
+            formData.set('Description', description);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.success) {
+                        showToast(res.message, 'bg-success');
+                        setTimeout(() => {
+                            window.location.href = '/admin/TermsOfService'; // ✅ redirect after toast
+                        }, 2000);
+                    } else {
+                        showToast('Something went wrong.', 'bg-danger');
+                    }
+                },
+                error: function () {
+                    showToast('An error occurred while saving.', 'bg-danger');
+                }
+            });
         });
     </script>
 }
