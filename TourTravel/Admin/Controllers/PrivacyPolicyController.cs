@@ -42,8 +42,8 @@ namespace TourTravel.Admin.Controllers
 
       _db.PrivacyPolicy.Add(model);
       _db.SaveChanges();
-      TempData["Success"] = "Privacy Policy added successfully!";
-      return RedirectToAction("Index");
+      return Json(new { success = true, message = "Privacy Policy Added successfully!" });
+    //  return RedirectToAction("Index");
 
     }
 
@@ -71,8 +71,8 @@ namespace TourTravel.Admin.Controllers
         existing.Description = model.Description;
         _db.SaveChanges();
 
-        TempData["Success"] = "Privacy Policy updated successfully!";
-        return RedirectToAction("Index");
+        return Json(new { success = true, message = "Privacy Policy Updated successfully!" });
+       // return RedirectToAction("Index");
       }
 
       TempData["Error"] = "Failed to update Term Of Service.";

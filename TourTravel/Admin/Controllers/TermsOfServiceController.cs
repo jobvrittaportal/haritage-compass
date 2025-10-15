@@ -43,7 +43,7 @@ namespace TourTravel.Admin.Controllers
       _db.TermsOfService.Add(model);
       _db.SaveChanges();
       TempData["Success"] = "Term Of Service added successfully!";
-      return RedirectToAction("Index");
+      return Json(new { success = true, message = "Term Of Service added successfully!" });
 
     }
 
@@ -71,8 +71,8 @@ namespace TourTravel.Admin.Controllers
         existing.Description = model.Description;
         _db.SaveChanges();
 
-        TempData["Success"] = "Terms Of Privacy updated successfully!";
-        return RedirectToAction("Index");
+        return Json(new { success = true, message = "Term Of Service Updated successfully!" });
+      //  return RedirectToAction("Index");
       }
 
       TempData["Error"] = "Failed to update Term Of Service.";
