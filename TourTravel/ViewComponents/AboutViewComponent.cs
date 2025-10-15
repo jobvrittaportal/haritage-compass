@@ -8,7 +8,7 @@ namespace TourTravel.ViewComponents
         private readonly MyDbContext db = db;
         public IViewComponentResult Invoke()
         {
-            var about = db.About.FirstOrDefault();
+            var about = db.About.OrderByDescending(f=>f.Id).FirstOrDefault();
             var viewModel = new About
             {
                 Title = about?.Title,
