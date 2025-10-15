@@ -1,0 +1,109 @@
+@using System.Text.RegularExpressions
+
+@model IEnumerable<TourTravel.Models.WebsiteSetting>
+@{
+    ViewData["Title"] = "Website Setting";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Left side -->
+        <h4 class="mb-0">Website Setting</h4>
+
+        <!-- Right side (search + New button) -->
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 170px;">
+                    <input type="text" name="search" value="@ViewBag.Search"
+                           class="form-control" placeholder="Search" />
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            <a href="@Url.Action("Create", "WebsiteSetting")" class="btn btn-primary">
+                <i class="fa fa-plus"></i> New
+            </a>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="">
+                <tr>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Facebook</th>
+                    <th>Twitter</th>
+                    <th>Instagram</th>
+                    <th>LinkedIn</th>
+                    <th>Timing</th>
+                    <th>Address</th>
+                    <th style="width: 130px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            <td>@item.Phone</td>
+                            <td>@item.Facebook</td>
+                            <td>@item.Twitter</td>
+                            <td>@item.Instagram</td>
+                            <td>@item.LinkedIn</td>
+                            <td>@item.Timing</td>
+                            <td>@item.Address</td>
+                          
+
+                            <td class="text-center">
+                                <!-- Edit Button -->
+
+                                <a href="@Url.Action("Edit", "WebsiteSetting", new { id = item.Id })"
+                                   class="btn btn-icon btn-sm btn-primary me-1"
+                                   title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+
+
+                                <!-- Delete Button -->
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post"
+                                      class="d-inline-block" onsubmit="return confirm('Are you sure?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-icon btn-sm btn-danger" title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No Data found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        $(function () {
+            // Initialize Bootstrap tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+}

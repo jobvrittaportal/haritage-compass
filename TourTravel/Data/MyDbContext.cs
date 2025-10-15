@@ -24,5 +24,6 @@ public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, stri
   public DbSet<City> City { get; set; }
   public DbSet<Country> Country { get; set; }
   public DbSet<Package> Package { get; set; }
+  public DbSet<WebsiteSetting> WebsiteSetting { get; set; }
 
 }

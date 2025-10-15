@@ -15,5 +15,8 @@ namespace TourTravel.Models
     public int? ReviewsCount { get; set; }
     public required int MaxPerson { get; set; }
     public string? ImageUrl { get; set; }
+    public required string MetaTitle { get; set; }
+    public required string MetaDescription { get; set; }
+    public string? SlugUrl { get; set; }
   }
 }
