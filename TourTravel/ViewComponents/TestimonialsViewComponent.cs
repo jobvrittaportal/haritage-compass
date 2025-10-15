@@ -3,7 +3,7 @@ using TourTravel.Models;
 using TourTravel.ViewModel;
 
 namespace TourTravel.ViewComponents
-{
+{ 
     public class TestimonialsViewComponent(MyDbContext db) : ViewComponent
     {
         public IViewComponentResult Invoke(bool showheading, int take)
@@ -20,11 +20,4 @@ namespace TourTravel.ViewComponents
         }
     }
 
-    //public class TestimonialsViewComponent : ViewComponent
-    //{
-    //    public IViewComponentResult Invoke()
-    //    {
-    //        return View();
-    //    }
-    //}
 }

@@ -1,6 +1,6 @@
 ﻿@await Component.InvokeAsync("HeroSection")
 @await Component.InvokeAsync("About", new { showHeading = false })
-@await Component.InvokeAsync("Testimonials", new { showHeading = true })
+@await Component.InvokeAsync("Testimonials", new { showHeading = true, take = 6 })
 <!-- counter area -->
 <div class="counter-area pt-50 pb-50">
     <div class="container">
