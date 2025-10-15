@@ -1,0 +1,272 @@
+@model TourTravel.Models.Package
+
+@{
+    ViewData["Title"] = "Add Package";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa-solid fa-newspaper me-2"></i>Add Package</h5>
+            <a href="@Url.Action("Index", "Package")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form id="submit" enctype="multipart/form-data" method="post" asp-action="Create" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+                    <input asp-for="Name" class="form-control" id="Name" placeholder="Enter Name" required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- ✅ Neat Dropdowns: Country / State / City -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Country <span class="text-danger">*</span></label>
+                        <select id="CountryId" name="CountryId" class="form-select" required>
+                            <option value="">-- Select Country --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">State <span class="text-danger">*</span></label>
+                        <select id="StateId" name="StateId" class="form-select" required disabled>
+                            <option value="">-- Select State --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">City <span class="text-danger">*</span></label>
+                        <select id="CityId" name="CityId" class="form-select" required disabled>
+                            <option value="">-- Select City --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Duration <span class="text-danger">*</span></label>
+                    <input asp-for="Duration" class="form-control" id="Duration" placeholder="Enter Duration" required />
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Price <span class="text-danger">*</span></label>
+                    <input asp-for="Price" class="form-control" id="Price" placeholder="Enter Price" required />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">ReviewsCount <span class="text-danger">*</span></label>
+                    <input asp-for="ReviewsCount" class="form-control" id="ReviewsCount" placeholder="Enter ReviewsCount" required />
+                    <span asp-validation-for="ReviewsCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">MaxPerson <span class="text-danger">*</span></label>
+                    <input asp-for="MaxPerson" class="form-control" id="MaxPerson" placeholder="Enter MaxPerson" required />
+                    <span asp-validation-for="MaxPerson" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Meta Title <span class="text-danger">*</span></label>
+                    <input asp-for="MetaTitle" class="form-control" id="MetaTitle" placeholder="Enter meta title" required />
+                    <span asp-validation-for="MetaTitle" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Meta Description <span class="text-danger">*</span></label>
+                    <textarea asp-for="MetaDescription" id="MetaDescription" class="form-control" rows="3" placeholder="Enter meta description" required></textarea>
+                    <span asp-validation-for="MetaDescription" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Slug URL <span class="text-danger">*</span></label>
+                    <input asp-for="SlugUrl" class="form-control" id="SlugUrl" placeholder="Enter slug (unique)" required />
+                    <span asp-validation-for="SlugUrl" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
+                    <textarea asp-for="Desc" id="Desc" class="form-control" rows="6" placeholder="Enter Package content" required></textarea>
+                    <span asp-validation-for="Desc" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Upload Image (800×600) <span class="text-danger">*</span></label>
+                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" id="clearBtn" class="btn btn-outline-secondary">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#Desc'))
+            .then(newEditor => editor = newEditor)
+            .catch(error => console.error(error));
+
+        function showToast(message, type = 'bg-primary') {
+            const toastId = 'toast' + Date.now();
+            const html = `<div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2">
+                                        <div class="d-flex">
+                                            <div class="toast-body fw-semibold">${message}</div>
+                                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                        </div>
+                                    </div>`;
+            $('#toastContainer').prepend(html);
+            const el = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(el, { delay: 3000 });
+            toast.show();
+            el.addEventListener('hidden.bs.toast', () => el.remove());
+        }
+
+        $('#clearBtn').click(() => {
+            $('#submit')[0].reset();
+            if (editor) editor.setData('');
+            $('.text-danger').text('');
+        });
+
+        $('#submit').submit(function (e) {
+            e.preventDefault();
+            const name = $('#Name').val().trim();
+            const duration = $('#Duration').val().trim();
+            const price = $('#Price').val().trim();
+            const reviewsCount = $('#ReviewsCount').val().trim();
+            const maxPerson = $('#MaxPerson').val().trim();
+            const metaTitle = $('#MetaTitle').val().trim();
+            const metaDescription = $('#MetaDescription').val().trim();
+            const slug = $('#SlugUrl').val().trim();
+            const cityId = $('#CityId').val();
+
+            const desc = editor ? editor.getData().trim() : '';
+
+            if (!name || !duration || !price || !reviewsCount || !maxPerson || !metaTitle || !metaDescription || !slug || !desc || !cityId) {
+                showToast('Please fill all required fields.', 'bg-danger');
+                return;
+            }
+
+            const imageFile = $('#image')[0].files[0];
+            if (imageFile) {
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!allowedTypes.includes(imageFile.type)) {
+                    showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
+                    return;
+                }
+
+                if (imageFile.size > maxSize) {
+                    showToast('Image size must be less than 5MB.', 'bg-danger');
+                    return;
+                }
+
+                const img = new Image();
+                img.src = URL.createObjectURL(imageFile);
+
+                img.onload = function () {
+                    if (img.width !== 800 || img.height !== 600) {
+                        showToast('Image dimensions must be 800x600.', 'bg-danger');
+                        return;
+                    }
+                    submitForm(desc);
+                };
+
+                img.onerror = function () {
+                    showToast('Invalid image file.', 'bg-danger');
+                    return;
+                };
+            } else {
+                submitForm(desc);
+            }
+        });
+
+        function submitForm(desc) {
+            const formData = new FormData($('#submit')[0]);
+            formData.set('desc', desc);
+
+            $.ajax({
+                url: '/admin/Package/Create',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.success) {
+                        showToast(res.message, 'bg-success');
+                        setTimeout(() => window.location.href = '/admin/Package', 1500);
+                    } else {
+                        showToast(res.message, 'bg-danger');
+                    }
+                },
+                error: function () {
+                    showToast('An error occurred while saving.', 'bg-danger');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            // Load countries
+            $.get('/admin/location/countries', function (countries) {
+                const countrySelect = $('#CountryId');
+                countries.forEach(c => countrySelect.append(`<option value="${c.id}">${c.name}</option>`));
+            });
+
+            // Load states on country change
+            $('#CountryId').change(function () {
+                const countryId = $(this).val();
+                const stateSelect = $('#StateId');
+                const citySelect = $('#CityId');
+                stateSelect.html('<option value="">-- Select State --</option>');
+                citySelect.html('<option value="">-- Select City --</option>');
+                citySelect.prop('disabled', true);
+
+                if (countryId) {
+                    $.get(`/admin/location/states/${countryId}`, function (states) {
+                        stateSelect.prop('disabled', false);
+                        states.forEach(s => stateSelect.append(`<option value="${s.id}">${s.name}</option>`));
+                    });
+                } else {
+                    stateSelect.prop('disabled', true);
+                }
+            });
+
+            // Load cities on state change
+            $('#StateId').change(function () {
+                const stateId = $(this).val();
+                const citySelect = $('#CityId');
+                citySelect.html('<option value="">-- Select City --</option>');
+
+                if (stateId) {
+                    $.get(`/admin/location/cities/${stateId}`, function (cities) {
+                        citySelect.prop('disabled', false);
+                        cities.forEach(c => citySelect.append(`<option value="${c.id}">${c.name}</option>`));
+                    });
+                } else {
+                    citySelect.prop('disabled', true);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,181 @@
+@model TourTravel.Models.WebsiteSetting
+@{
+    ViewData["Title"] = "Add Website Setting";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header text-black d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Add Website Setting</h5>
+            <a href="@Url.Action("Index", "WebsiteSetting")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form id="submit" asp-action="Create" method="post" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label><span class="text-danger">*</span>
+                    <input asp-for="Email" id="Email" class="form-control" placeholder="Enter Email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Phone</label><span class="text-danger">*</span>
+                    <input asp-for="Phone" id="Phone" class="form-control" rows="5" placeholder="Enter Phone" required/>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Facebook</label><span class="text-danger">*</span>
+                    <input asp-for="Facebook" id="Facebook" class="form-control" rows="5" placeholder="Enter Facebook" required/>
+                    <span asp-validation-for="Facebook" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Twitter</label><span class="text-danger">*</span>
+                    <input asp-for="Twitter" id="Twitter" class="form-control" rows="5" placeholder="Enter Twitter" required />
+                    <span asp-validation-for="Twitter" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Instagram</label><span class="text-danger">*</span>
+                    <input asp-for="Instagram" id="Instagram" class="form-control" rows="5" placeholder="Enter Instagram" required></input>
+                    <span asp-validation-for="Instagram" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">LinkedIn</label><span class="text-danger">*</span>
+                    <input asp-for="LinkedIn" id="LinkedIn" class="form-control" rows="5" placeholder="Enter LinkedIn" required></input>
+                    <span asp-validation-for="LinkedIn" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">YouTube</label><span class="text-danger">*</span>
+                    <input asp-for="YouTube" id="YouTube" class="form-control" rows="5" placeholder="Enter YouTube" required></input>
+                    <span asp-validation-for="YouTube" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Timing</label><span class="text-danger">*</span>
+                    <input asp-for="Timing" id="Timing" class="form-control" rows="5" placeholder="Enter Timing" required></input>
+                    <span asp-validation-for="Timing" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Address</label><span class="text-danger">*</span>
+                    <input asp-for="Address" id="Address" class="form-control" rows="5" placeholder="Enter Address" required></input>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <button type="submit" class="btn btn-success">
+                        Save
+                    </button>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">
+                        Clear
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Toast Container -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+    <script>
+      
+        // ✅ Toast function
+        function showToast(message, type = 'bg-primary') {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
+                                    role="alert" aria-live="assertive" aria-atomic="true">
+                                    <div class="d-flex">
+                                        <div class="toast-body fw-semibold">${message}</div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                            data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                </div>`;
+            $('#toastContainer').prepend(toastHtml);
+            const toastEl = document.getElementById(toastId);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        }
+
+        $('#clearBtn').click(() => {
+            $('#Email').val('');
+            $('#Phone').val('');
+            $('#Facebook').val('');
+            $('#Twitter').val('');
+            $('#Instagram').val('');
+            $('#Timing').val('');
+            $('#LinkedIn').val('');
+            $('#Address').val('');
+            $('.text-danger').text('');
+            showToast('Form cleared successfully.', 'bg-info');
+        });
+
+        // ✅ AJAX form submit
+        $('#submit').submit(function (e) {
+            e.preventDefault();
+
+            const email = $('#Email').val().trim();
+            const phone = $('#Phone').val().trim();
+            const facebook = $('#Facebook').val().trim();
+            const twitter = $('#Twitter').val().trim();
+            const instagram = $('#Instagram').val().trim();
+            const timing = $('#Timing').val().trim();
+            const linkedIn = $('#LinkedIn').val().trim();
+            const address = $('#Address').val().trim();
+
+            if (!email || !phone || !facebook || !twitter || !instagram || !timing || !linkedIn || !address) {
+                showToast('Please fill all required field.', 'bg-danger');
+                return;
+            }
+
+            // ✅ Prepare form data
+            const formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.success) {
+                        showToast(res.message, 'bg-success');
+                        setTimeout(() => {
+                            window.location.href = '/admin/WebsiteSetting'; // ✅ redirect after toast
+                        }, 2000);
+                    } else {
+                        showToast('Something went wrong.', 'bg-danger');
+                    }
+                },
+                error: function () {
+                    showToast('An error occurred while saving.', 'bg-danger');
+                }
+            });
+        });
+    </script>
+}
