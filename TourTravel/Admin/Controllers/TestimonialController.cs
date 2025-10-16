@@ -33,26 +33,35 @@ namespace TourTravel.Admin.Controllers
     // ✅ Upload Image
     [HttpPost("create")]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Testimonial model, IFormFile? imageUrl)
+    public IActionResult Create(Testimonial model, IFormFile? image)
     {
-      if (imageUrl != null && imageUrl.Length > 0)
+
+      var existingAuthor = _db.Testimonial
+        .FirstOrDefault(t => t.AuthorName.Trim().ToLower() == model.AuthorName.Trim().ToLower());
+
+      if (existingAuthor != null)
+      {
+        return Json(new { success = false, message = "This author already exists!" });
+      }
+
+      if (image != null && image.Length > 0)
       {
         string folderPath = Path.Combine(_env.WebRootPath, "Testimonial");
         Directory.CreateDirectory(folderPath);
 
-        string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(imageUrl.FileName)}";
+        string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
         string filePath = Path.Combine(folderPath, uniqueFileName);
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
-          imageUrl.CopyTo(stream);
+          image.CopyTo(stream);
         }
 
         model.ImageUrl = "/Testimonial/" + uniqueFileName;
 
         _db.Testimonial.Add(model);
         _db.SaveChanges();
-        TempData["Success"] = "Image uploaded successfully!";
+        return Json(new { success = true, message = "  Added successfully!" });
       }
       else
       {
@@ -60,7 +69,7 @@ namespace TourTravel.Admin.Controllers
         return View("~/Views/Admin/Testimonial/Index.cshtml", model);
       }
 
-      return RedirectToAction("Index");
+     // return RedirectToAction("Index");
     }
 
     // ✅ Edit Page
@@ -73,32 +82,38 @@ namespace TourTravel.Admin.Controllers
     }
 
     // ✅ Update Image
-    [HttpPost("edit/{id}")]
+    [HttpPost("edit")]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, Testimonial model, IFormFile? newImage)
+    public IActionResult Edit( Testimonial model, IFormFile? image)
     {
-      var existing = _db.Testimonial.Find(id);
+      var existing = _db.Testimonial.Find(model.Id);
       if (existing == null) return NotFound();
-        
 
-      // ✅ Update basic fields
+      var duplicateAuthor = _db.Testimonial
+          .FirstOrDefault(t => t.AuthorName.Trim().ToLower() == model.AuthorName.Trim().ToLower() && t.Id != model.Id);
+
+      if (duplicateAuthor != null)
+      {
+        return Json(new { success = false, message = "This author already exists!" });
+      }
+
       existing.AuthorName = model.AuthorName;
       existing.Role = model.Role;
       existing.Quote = model.Quote;
       existing.Rating = model.Rating;
    
 
-      if (newImage != null && newImage.Length > 0)
+      if (image != null && image.Length > 0)
       {
         string folderPath = Path.Combine(_env.WebRootPath, "Testimonial");
         Directory.CreateDirectory(folderPath);
 
-        string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(newImage.FileName)}";
+        string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
         string filePath = Path.Combine(folderPath, uniqueFileName);
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
-          newImage.CopyTo(stream);
+          image.CopyTo(stream);
         }
 
         // Delete old image
@@ -113,8 +128,8 @@ namespace TourTravel.Admin.Controllers
       }
 
       _db.SaveChanges();
-      TempData["Success"] = "Updated successfully!";
-      return RedirectToAction("Index");
+      return Json(new { success = true, message = "  Updated successfully!" });
+    //  return RedirectToAction("Index");
     }
 
     // ✅ Delete
@@ -135,7 +150,7 @@ namespace TourTravel.Admin.Controllers
 
         _db.Testimonial.Remove(image);
         _db.SaveChanges();
-        TempData["Success"] = "Testimonial deleted successfully!";
+        TempData["Success"] = " deleted successfully.";
       }
 
       return RedirectToAction("Index");

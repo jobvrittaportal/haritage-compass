@@ -69,6 +69,10 @@ namespace TourTravel.Admin.Controllers
         if (slugExists)
           return Json(new { success = false, message = "Slug URL already exists." });
 
+        bool titleexist = await _db.Blog.AnyAsync(b => b.Title.ToLower() == model.Title.ToLower());
+        if (titleexist)
+          return Json(new { success = false, message = "already exists." });
+
 
         // ✅ Validate file size (max 5MB)
         if (image.Length > 5 * 1024 * 1024)
@@ -131,6 +135,16 @@ namespace TourTravel.Admin.Controllers
             .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
         if (slugExists)
           return Json(new { success = false, message = "Slug URL already exists." });
+
+
+        bool titleexist = await _db.Blog
+     .AnyAsync(b => b.Id != model.Id && b.Title.ToLower() == model.Title.ToLower());
+
+        if (titleexist)
+        {
+          return Json(new { success = false, message = "This Title already exists. Please use a different one." });
+        }
+
 
         // ✅ Validate file size (max 5MB)
         //if (image.Length > 5 * 1024 * 1024)
