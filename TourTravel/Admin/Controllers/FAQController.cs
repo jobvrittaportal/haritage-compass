@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
@@ -39,8 +40,17 @@ namespace TourTravel.Admin.Controllers
     [ValidateAntiForgeryToken]
     public IActionResult Create(FAQ model)
     {
-      
-        _db.FAQ.Add(model);
+      //var existingFAQ = _db.FAQ
+      // .FirstOrDefault(f => f.Question.Trim().ToLower() == model.Question.Trim().ToLower());
+
+      //if (existingFAQ != null)
+      //{
+      //  return Json(new { success = false, message = " already exists!" });
+      ////  return RedirectToAction("Index");
+      //}
+
+
+      _db.FAQ.Add(model);
         _db.SaveChanges();
         TempData["Success"] = "FAQ added successfully!";
         return RedirectToAction("Index");
@@ -66,6 +76,16 @@ namespace TourTravel.Admin.Controllers
         var existing = _db.FAQ.Find(model.Id);
         if (existing == null)
           return NotFound();
+
+       // var duplicate = _db.FAQ
+       //  .FirstOrDefault(f => f.Question.Trim().ToLower() == model.Question.Trim().ToLower()
+       //                       && f.Id != model.Id);
+
+       // if (duplicate != null)
+       // {
+       //   return Json(new { success = false, message = " already exists!" });
+       ////   return RedirectToAction("Index");
+       // }
 
         existing.Question = model.Question;
         existing.Answer = model.Answer;

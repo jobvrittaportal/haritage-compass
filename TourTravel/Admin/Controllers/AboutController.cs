@@ -66,6 +66,15 @@ namespace TourTravel.Admin.Controllers
           return Json(new { success = false, message = "Please fill all required fields." });
         }
 
+
+        var existingTitle = _db.About
+    .FirstOrDefault(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower());
+
+        if (existingTitle != null)
+        {
+          return Json(new { success = false, message = " already exists!" });
+        }
+
         if (image == null || image.Length == 0)
         {
           return Json(new { success = false, message = "Please upload an image for the About section." });
@@ -147,6 +156,15 @@ namespace TourTravel.Admin.Controllers
         {
           return Json(new { success = false, message = "Slug URL already exists. Please use a different one." });
         }
+
+        bool titleexist = await _db.About
+           .AnyAsync(b => b.Id != model.Id && b.Title.ToLower() == model.Title.ToLower());
+
+        if (titleexist)
+        {
+          return Json(new { success = false, message = "This Title already exists. Please use a different one." });
+        }
+
 
         // ✅ Validate file size (max 5MB)
         //if (image.Length > 5 * 1024 * 1024)

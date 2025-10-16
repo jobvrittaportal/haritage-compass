@@ -1,3 +1,5 @@
+@using System.Text.RegularExpressions
+
 @model IEnumerable<TourTravel.Models.Testimonial>
 @{
     ViewData["Title"] = "Testimonial";
@@ -5,22 +7,40 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3 align-items-center">
-        <h3>Testimonial</h3>
-        <a href="@Url.Action("Create", "Testimonial")" class="btn btn-success">
-            <i class="fa-solid fa-plus me-1"></i> Add New
-        </a>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Left side -->
+        <h4 class="mb-0">Testimonial</h4>
+
+        <!-- Right side (search + New button) -->
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 170px;">
+                    <input type="text" name="search" value="@ViewBag.Search"
+                           class="form-control" placeholder="Search" />
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            <a href="@Url.Action("Create", "Testimonial")" class="btn btn-primary">
+                <i class="fa fa-plus"></i> New
+            </a>
+        </div>
     </div>
+
 
     <div class="table-responsive">
         <table class="table table-hover table-bordered align-middle">
-            <thead class="table-dark">
+            <thead class="">
                 <tr>
                     <th>AuthorName</th>
                     <th>Role</th>
                     <th>Rating</th>
                     <th>Quote</th>
                     <th>Image</th>
+
                     <th style="width: 130px;">Actions</th>
                 </tr>
             </thead>
@@ -33,22 +53,25 @@
                             <td>@item.AuthorName</td>
                             <td>@item.Role</td>
                             <td>@item.Rating</td>
-                            <td>@item.Quote</td>
+                            <td data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="@Regex.Replace(item.Quote ?? "", "<.*?>", string.Empty)">
+                                @{
+                                    var plainText = Regex.Replace(item.Quote ?? "", "<.*?>", string.Empty);
+                                }
+                                @(plainText.Length > 50 ? plainText.Substring(0, 50) + "..." : plainText)
+                            </td>
                             <td>
                                 @if (!string.IsNullOrEmpty(item.ImageUrl))
                                 {
-                                    <img src="@item.ImageUrl" alt="Image" style="width:100px;height:60px;object-fit:cover;" />
-                                }
-                                else
-                                {
-                                    <span class="text-muted">No image</span>
+                                    <img src="@item.ImageUrl" alt="Blog Image" width="50" height="30" class="rounded" />
                                 }
                             </td>
+
                             <td class="text-center">
                                 <!-- Edit Button -->
 
                                 <a href="@Url.Action("Edit", "Testimonial", new { id = item.Id })"
-                                   class="btn btn-icon btn-sm btn-warning me-1"
+                                   class="btn btn-icon btn-sm btn-primary me-1"
                                    title="Edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
@@ -70,7 +93,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="3" class="text-center text-muted">No Image found.</td>
+                        <td colspan="3" class="text-center text-muted">No result found.</td>
                     </tr>
                 }
             </tbody>
@@ -80,13 +103,12 @@
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ✅ CKEditor 5 -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
-
-        $('[data-bs-toggle="tooltip"]').tooltip();
+        $(function () {
+            // Initialize Bootstrap tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
 
     </script>
 }
