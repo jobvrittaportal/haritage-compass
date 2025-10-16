@@ -1,0 +1,96 @@
+﻿@model IEnumerable<TourTravel.Models.HeroSlider>
+@{
+    ViewData["Title"] = "Hero Sliders";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Hero Sliders</h4>
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 200px;">
+                    <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search title/subtitle" />
+                    <button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+            <a href="@Url.Action("Create", "HeroSlider")" class="btn btn-primary ms-2"><i class="fa fa-plus"></i> New</a>
+        </div>
+    </div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>SubTitle</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Rotation Time</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr id="sliderRow_@item.Id">
+                    <td>@item.Title</td>
+                    <td>@item.SubTitle</td>
+                    <td>@Html.Raw(item.Description)</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Image))
+                        {
+                            <img src="@item.Image" alt="Slider" width="100" />
+                        }
+                    </td>
+                    <td>@item.RotationTime sec</td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Edit", "HeroSlider", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        @Html.AntiForgeryToken()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination justify-content-center mt-3">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                    <a class="page-link" href="?page=@i&search=@ViewBag.Search">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+@section Scripts {
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to delete this slider?')) return;
+
+                const id = btn.dataset.id;
+                const res = await fetch(`/admin/HeroSlider/Delete/${id}`, {
+                    method: 'POST',
+                    headers: { 'RequestVerificationToken': token }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    document.getElementById(`sliderRow_${id}`).remove();
+                    alert('Hero slider deleted!');
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,170 @@
+﻿@model TourTravel.Models.Destinations
+
+@{
+    ViewData["Title"] = "Edit Destination";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Destination</h5>
+            <a href="@Url.Action("Index", "Destination")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form id="destinationEditForm" enctype="multipart/form-data" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" id="Id" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Destination Name <span class="text-danger">*</span></label>
+                    <input asp-for="DestinationName" class="form-control" id="DestinationName" required />
+                    <span asp-validation-for="DestinationName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Destination Info</label>
+                    <textarea asp-for="DestinationInfo" id="DestinationInfo" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Upload New Image (800×600)</label>
+                    <input type="file" name="DestinationImage" id="DestinationImage" class="form-control" accept="image/*" />
+                    @if (!string.IsNullOrEmpty(Model.DestinationImgUrl))
+                    {
+                        <div class="mt-2">
+                            <label class="form-label">Current Image:</label><br />
+                            <img src="@Model.DestinationImgUrl" alt="Current Image" style="max-width: 220px; border-radius: 8px;" />
+                        </div>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Starting Price</label>
+                    <input asp-for="StartingPrice" class="form-control" id="StartingPrice" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Map URL</label>
+                    <input asp-for="MapUrl" class="form-control" id="MapUrl" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Meta Title <span class="text-danger">*</span></label>
+                    <input asp-for="MetaTitle" class="form-control" id="MetaTitle" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Meta Description <span class="text-danger">*</span></label>
+                    <textarea asp-for="MetaDescription" id="MetaDescription" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Slug URL</label>
+                    <input asp-for="SlugUrl" class="form-control" id="SlugUrl" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mb-3">
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <button type="button" id="clearBtn" class="btn btn-outline-secondary">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let editor;
+
+        //  Initialize CKEditor for Description only
+        ClassicEditor
+            .create(document.querySelector('#DestinationInfo'))
+            .then(newEditor => editor = newEditor)
+            .catch(error => console.error(error));
+
+        // Toast helper
+        function showToast(message, type = 'bg-primary') {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body fw-semibold">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>`;
+            document.getElementById('toastContainer').insertAdjacentHTML('afterbegin', toastHtml);
+            const toastEl = document.getElementById(toastId);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        }
+
+        // Clear form
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('destinationEditForm').reset();
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+        });
+
+        // Form submit with Fetch API
+        document.getElementById('destinationEditForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('DestinationName').value.trim();
+            const metaTitle = document.getElementById('MetaTitle').value.trim();
+            const metaDescription = document.getElementById('MetaDescription').value.trim();
+
+            if (!name || !metaTitle || !metaDescription) {
+                showToast('Please fill all required fields.', 'bg-danger');
+                return;
+            }
+
+            const imageFile = document.getElementById('DestinationImage').files[0];
+            if (imageFile) {
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                if (!allowedTypes.includes(imageFile.type)) {
+                    showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
+                    return;
+                }
+            }
+
+            const formData = new FormData(document.getElementById('destinationEditForm'));
+
+            // Anti-forgery token
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            try {
+                const response = await fetch('/admin/Destination/Edit', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'bg-success');
+                    setTimeout(() => window.location.href = '/admin/Destination', 1200);
+                } else {
+                    showToast(result.message, 'bg-danger');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('An error occurred while updating.', 'bg-danger');
+            }
+        });
+    </script>
+}

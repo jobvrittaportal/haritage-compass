@@ -1,0 +1,126 @@
+﻿@model IEnumerable<TourTravel.Models.TourGuideView>
+@{
+    ViewData["Title"] = "Tour Guides";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Tour Guides</h4>
+
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 200px;">
+                    <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search name/email" />
+                    <button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+            <a href="@Url.Action("Create", "TourGuide")" class="btn btn-primary ms-2"><i class="fa fa-plus"></i> New</a>
+        </div>
+    </div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Image</th>
+                <th>Social Links</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr id="guideRow_@item.Id">
+                    <td>@item.Name</td>
+                    <td>@item.Role</td>
+                    <td>@item.Email</td>
+                    <td>@item.Phone</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="Guide" width="60" height="60" class="rounded-circle" />
+                        }
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">Links</button>
+                            <ul class="dropdown-menu">
+                                @if (!string.IsNullOrEmpty(item.Facebook))
+                                {
+                                    <li><a class="dropdown-item" href="@item.Facebook" target="_blank">Facebook</a></li>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Twitter))
+                                {
+                                    <li><a class="dropdown-item" href="@item.Twitter" target="_blank">Twitter</a></li>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Instagram))
+                                {
+                                    <li><a class="dropdown-item" href="@item.Instagram" target="_blank">Instagram</a></li>
+                                }
+                                @if (!string.IsNullOrEmpty(item.LinkedIn))
+                                {
+                                    <li><a class="dropdown-item" href="@item.LinkedIn" target="_blank">LinkedIn</a></li>
+                                }
+                                @if (!string.IsNullOrEmpty(item.YouTube))
+                                {
+                                    <li><a class="dropdown-item" href="@item.YouTube" target="_blank">YouTube</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Edit", "TourGuide", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        @Html.AntiForgeryToken()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center mt-3">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                    <a class="page-link" href="?page=@i&search=@ViewBag.Search">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+@section Scripts {
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to delete this guide?')) return;
+
+                const id = btn.dataset.id;
+                const res = await fetch(`/admin/TourGuide/Delete/${id}`, {
+                    method: 'POST',
+                    headers: { 'RequestVerificationToken': token }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    document.getElementById(`guideRow_${id}`).remove();
+                    alert('Tour guide deleted!');
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+    </script>
+}

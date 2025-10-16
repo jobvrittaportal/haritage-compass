@@ -1,0 +1,104 @@
+﻿@model TourTravel.Models.TourGuideView
+@{
+    ViewData["Title"] = "Edit Tour Guide";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa fa-edit me-2"></i>Edit Tour Guide</h5>
+            <a href="@Url.Action("Index", "TourGuide")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Role <span class="text-danger">*</span></label>
+                        <input asp-for="Role" class="form-control" required/>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                        <input asp-for="Email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Phone <span class="text-danger">*</span></label>
+                        <input asp-for="Phone" class="form-control" required />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Facebook</label>
+                        <input asp-for="Facebook" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Twitter</label>
+                        <input asp-for="Twitter" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Instagram</label>
+                        <input asp-for="Instagram" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">LinkedIn</label>
+                        <input asp-for="LinkedIn" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">YouTube</label>
+                        <input asp-for="YouTube" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Current Image</label><br />
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" width="150" class="rounded mb-2" />
+                        }
+                        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Introduction</label>
+                        <textarea asp-for="Introduction" class="form-control" id="Introduction"></textarea>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Biography</label>
+                        <textarea asp-for="Biography" class="form-control" id="Biography"></textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <a href="@Url.Action("Index", "TourGuide")" class="btn btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor.create(document.querySelector('#Introduction')).catch(console.error);
+        ClassicEditor.create(document.querySelector('#Biography')).catch(console.error);
+    </script>
+}
