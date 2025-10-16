@@ -1,0 +1,223 @@
+﻿@model IEnumerable<TourTravel.Models.Destinations>
+
+@{
+    ViewData["Title"] = "Destinations";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Destinations</h4>
+
+        <div class="d-flex align-items-center">
+            <form method="get" asp-action="Index" class="me-2">
+                <div class="input-group" style="width: 200px;">
+                    <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by name or slug" />
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+            <a href="@Url.Action("Create", "Destination")" class="btn btn-primary ms-2"><i class="fa fa-plus"></i> New</a>
+        </div>
+    </div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Starting Price</th>
+                <th>Slug</th>
+                <th>Image</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr id="destinationRow_@item.Id">
+                    <td>@item.DestinationName</td>
+                    <td>@(item.StartingPrice?.ToString() ?? "-")</td>
+                    <td>@item.SlugUrl</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.DestinationImgUrl))
+                        {
+                            <img src="@item.DestinationImgUrl" alt="Dest Image" width="60" height="40" class="rounded" />
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Action("Edit", "Destination", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-info me-1 btn-manage-gallery" data-id="@item.Id" title="Manage Gallery">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger btn-delete-destination" data-id="@item.Id">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        @Html.AntiForgeryToken()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(ViewBag.Page <= 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page - 1 })">Previous</a>
+                </li>
+
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.Page == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { search = ViewBag.Search, page = i })">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(ViewBag.Page >= ViewBag.TotalPages ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { search = ViewBag.Search, page = ViewBag.Page + 1 })">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+<!-- Gallery Modal (same as before) -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Manage Gallery</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="galleryAlerts"></div>
+                <form id="galleryForm" enctype="multipart/form-data">
+                    <input type="hidden" id="galleryDestinationId" name="destinationId" />
+                    <div class="mb-3">
+                        <label class="form-label">Upload Images (multiple)</label>
+                        <input type="file" id="galleryFiles" name="galleryFiles" class="form-control" accept="image/*" multiple />
+                    </div>
+                    <div class="d-flex justify-content-end mb-3">
+                        <button type="button" id="uploadGalleryBtn" class="btn btn-success">Upload</button>
+                    </div>
+                </form>
+                <hr />
+                <div id="galleryPreview" class="row gy-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        // Delete Destination
+        document.querySelectorAll('.btn-delete-destination').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to delete this destination?')) return;
+                const id = btn.dataset.id;
+
+                const res = await fetch(`/admin/Destination/Delete/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': token
+                    }
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById(`destinationRow_${id}`).remove();
+                    alert('Destination deleted successfully!');
+                } else {
+                    alert(data.message || 'Delete failed');
+                }
+            });
+        });
+
+        // Open Gallery Modal
+        document.querySelectorAll('.btn-manage-gallery').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                document.getElementById('galleryDestinationId').value = id;
+                document.getElementById('galleryPreview').innerHTML = '';
+
+                const res = await fetch(`/admin/Destination/GetGallery/${id}`);
+                const data = await res.json();
+                if (data.success) {
+                    renderGallery(data.data);
+                    new bootstrap.Modal(document.getElementById('galleryModal')).show();
+                } else {
+                    alert('Could not load gallery');
+                }
+            });
+        });
+
+        function renderGallery(items) {
+            const container = document.getElementById('galleryPreview');
+            container.innerHTML = '';
+            if (!items || items.length === 0) {
+                container.innerHTML = '<div class="col-12"><p class="text-muted">No images uploaded yet.</p></div>';
+                return;
+            }
+
+            items.forEach(i => {
+                const col = document.createElement('div');
+                col.className = 'col-6 col-md-3';
+                col.innerHTML = `
+                    <div class="card">
+                        <img src="${i.galleryImgUrl || i.GalleryImgUrl || i.url}" class="card-img-top" style="height:130px; object-fit:cover;" />
+                        <div class="card-body p-2 text-center">
+                            <button class="btn btn-sm btn-danger btn-delete-gallery" data-id="${i.id}"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                container.appendChild(col);
+            });
+
+            container.querySelectorAll('.btn-delete-gallery').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (!confirm('Delete this image?')) return;
+                    const imgId = btn.dataset.id;
+                    const res = await fetch(`/admin/Destination/DeleteGallery/${imgId}`, {
+                        method: 'POST',
+                        headers: { 'RequestVerificationToken': token }
+                    });
+                    const data = await res.json();
+                    if (data.success) btn.closest('.col-6').remove();
+                    else alert(data.message || 'Delete failed');
+                });
+            });
+        }
+
+        // Upload Gallery
+        document.getElementById('uploadGalleryBtn').addEventListener('click', async () => {
+            const id = document.getElementById('galleryDestinationId').value;
+            const files = document.getElementById('galleryFiles').files;
+            if (!files.length) { alert('Select files'); return; }
+
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) formData.append('galleryFiles', files[i]);
+
+            const res = await fetch(`/admin/Destination/UploadGallery/${id}`, {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': token },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                renderGallery(data.data);
+                document.getElementById('galleryFiles').value = '';
+            } else {
+                alert(data.message || 'Upload failed');
+            }
+        });
+    </script>
+}

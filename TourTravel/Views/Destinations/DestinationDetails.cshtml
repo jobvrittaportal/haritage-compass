@@ -10,24 +10,8 @@
                 </div>
                 <h2 class="destination-single-title">@Model.Destination.DestinationName</h2>
                 <p class="mt-20">
-                    @Model.Destination.DestinationInfo
+                    @Html.Raw(Model.Destination.DestinationInfo)
                 </p>
-                <p class="mt-20">
-                    @Model.Destination.DestinationInfo
-                </p>
-                @* <div class="destination-single-middle-img">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="/assets/img/destination/2.jpg" alt="">
-                        </div>
-                        <div class="col-md-4">
-                            <img src="/assets/img/destination/3.jpg" alt="">
-                        </div>
-                        <div class="col-md-4">
-                            <img src="/assets/img/destination/4.jpg" alt="">
-                        </div>
-                    </div>
-                </div> *@
 
                 <div class="destination-single-gallery">
                     <h3>Destination Gallery</h3>

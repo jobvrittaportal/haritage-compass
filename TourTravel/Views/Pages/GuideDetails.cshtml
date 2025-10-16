@@ -6,14 +6,14 @@
         <div class="row align-items-center">
             <div class="col-md-4">
                 <div class="team-single-img">
-                    <img src="~/assets/img/team/single.jpg" alt="">
+                    <img src="@Model.TourGuide.ImageUrl" alt="@Model.TourGuide.Name">
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="team-details">
                     <h3>@Model.TourGuide.Name</h3>
                     <p class="mb-3 team-tagline"><strong>@Model.TourGuide.Role</strong></p>
-                    <p>@Model.TourGuide.Introduction</p>
+                    <p>@Html.Raw(Model.TourGuide.Introduction)</p>
                     <div class="team-details-info">
                         <ul>
                             <li><a href="#"><i class="far fa-envelope"></i> @Model.TourGuide.Email</a></li>
@@ -56,19 +56,16 @@
                 <div class="biography">
                     <h4 class="mb-3">Biography</h4>
                     <p class="mb-10">
-                        @Model.TourGuide.Biography
+                        @Html.Raw(Model.TourGuide.Biography)
                     </p>
-                    @* <p class="mb-10">
-                        All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.
-                    </p> *@
                 </div>
             </div>
             <div class="col-md-5">
                 <div class="biography-img">
-                    <img src="~/assets/img/team/bio.jpg" alt="">
+                    <img src="@Model.TourGuide.ImageUrl" alt="@Model.TourGuide.Name">
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- biography & skill end -->
+<!-- biography & skill end --> 

@@ -143,7 +143,7 @@
 @await Component.InvokeAsync("About", new { showHeading = true })
 
 <!-- Destination Area-->
-@await Component.InvokeAsync("DestinationArea", new { showHeading = true })
+@await Component.InvokeAsync("DestinationArea", new { showHeading = true, take = 3 })
 
 <!-- Tour Area-->
 @await Component.InvokeAsync("TourCards", new { showHeading = true, take = 3 })

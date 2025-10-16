@@ -1,0 +1,90 @@
+﻿@model TourTravel.Models.HeroSlider
+@{
+    ViewData["Title"] = "Add Hero Slider";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa fa-plus me-2"></i>Add Hero Slider</h5>
+            <a href="@Url.Action("Index", "HeroSlider")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            @* Display validation errors *@
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Title <span class="text-danger">*</span></label>
+                        <input asp-for="Title" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">SubTitle <span class="text-danger">*</span></label>
+                        <input asp-for="SubTitle" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" id="Description"></textarea>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Rotation Time (seconds) <span class="text-danger">*</span></label>
+                        <input asp-for="RotationTime" type="number" class="form-control" min="1" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Upload Image <span class="text-danger">*</span></label>
+                        <input type="file" name="ImageFile" class="form-control" accept="image/*" required />
+                        @if (ViewData.ModelState["Image"]?.Errors.Count > 0)
+                        {
+                            <span class="text-danger">@ViewData.ModelState["Image"].Errors[0].ErrorMessage</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index", "HeroSlider")" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#Description'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(console.error);
+
+        // Sync CKEditor data to textarea before form submit
+        const form = document.querySelector('form[asp-action="Create"]');
+        form.addEventListener('submit', () => {
+            document.querySelector('#Description').value = editor.getData();
+        });
+    </script>
+}
