@@ -1,4 +1,4 @@
-﻿ <!-- contact area -->
+ <!-- contact area -->
 @await Component.InvokeAsync("HeroSection")
 <div class="contact-area py-120">
     <div class="container">
@@ -27,6 +27,10 @@
                                         <input type="email" class="form-control" name="email" placeholder="Your Email" required>
                                     </div>
                                 </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="PhoneNumber" placeholder="Your PhoneNumber" required>
+                                    </div>
+                               
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" name="subject" placeholder="Your Subject" required>
@@ -79,4 +83,55 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        async function showToast(message, cssClass) {
+            const container = document.getElementById('form-message');
+            container.textContent = message;
+            container.className = 'mt-2 ' + cssClass;
+
+            setTimeout(() => {
+                container.textContent = '';
+                container.className = '';
+            }, 3000);
+        }
+
+        document.getElementById("contact-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: this.name.value,
+                email: this.email.value,
+                phoneNumber: this.PhoneNumber.value,
+                subject: this.subject.value,
+                message: this.message.value
+            };
+
+            try {
+                const response = await fetch('https://stg-jungleave-back.jobvritta.com/api/contact/addEnquiry', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjMiLCJuYmYiOjE3NjA2MjAzMjksImV4cCI6MTc2MDY1NjMyOSwiaWF0IjoxNzYwNjIwMzI5fQ.JkvwSIaX8ff-fpmisuEXrQhMPC-452gsL5oG-FbaDkU'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result) {
+                    showToast('Message sent successfully!', 'text-success');
+                    this.reset();
+                } else {
+                    showToast(result?.message || 'Failed to send message.', 'text-danger');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('An error occurred while sending the message.', 'text-danger');
+            }
+        });
+    </script>
+}
+
 <!-- end contact area -->
