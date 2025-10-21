@@ -21,11 +21,21 @@ namespace TourTravel.Controllers
             return View();
         }
 
-        public IActionResult TeamDetails()
+        public IActionResult TeamDetails(int id)
         {
             ViewBag.Title = "Team Details";
             ViewBag.Page = "Team Details";
-            return View();
+            var TeamMember = db.TourGuideView.FirstOrDefault(g => g.Id == id);
+            if (TeamMember == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new TourGuideDetail
+            {
+                TourGuide = TeamMember
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Guide(bool showHeading)
@@ -74,7 +84,8 @@ namespace TourTravel.Controllers
         {
             ViewBag.Title = "Gallery";
             ViewBag.Page = "Gallery";
-            return View();
+            var Gallery = db.Gallery.ToList();
+            return View(Gallery);
         }
 
         public IActionResult PrivacyPolicy()

@@ -44,11 +44,13 @@
     </div>
     <!-- preloader end -->
 
-    @await Html.PartialAsync("_Header")
+    @* @await Html.PartialAsync("_Header") *@
+    @await Component.InvokeAsync("Header")
     <main class="main">
         @RenderBody()
     </main>
-    @await Html.PartialAsync("_Footer")
+    @await Component.InvokeAsync("Footer")
+    @* @await Html.PartialAsync("_Footer") *@
 
     <!-- scroll-top -->
     <a href="#" id="scroll-top"><i class="far fa-angle-double-up"></i></a>
