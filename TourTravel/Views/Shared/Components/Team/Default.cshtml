@@ -1,26 +1,47 @@
 ﻿<!-- team-area -->
+@model List<TourTravel.Models.TourGuideView>
 <div class="team-area py-120">
     <div class="container">
+      
         <div class="row">
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item active">
-                    <img src="~/assets/img/team/team-1.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">Malissa Fierro</a>
-                            <p>Tour Manager</p>
+              @foreach(var item in Model)
+        {
+                <div class="col-md-6 col-lg-3">
+                    <div class="team-item active">
+                        <img src=@item.ImageUrl alt="thumb" style="width:340px; height:400px">
+                        <div class="team-content">
+                            <div class="team-social">
+                                @if (!string.IsNullOrEmpty(item.Facebook))
+                                {
+                                    <a href="@item.Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Twitter))
+                                {
+                                    <a href="@item.Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Instagram))
+                                {
+                                    <a href="@item.Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.LinkedIn))
+                                {
+                                    <a href="@item.LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.YouTube))
+                                {
+                                    <a href="@item.YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+                                }
+                            </div>
+                            <div class="team-bio">
+                                <a asp-controller="Pages" asp-action="TeamDetails" asp-route-id="@item.Id">@item.Name</a>
+                                <p>@item.Role</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
+            }
+           
+            @* <div class="col-md-6 col-lg-3">
                 <div class="team-item">
                     <img src="~/assets/img/team/team-2.jpg" alt="thumb">
                     <div class="team-content">
@@ -149,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
         </div>
     </div>
 </div>

@@ -1,24 +1,24 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TourTravel.Models;
+using System.Linq;
 
-namespace TourTravel.Controllers
+namespace TourTravel.ViewComponents
 {
-    public class ContactController : Controller
+    public class HeaderViewComponent : ViewComponent
     {
         private readonly MyDbContext _db;
-        public ContactController(MyDbContext db)
+
+        public HeaderViewComponent(MyDbContext db)
         {
             _db = db;
         }
 
-        public IActionResult Index()
+        public IViewComponentResult Invoke()
         {
-            ViewBag.Title = "Contact Us";
-            ViewBag.Page = "Contact Us";
+            // Get the latest WebsiteSetting record
             var companyDetails = _db.WebsiteSetting
-               .OrderByDescending(f => f.Id)
-               .FirstOrDefault();
+                .OrderByDescending(f => f.Id)
+                .FirstOrDefault();
 
             // If not found, create a default one (to prevent null reference issues)
             if (companyDetails == null)
@@ -33,10 +33,11 @@ namespace TourTravel.Controllers
                     Twitter = "#",
                     LinkedIn = "#",
                     YouTube = "#",
-                    Timing = "Mon–Sat: 9:00 AM – 6:00 PM"
+                    Timing = "Mon–Fri: 10:00 AM – 8:00 PM"
                 };
             }
-            return View(companyDetails);
+
+            return View(companyDetails); // ✅ Pass model to the view
         }
     }
 }

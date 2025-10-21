@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TourTravel.ViewModel;
 
 namespace TourTravel.ViewComponents
 {
-    public class TeamViewComponent : ViewComponent
+    public class TeamViewComponent(MyDbContext db) : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(int take)
         {
-            return View();
+            var TourGuides = db.TourGuideView.OrderByDescending(t => t.Id).Take(take).ToList();
+
+            return View(TourGuides);
         }
     }
 }

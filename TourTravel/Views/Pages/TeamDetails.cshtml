@@ -1,28 +1,46 @@
-﻿@await Component.InvokeAsync("HeroSection")
+﻿@model TourTravel.ViewModel.TourGuideDetail
+@await Component.InvokeAsync("HeroSection")
 <!-- team single -->
 <div class="team-single pt-120 pb-80">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-4">
                 <div class="team-single-img">
-                    <img src="~/assets/img/team/single.jpg" alt="">
+                    <img src="@Model.TourGuide.ImageUrl" alt="@Model.TourGuide.Name">
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="team-details">
-                    <h3>Marie R Lippert</h3>
-                    <p class="mb-3 team-tagline"><strong>Tour Manager</strong></p>
-                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters packages and web page editors now usepackages and web page editors now use.</p>
+                    <h3>@Model.TourGuide.Name</h3>
+                    <p class="mb-3 team-tagline"><strong>@Model.TourGuide.Role</strong></p>
+                    <p>@Html.Raw(Model.TourGuide.Introduction)</p>
                     <div class="team-details-info">
                         <ul>
-                            <li><a href="#"><i class="far fa-envelope"></i> marie@example.com</a></li>
-                            <li><a href="#"><i class="far fa-phone"></i> +2 123 456 7892</a></li>
+                            <li><a href="#"><i class="far fa-envelope"></i> @Model.TourGuide.Email</a></li>
+                            <li><a href="#"><i class="far fa-phone"></i> @Model.TourGuide.Phone</a></li>
                         </ul>
                     </div>
                     <div class="team-details-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Facebook))
+                        {
+                            <a href="@Model.TourGuide.Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Twitter))
+                        {
+                            <a href="@Model.TourGuide.Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Instagram))
+                        {
+                            <a href="@Model.TourGuide.Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.LinkedIn))
+                        {
+                            <a href="@Model.TourGuide.LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.TourGuide.YouTube))
+                        {
+                            <a href="@Model.TourGuide.YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+                        }
                     </div>
                 </div>
             </div>
@@ -30,3 +48,24 @@
     </div>
 </div>
 <!-- team single end -->
+<!-- biography & skill -->
+<div class="biography-skill pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 mb-3">
+                <div class="biography">
+                    <h4 class="mb-3">Biography</h4>
+                    <p class="mb-10">
+                        @Html.Raw(Model.TourGuide.Biography)
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="biography-img">
+                    <img src="@Model.TourGuide.ImageUrl" alt="@Model.TourGuide.Name">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- biography & skill end --> 

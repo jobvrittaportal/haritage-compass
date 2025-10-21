@@ -1,44 +1,18 @@
-﻿@await Component.InvokeAsync("HeroSection")
+﻿@model List<TourTravel.Models.Gallery>
+@await Component.InvokeAsync("HeroSection")
 <!-- gallery area -->
 <div class="gallery-area py-120">
     <div class="container">
         <div class="row popup-gallery" data-masonry='{"percentPosition": true }'>
-            <div class="col-md-4">
-                <div class="gallery-item">
-                    <img src="~/assets/img/gallery/gallery-1.jpg" alt="">
-                    <a class="popup-img" href="assets/img/gallery/gallery-1.jpg"><i class="far fa-plus"></i></a>
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="gallery-item">
+                        <img src=@item.ImageUrl alt="">
+                        <a class="popup-img" ><i class="far fa-plus"></i></a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="gallery-item">
-                    <img src="~/assets/img/gallery/gallery-2.jpg" alt="">
-                    <a class="popup-img" href="assets/img/gallery/gallery-2.jpg"><i class="far fa-plus"></i></a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="gallery-item">
-                    <img src="~/assets/img/gallery/gallery-3.jpg" alt="">
-                    <a class="popup-img" href="assets/img/gallery/gallery-3.jpg"><i class="far fa-plus"></i></a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="gallery-item">
-                    <img src="~/assets/img/gallery/gallery-4.jpg" alt="">
-                    <a class="popup-img" href="assets/img/gallery/gallery-4.jpg"><i class="far fa-plus"></i></a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="gallery-item">
-                    <img src="~/assets/img/gallery/gallery-5.jpg" alt="">
-                    <a class="popup-img" href="assets/img/gallery/gallery-5.jpg"><i class="far fa-plus"></i></a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="gallery-item">
-                    <img src="~/assets/img/gallery/gallery-6.jpg" alt="">
-                    <a class="popup-img" href="assets/img/gallery/gallery-6.jpg"><i class="far fa-plus"></i></a>
-                </div>
-            </div>
+            }        
         </div>
         <div class="text-center mt-5">
             <a href="#" class="theme-btn">Load More <i class="far fa-sync"></i></a>
