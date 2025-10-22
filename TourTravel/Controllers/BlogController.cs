@@ -8,14 +8,33 @@ namespace TourTravel.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.Title = "Our Blogs";
             ViewBag.Page = "Blogs";
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Blogs");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
             return View();
         }
         public IActionResult SingleBlog(int id)
         {
-            ViewBag.Title = "Blog Detail";
             ViewBag.Page = "Blog Detail";
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Blogs");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+
             var blog = db.Blog.FirstOrDefault(b => b.Id == id);
             var Recentblogs = db.Blog.OrderByDescending(b => b.Id).Take(3).ToList();
             if (blog == null)

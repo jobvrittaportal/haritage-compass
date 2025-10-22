@@ -17,11 +17,16 @@
             <form id="galleryEditForm" asp-action="Edit" method="post" enctype="multipart/form-data" novalidate>
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Image <span class="text-danger">*</span></label>
-                    <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" />
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Title <span class="text-danger">*</span></label>
+                        <input asp-for="Title" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Image <span class="text-danger">*</span></label>
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
                 </div>
 
                 <div id="previewContainer" class="mb-3">

@@ -20,6 +20,20 @@ namespace TourTravel.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Page = "Home";
+            var page = _db.SitePages.FirstOrDefault(f => f.Page == "Home");
+            if (page != null)
+            {
+
+                ViewBag.Title = page.Title;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+                //ViewBag.ImageType = page.ImageType;
+            }
+
             var heroSliders = _db.HeroSlider.ToList();
             var viewModel = new HomeViewModel
             {

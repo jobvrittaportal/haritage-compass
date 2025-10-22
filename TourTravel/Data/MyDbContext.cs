@@ -26,5 +26,7 @@ public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, stri
     public DbSet<Package> Package { get; set; }
     public DbSet<WebsiteSetting> WebsiteSetting { get; set; }
     public DbSet<HeroSlider> HeroSlider { get; set; }
+    public DbSet<SitePages> SitePages { get; set; }
+    public DbSet<NewsletterSubscribers> NewsletterSubscribers { get; set; }
 
 }

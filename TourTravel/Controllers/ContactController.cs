@@ -4,23 +4,25 @@ using TourTravel.Models;
 
 namespace TourTravel.Controllers
 {
-    public class ContactController : Controller
+    public class ContactController(MyDbContext db) : Controller
     {
-        private readonly MyDbContext _db;
-        public ContactController(MyDbContext db)
-        {
-            _db = db;
-        }
-
         public IActionResult Index()
         {
-            ViewBag.Title = "Contact Us";
             ViewBag.Page = "Contact Us";
-            var companyDetails = _db.WebsiteSetting
-               .OrderByDescending(f => f.Id)
-               .FirstOrDefault();
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Blogs");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
 
-            // If not found, create a default one (to prevent null reference issues)
+            var companyDetails = db.WebsiteSetting.OrderByDescending(f => f.Id).FirstOrDefault();
+
+            // If not found, create a default one
             if (companyDetails == null)
             {
                 companyDetails = new WebsiteSetting

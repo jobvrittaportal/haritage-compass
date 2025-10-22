@@ -1,0 +1,131 @@
+﻿@model TourTravel.Models.SitePages
+@{
+    ViewData["Title"] = "Edit Site Page";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa fa-edit me-2"></i>Edit Site Page</h5>
+            <a href="@Url.Action("Index", "SitePages")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" id="editSitePageForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Page <span class="text-danger">*</span></label>
+                        <input asp-for="Page" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Title <span class="text-danger">*</span></label>
+                        <input asp-for="Title" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" id="Description"></textarea>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Keywords <span class="text-danger">*</span></label>
+                        <input asp-for="KeyWords" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Image Width <span class="text-danger">*</span></label>
+                        <input asp-for="ImgWidth" type="number" id="ImgWidth" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Image Height <span class="text-danger">*</span></label>
+                        <input asp-for="ImgHeight" type="number" id="ImgHeight" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label mt-2">Upload New Image</label>
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" />
+                        <div id="imageError" class="text-danger mt-1"></div>
+                        <label class="form-label">Current Image</label><br />
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="@Model.Image" width="150" class="rounded mb-2 border" />
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <a href="@Url.Action("Index", "SitePages")" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#Description'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(console.error);
+
+        const form = document.getElementById('editSitePageForm');
+        const imageInput = document.getElementById('ImageFile');
+        const widthInput = document.getElementById('ImgWidth');
+        const heightInput = document.getElementById('ImgHeight');
+        const imageError = document.getElementById('imageError');
+
+        // Validate new image when selected
+        imageInput.addEventListener('change', function () {
+            imageError.textContent = '';
+            const file = this.files[0];
+            if (!file) return;
+
+            // Validate file type (only image)
+            if (!file.type.startsWith('image/')) {
+                imageError.textContent = 'Please upload only image files (JPEG, PNG, etc.).';
+                this.value = '';
+                return;
+            }
+
+            // Check image dimensions
+            const img = new Image();
+            img.onload = function () {
+                const enteredWidth = parseInt(widthInput.value);
+                const enteredHeight = parseInt(heightInput.value);
+
+                if (enteredWidth && enteredHeight) {
+                    if (img.width !== enteredWidth || img.height !== enteredHeight) {
+                        imageError.textContent = `⚠️ Uploaded image size is ${img.width}x${img.height}px, expected ${enteredWidth}x${enteredHeight}px.`;
+                        imageInput.value = '';
+                    }
+                }
+            };
+            img.src = URL.createObjectURL(file);
+        });
+
+        // Before submitting form, inject CKEditor data and check errors
+        form.addEventListener('submit', (e) => {
+            document.querySelector('#Description').value = editor.getData();
+            if (imageError.textContent !== '') {
+                e.preventDefault();
+                alert('Please fix image validation errors before submitting.');
+            }
+        });
+    </script>
+}
