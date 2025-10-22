@@ -9,8 +9,23 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- title -->
-    <title> Heritage Compass </title>
+    <!-- Dynamic SEO -->
+    <title>@(ViewBag.Title ?? "Heritage Compass")</title>
+    <meta name="description" content="@(ViewBag.Description ?? "Are you Looking for Best Destinations & Tours in CityName? Heritage Compass is Best Place to Book. Your Ultimate Adventure Awaits. Book Your Tour Today!")">
+    <meta name="keywords" content="@(ViewBag.Keywords ?? "Varanasi, Agra, Best Tours in Varanasi")">
+
+    <!-- Social Sharing (OpenGraph) -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@(ViewBag.Title ?? "Heritage Compass")">
+    <meta property="og:description" content="@(ViewBag.Description ?? "Are you Looking for Best Destinations & Tours in CityName? Heritage Compass is Best Place to Book. Your Ultimate Adventure Awaits. Book Your Tour Today!")">
+    <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+    <meta property="og:site_name" content="Heritage Compass">
+    <meta property="article:modified_time" content="@DateTime.Now">
+    <meta property="og:image" content="@(string.IsNullOrEmpty(ViewBag.Image) ? $"{Context.Request.Scheme}://{Context.Request.Host}/img/feature.jpg" : ViewBag.Image)" />
+    <meta property="og:image:width" content="@(ViewBag.ImageWidth ?? 1080)">
+    <meta property="og:image:height" content="@(ViewBag.ImageHeight ?? 480)">
+    <meta name="twitter:card" content="summary_large_image">
 
     <!-- favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/logo/favicon.png">
@@ -54,7 +69,16 @@
 
     <!-- scroll-top -->
     <a href="#" id="scroll-top"><i class="far fa-angle-double-up"></i></a>
-    <!-- scroll-top end -->
+
+    <!-- Toast Message -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+        <div id="toastMessage" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body"></div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
     <!-- js -->
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
@@ -71,6 +95,7 @@
     <script src="/assets/js/wow.min.js"></script>
     <script src="/assets/js/count-to.js"></script>
     <script src="/assets/js/main.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

@@ -8,7 +8,7 @@ namespace TourTravel.Models
     {
         [MaxLength(255)]
         public required string Name { get; set; }
-        public bool IsTouristDestination { get; set; } = false;
+        public bool IsDestination { get; set; } = false;
         public required string Code { get; set; }
         public required string DialCode { get; set; }
         public virtual List<State>? States { get; set; }
