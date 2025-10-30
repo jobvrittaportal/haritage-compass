@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
@@ -16,12 +17,39 @@ namespace TourTravel.Admin.Controllers
     }
 
     // ✅ List all images
+    //[HttpGet]
+    //public IActionResult Index()
+    //{
+    //  var images = _db.Testimonial.OrderByDescending(x => x.Id).ToList();
+    //  return View("~/Views/Admin/Testimonial/Index.cshtml", images);
+    //}
+
+
+
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 5)
     {
-      var images = _db.Testimonial.OrderByDescending(x => x.Id).ToList();
-      return View("~/Views/Admin/Testimonial/Index.cshtml", images);
+      var query = _db.Testimonial.AsQueryable();
+
+      if (!string.IsNullOrEmpty(search))
+      {
+        query = query.Where(b => b.AuthorName.Contains(search) || b.AuthorName.Contains(search));
+      }
+
+      int totalItems = await query.CountAsync();
+      var blogs = await query
+          .OrderByDescending(b => b.Id)
+          .Skip((page - 1) * pageSize)
+          .Take(pageSize)
+          .ToListAsync();
+
+      ViewBag.Search = search;
+      ViewBag.Page = page;
+      ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+      return View("~/Views/Admin/Testimonial/Index.cshtml", blogs);
     }
+
 
     // ✅ Create Page
     [HttpGet("create")]

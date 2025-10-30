@@ -1,4 +1,4 @@
-﻿<div class="destination-sidebar">
+@* <div class="destination-sidebar">
     <div class="widget">
         <h4 class="widget-title">All Category</h4>
         <div class="destination-category">
@@ -9,4 +9,30 @@
             <a href="#">Vip Package</a>
             <a href="#">Regular Package</a>
         </div>
+    </div> *@
+
+@model IEnumerable<TourTravel.ViewModel.SpotViewModel>
+
+<div class="destination-sidebar">
+    <div class="widget">
+        <h4 class="widget-title">All Spots</h4>
+        <div class="destination-category">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var spot in Model)
+                {
+                  
+                    <a asp-controller="Destinations" asp-action="SpotDetails" asp-route-id="@spot.SpotId" class="destination-btn">
+                        @spot.Title
+                    </a>
+
+                }
+            }
+            else
+            {
+                <p>No spots found for this destination.</p>
+            }
+        </div>
     </div>
+</div>
+

@@ -14,6 +14,8 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 
 
 
+// Register IHttpClientFactory
+builder.Services.AddHttpClient();
 
 
 
