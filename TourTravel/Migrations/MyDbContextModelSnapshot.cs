@@ -205,7 +205,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("About", (string)null);
+                    b.ToTable("About");
                 });
 
             modelBuilder.Entity("TourTravel.Models.ApplicationUser", b =>
@@ -321,7 +321,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blog", (string)null);
+                    b.ToTable("Blog");
                 });
 
             modelBuilder.Entity("TourTravel.Models.City", b =>
@@ -353,7 +353,7 @@ namespace TourTravel.Migrations
 
                     b.HasIndex("StateId");
 
-                    b.ToTable("City", (string)null);
+                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Country", b =>
@@ -391,7 +391,68 @@ namespace TourTravel.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Country", (string)null);
+                    b.ToTable("Country");
+                });
+
+            modelBuilder.Entity("TourTravel.Models.DestinationGallery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("DestinationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GalleryImgUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DestinationGallery");
+                });
+
+            modelBuilder.Entity("TourTravel.Models.Destinations", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DestinationImgUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DestinationInfo")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DestinationName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("MapUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("StartingPrice")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Destinations");
                 });
 
             modelBuilder.Entity("TourTravel.Models.FAQ", b =>
@@ -418,7 +479,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FAQ", (string)null);
+                    b.ToTable("FAQ");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Gallery", b =>
@@ -441,7 +502,67 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gallery", (string)null);
+                    b.ToTable("Gallery");
+                });
+
+            modelBuilder.Entity("TourTravel.Models.Package", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Desc")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaxPerson")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetaDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("MetaTitle")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int?>("ReviewsCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SlugUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("Package");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Page", b =>
@@ -471,7 +592,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pages", (string)null);
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Permission", b =>
@@ -501,7 +622,7 @@ namespace TourTravel.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("TourTravel.Models.PrivacyPolicy", b =>
@@ -528,7 +649,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PrivacyPolicy", (string)null);
+                    b.ToTable("PrivacyPolicy");
                 });
 
             modelBuilder.Entity("TourTravel.Models.State", b =>
@@ -560,7 +681,7 @@ namespace TourTravel.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("State", (string)null);
+                    b.ToTable("State");
                 });
 
             modelBuilder.Entity("TourTravel.Models.TermsOfService", b =>
@@ -587,7 +708,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TermsOfService", (string)null);
+                    b.ToTable("TermsOfService");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Testimonial", b =>
@@ -624,7 +745,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Testimonial", (string)null);
+                    b.ToTable("Testimonial");
                 });
 
             modelBuilder.Entity("TourTravel.Models.TourCardsView", b =>
@@ -667,7 +788,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TourCardsView", (string)null);
+                    b.ToTable("TourCardsView");
                 });
 
             modelBuilder.Entity("TourTravel.Models.TourGuideView", b =>
@@ -677,6 +798,9 @@ namespace TourTravel.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Biography")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -691,6 +815,9 @@ namespace TourTravel.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Instagram")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Introduction")
                         .HasColumnType("longtext");
 
                     b.Property<string>("LinkedIn")
@@ -718,7 +845,7 @@ namespace TourTravel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TourGuideView", (string)null);
+                    b.ToTable("TourGuideView");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Role", b =>
@@ -791,6 +918,15 @@ namespace TourTravel.Migrations
                         .IsRequired();
 
                     b.Navigation("State");
+                });
+
+            modelBuilder.Entity("TourTravel.Models.Package", b =>
+                {
+                    b.HasOne("TourTravel.Models.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("TourTravel.Models.Permission", b =>

@@ -1,0 +1,71 @@
+@model TourTravel.ViewModel.SpotDetailsViewModel
+
+@await Component.InvokeAsync("HeroSection")
+
+<div class="destination-single py-120">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="destination-single-img">
+                    <img src="@Model.CoverPhoto" alt="@Model.Title" class="img-fluid rounded">
+                </div>
+
+                <h2 class="destination-single-title mt-4">@Model.Title</h2>
+
+                <p class="mt-20">
+                    <strong>City:</strong> @Model.Name
+                </p>
+
+                <div class="mt-3">
+                    @Html.Raw(Model.Description)
+                </div>
+
+                <!-- Gallery Section -->
+                @if (Model.Gallery != null && Model.Gallery.Any())
+                {
+                    <div class="destination-single-gallery mt-40">
+                        <h3>Spot Gallery</h3>
+                        <p class="mt-10">
+                            Explore the beauty of <strong>@Model.Title</strong> through our photo collection. Each image captures the unique charm and history of this spot.
+                        </p>
+                        <div class="row mt-20 popup-gallery">
+                            @foreach (var img in Model.Gallery)
+                            {
+                                <div class="col-md-4 mb-3">
+                                    <div class="destination-single-gallery-img">
+                                        <img src="@img.CoverImageUrl" alt="@Model.Title" class="img-fluid rounded" />
+                                        <a class="popup-img" href="@img.ImageUrl"><i class="far fa-plus"></i></a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Optional Map Section (if applicable in future) -->
+                @if (!string.IsNullOrEmpty(Model.Name))
+                {
+                    <div class="destination-single-map mt-50">
+                        <h3>Location Map</h3>
+                        <p class="mt-10">
+                            Discover the surroundings of <strong>@Model.Title</strong> — explore nearby attractions and get directions for your next trip.
+                        </p>
+                        <iframe src="https://www.google.com/maps?q=@Model.Name&output=embed"
+                                width="100%"
+                                height="450"
+                                style="border:0;"
+                                allowfullscreen
+                                loading="lazy">
+                        </iframe>
+                    </div>
+                }
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                @await Component.InvokeAsync("PackageCategories", new { id = Model.CityId })
+            </div>
+        </div>
+    </div>
+</div>
