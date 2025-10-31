@@ -18,6 +18,8 @@ namespace TourTravel.ViewModel
     public string Title { get; set; }
     public string Description { get; set; }
     public string Name { get; set; }
+    public decimal? Latitude { get; set; }
+    public decimal? Longitude { get; set; }
     public bool IsActive { get; set; }
     public string CoverPhoto { get; set; }
     public List<SpotGalleryViewModel> Gallery { get; set; } = new();

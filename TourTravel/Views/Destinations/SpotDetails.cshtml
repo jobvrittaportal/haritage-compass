@@ -51,12 +51,18 @@
                         <p class="mt-10">
                             Discover the surroundings of <strong>@Model.Title</strong> — explore nearby attractions and get directions for your next trip.
                         </p>
-                        <iframe src="https://www.google.com/maps?q=@Model.Name&output=embed"
-                                width="100%"
-                                height="450"
-                                style="border:0;"
+                        @{
+                            // Construct the Google Maps embed URL dynamically
+                            string googleMapUrl = $"https://www.google.com/maps/embed/v1/place?key=AIzaSyBF2784voy6go8CoGUbLCWdEZw0alX8fHI&q={Model.Latitude},{Model.Longitude}&zoom=12";
+                        }
+
+                        <iframe width="100%"
+                                height="400"
+                                style="border:0"
+                                loading="lazy"
                                 allowfullscreen
-                                loading="lazy">
+                                referrerpolicy="no-referrer-when-downgrade"
+                                src="@googleMapUrl">
                         </iframe>
                     </div>
                 }
