@@ -66,7 +66,7 @@ namespace TourTravel.Controllers
             Id = c.Id,
             DestinationName = c.Name,
             DestinationImgUrl = c.ImageUrl ?? "/img/bg/cta.jpg",
-            StartingPrice = c.BasePrice
+            StartingPrice = c.BasePrice,
           }).ToList();
         }
       }
@@ -206,6 +206,9 @@ namespace TourTravel.Controllers
           viewModel.CityCoverImage = response.CityCoverImage ?? response.CoverPhoto;
           viewModel.Gallery = response.Gallery ?? new List<ImageDto>();
           viewModel.MapUrl = "https://www.google.com/maps/embed?pb=...";
+          viewModel.Latitude = response.Latitude ?? 0;
+          viewModel.Longitude = response.Longitude ?? 0;
+
         }
       }
       catch (Exception ex)
@@ -261,8 +264,10 @@ namespace TourTravel.Controllers
     public bool IsCoverPhoto { get; set; }
     public int? OrderIndex { get; set; }
     public decimal? BasePrice { get; set; }
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
   }
- 
+
 
 
 

@@ -37,6 +37,8 @@ namespace TourTravel.ViewModel
     public List<ImageDto> Gallery { get; set; } = new List<ImageDto>();
 
     public string MapUrl { get; set; }
+    public decimal? Latitude { get; set; }
+    public decimal? Longitude { get; set; }
   }
 
   public class ImageDto

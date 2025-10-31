@@ -40,16 +40,30 @@
                         Whether you’re planning your next adventure or simply exploring virtually, this map will help you get a closer
                         look at everything that makes this place truly special.
                     </p>
-                    @if (!string.IsNullOrEmpty(Model.MapUrl))
+                    @*   @if (!string.IsNullOrEmpty(Model.MapUrl))
                     {
-                        <iframe src="@Model.MapUrl" width="100%" height="450" style="border:0;" allowfullscreen loading="lazy"></iframe>
+                    <iframe src="@Model.MapUrl" width="100%" height="450" style="border:0;" allowfullscreen loading="lazy"></iframe>
+
+                    } *@
+                    @{
+                        // Construct the Google Maps embed URL dynamically 
+                        string googleMapUrl = $"https://www.google.com/maps/embed/v1/place?key=AIzaSyBF2784voy6go8CoGUbLCWdEZw0alX8fHI&q={Model.Latitude},{Model.Longitude}&zoom=12";
                     }
+
+                    <iframe width="100%"
+                            height="400"
+                            style="border:0"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="@googleMapUrl">
+                    </iframe>
 
                 </div>
             </div>
 
             <div class="col-lg-4">
-      @*           @await Component.InvokeAsync("PackageCategories") *@
+                @*           @await Component.InvokeAsync("PackageCategories") *@
                 @await Component.InvokeAsync("PackageCategories", new { id = @Model.Id })
 
                 @await Component.InvokeAsync("FeaturedTours")
@@ -76,7 +90,7 @@
 
 
 
-@* 
+@*
 
                         @model TourTravel.ViewModel.DestinationDetailsViewModel
 
