@@ -8,9 +8,9 @@ namespace TourTravel.ViewComponents
    
     public class BlogViewComponent(MyDbContext db) : ViewComponent
     {
-        public IViewComponentResult Invoke(bool  showheading, int take,string ? search )
+        public IViewComponentResult Invoke(bool  showheading, int take,string ? search, int currentPage = 1)
         {
-            int page = 1;
+            
             int pageSize = take;
             var query = db.Blog.AsQueryable();
 
@@ -24,11 +24,11 @@ namespace TourTravel.ViewComponents
             int totalItems = query.Count();
             var blog = query
                 .OrderByDescending(b => b.Id)
-                .Skip((page - 1) * pageSize)
+                .Skip((currentPage - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
             ViewBag.Search = search;
-            ViewBag.Page = page;
+            ViewBag.Currentpage = currentPage;
             ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);          
             var viewModel = new BlogViewModel
             {

@@ -26,6 +26,7 @@ namespace TourTravel.Controllers
             {
 
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;

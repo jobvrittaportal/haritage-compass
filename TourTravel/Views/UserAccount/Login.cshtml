@@ -1,0 +1,129 @@
+﻿@await Component.InvokeAsync("HeroSection")
+
+<!-- login area -->
+<div class="login-area py-120">
+    <div class="container">
+        <div class="col-md-5 mx-auto">
+            <div class="login-form">
+                <div class="login-header text-center mb-3">
+                    <img src="~/assets/img/logo/logo-dark.png" alt="">
+                    <p>Login with your Travelox account</p>
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger text-center">@ViewBag.Error</div>
+                }
+
+                <form asp-controller="UserAccount" asp-action="Login" method="post" id="loginForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group mb-3">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                    </div>
+
+                    <!-- ✅ Password with show/hide toggle -->
+                    <div class="form-group mb-3">
+                        <label>Password</label>
+                        <div class="input-group">
+                            <input type="password" id="loginPassword" name="password"
+                                   class="form-control unified-input"
+                                   placeholder="Your Password" required>
+                            <button type="button" id="toggleLoginPassword" class="btn unified-btn" tabindex="-1">
+                                <i class="far fa-eye" id="loginEyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="remember">
+                            <label class="form-check-label" for="remember">Remember Me</label>
+                        </div>
+                        <a asp-controller="UserAccount" asp-action="ForgotPassword" class="forgot-pass">Forgot Password?</a>
+                    </div>
+
+                    <!-- ✅ Loader button -->
+                    <div class="d-flex align-items-center">
+                        <button type="submit" class="login-btn d-flex align-items-center justify-content-center" id="loginBtn">
+                            <i class="far fa-sign-in me-2"></i>
+                            <span id="loginBtnText">Login</span>
+                            <span id="loginBtnLoader" class="spinner-border spinner-border-sm ms-2"
+                                  role="status" aria-hidden="true" style="display:none;"></span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="login-footer text-center mt-3">
+                    <p>Don't have an account? <a asp-controller="UserAccount" asp-action="Register">Register.</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Scripts -->
+@section Scripts {
+    <script>
+        // Password visibility toggle
+        document.getElementById('toggleLoginPassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('loginPassword');
+            const eyeIcon = document.getElementById('loginEyeIcon');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+
+        // Loader on form submit
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const loginBtnLoader = document.getElementById('loginBtnLoader');
+
+        loginForm.addEventListener('submit', function () {
+            loginBtn.disabled = true; // Prevent multiple clicks
+            loginBtnText.textContent = 'Signing in...';
+            loginBtnLoader.style.display = 'inline-block';
+        });
+
+        // Optional: reset button state if user navigates back
+        window.addEventListener('pageshow', function () {
+            loginBtn.disabled = false;
+            loginBtnText.textContent = 'Login';
+            loginBtnLoader.style.display = 'none';
+        });
+    </script>
+}
+
+<!-- ✅ Unified input/button styles -->
+<style>
+    .input-group .unified-input {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #ced4da;
+        border-right: none;
+        box-shadow: none;
+    }
+
+        .input-group .unified-input:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+    .input-group .unified-btn {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #ced4da;
+        border-left: none;
+        box-shadow: none;
+    }
+
+        .input-group .unified-btn:focus,
+        .input-group .unified-btn:active {
+            background-color: #fff;
+            color: #000;
+            box-shadow: none;
+        }
+</style>

@@ -7,13 +7,15 @@ namespace TourTravel.Controllers
     public class PagesController(MyDbContext db) : Controller
     {
         private readonly MyDbContext db = db;
+
         public IActionResult AboutUs()
         {
-            ViewBag.Page = "About Us";
+            
             var page = db.SitePages.FirstOrDefault(f => f.Page == "About");
             if(page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -25,28 +27,31 @@ namespace TourTravel.Controllers
 
         public IActionResult Team()
         {
-            ViewBag.Page = "Team";
+            
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Team");
+            ViewBag.CurrentPage = 1;
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
                 ViewBag.ImageHeight = page.ImgHeight;
                 ViewBag.ImageWidth = page.ImgWidth;
             }
+          
             return View();
         }
 
         public IActionResult TeamDetails(int id)
         {
-            ViewBag.Page = "Team Details";
-
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "Team");
+       
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Single Team");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -54,26 +59,24 @@ namespace TourTravel.Controllers
                 ViewBag.ImageWidth = page.ImgWidth;
             }
 
-            var TeamMember = db.TourGuideView.FirstOrDefault(g => g.Id == id);
+            var TeamMember = db.Team.FirstOrDefault(g => g.Id == id);
             if (TeamMember == null)
             {
                 return NotFound();
             }
-            var viewModel = new TourGuideDetail
-            {
-                TourGuide = TeamMember
-            };
-
-            return View(viewModel);
+            
+            return View(TeamMember);
         }
 
-        public IActionResult Guide(bool showHeading)
+        public IActionResult Guide( int currentpage = 1)
         {
-            ViewBag.Page = "Guides";
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "Guides");
+            
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Guide");
+            ViewBag.CurrentPage = currentpage;
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -81,17 +84,17 @@ namespace TourTravel.Controllers
                 ViewBag.ImageWidth = page.ImgWidth;
             }
 
-            ViewData["ShowHeading"] = showHeading;
             return View();
         }
 
         public IActionResult GuideDetails(int id)
         {
-            ViewBag.Page = "Guide Detail";
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "Guides");
+            
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Guide Single");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -104,21 +107,19 @@ namespace TourTravel.Controllers
             {
                 return NotFound();
             }
-            var viewModel = new TourGuideDetail
-            {
-                TourGuide = guide
-            };
+            
 
-            return View(viewModel);
+            return View(guide);
         }
 
         public IActionResult Testimonials(bool showHeading)
         {
-            ViewBag.Page = "Testimonials";
+            
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Testimonials");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -131,11 +132,12 @@ namespace TourTravel.Controllers
 
         public IActionResult Faq()
         {
-            ViewBag.Page = "Faq";
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "Faq");
+            
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "FAQ'S");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -147,31 +149,39 @@ namespace TourTravel.Controllers
 
             return View(fAQ);
         }
-        public IActionResult Gallery()
+        public IActionResult Gallery(int currentpage = 1, int pageSize = 1)
         {
-            ViewBag.Page = "Gallery";
+            
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Gallery");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
                 ViewBag.ImageHeight = page.ImgHeight;
                 ViewBag.ImageWidth = page.ImgWidth;
             }
+            var totalItems = db.Gallery.Count();
 
-            var Gallery = db.Gallery.ToList();
-            return View(Gallery);
+            var galleryItems = db.Gallery.OrderByDescending(g => g.Id).Skip((currentpage - 1) * pageSize).Take(pageSize).ToList();
+
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);         
+            return View(galleryItems);
         }
 
         public IActionResult PrivacyPolicy()
         {
-            ViewBag.Page = "Privacy Policy";
+            
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Privacy Policy");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -184,11 +194,12 @@ namespace TourTravel.Controllers
 
         public IActionResult TermsOfService()
         {
-            ViewBag.Page = "Terms Of Service";
+           
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Terms Of Service");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -197,23 +208,36 @@ namespace TourTravel.Controllers
             }
             return View();
         }
+        public IActionResult Error()
+        {
+          
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Error");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
+        }
+        public IActionResult ComingSoon()
+        {
 
-        public IActionResult Login()
-        {
-            ViewBag.Title = "Login";
-            ViewBag.Page = "Login";
-            return View();
-        }
-        public IActionResult Register()
-        {
-            ViewBag.Title = "Register";
-            ViewBag.Page = "Register";
-            return View();
-        }
-        public IActionResult ForgotPassword()
-        {
-            ViewBag.Title = "Forgot Password";
-            ViewBag.Page = "Forgot Password";
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Coming Soon");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
             return View();
         }
     }

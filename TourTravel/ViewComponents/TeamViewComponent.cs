@@ -5,11 +5,17 @@ namespace TourTravel.ViewComponents
 {
     public class TeamViewComponent(MyDbContext db) : ViewComponent
     {
-        public IViewComponentResult Invoke(int take)
+        public IViewComponentResult Invoke(int take, int currentPage = 1)
         {
-            var TourGuides = db.TourGuideView.OrderByDescending(t => t.Id).Take(take).ToList();
+            
+            int pageSize = take;
+            var query = db.Team.AsQueryable();
+            int totalItems = query.Count();
+            var Team = query.OrderByDescending(b => b.Id).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.Currentpage = currentPage;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            return View(TourGuides);
+            return View(Team);
         }
     }
 }

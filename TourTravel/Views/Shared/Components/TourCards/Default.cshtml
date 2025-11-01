@@ -66,7 +66,7 @@
                             <div class="tour-price">
                                 ₹@tour.Price.ToString("0") <small>/per person</small>
                             </div>
-                            <a asp-controller="Tours" asp-action="TourPackageDetails" class="tour-btn">
+                            <a asp-controller="Tours" asp-action="TourPackageDetails" asp-route-id="@tour.Id" class="tour-btn">
                                 Book Now <i class="far fa-arrow-right"></i>
                             </a>
                         </div>

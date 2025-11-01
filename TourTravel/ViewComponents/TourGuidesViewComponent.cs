@@ -1,28 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
 using TourTravel.Models;
 using TourTravel.ViewModel;
-
 namespace TourTravel.ViewComponents
+
 {
+
     public class TourGuidesViewComponent(MyDbContext db) : ViewComponent
+
     {
-        public IViewComponentResult Invoke(bool showHeading, int take )
+
+        public IViewComponentResult Invoke(bool showHeading, int take, int currentPage = 1)
+
         {
-            var TourGuides = db.TourGuideView.OrderByDescending(t => t.Id).Take(take).ToList();
-            foreach(var abc in TourGuides)
-            {
-                if (!string.IsNullOrEmpty(abc.ImageUrl))
-                {
 
-                }
-            }
-
-            var  viewModel = new TourGuideViewModel
+            int pageSize = take;
+            var query = db.TourGuideView.AsQueryable();
+            int totalItems = query.Count();
+            var tourguide = query.OrderByDescending(b => b.Id).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.Currentpage = currentPage;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            var viewModel = new TourGuideViewModel
             {
-               TourGuides = TourGuides,
-                ShowHeading = showHeading // or false depending on logic
+              TourGuides = tourguide,
+               ShowHeading = showHeading
             };
             return View(viewModel);
+
         }
+
     }
+
 }
+
