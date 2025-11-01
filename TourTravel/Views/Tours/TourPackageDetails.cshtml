@@ -1,38 +1,39 @@
 ﻿ <!-- tour-details -->
+@model TourTravel.Models.TourCardsView
 @await Component.InvokeAsync("HeroSection")
 <div class="tour-single py-120">
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
                 <div class="tour-single-img">
-                    <img src="/assets/img/tour/single.jpg" alt="">
+                    <img src="@(Model.ImageUrl?.StartsWith("/") == true ? Model.ImageUrl : $"/assets/img/tour/{Model.ImageUrl}")" alt="@Model.Title">
                 </div>
 
                 <div class="tour-single-header">
                     <div class="tour-single-content">
                         <div class="tour-single-info">
-                            <h3>Norway Lake Tour</h3>
+                            <h3>@Model.Title</h3>
                             <div class="tour-single-rating">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
-                                <span>(25 Reviews)</span>
+                                <span>@Model.ReviewsCount</span>
                             </div>
                         </div>
                         <div class="tour-single-price">
-                            <span>$1,500</span>
+                            <span>@Model.Price.ToString("0")</span>
                             <p>Per Person</p>
                         </div>
 
                     </div>
                     <div class="tour-single-meta">
                         <ul>
-                            <li><i class="far fa-clock"></i>3 Days/2 Nights</li>
-                            <li><i class="far fa-user"></i>15+ Persons</li>
+                            <li><i class="far fa-clock"></i>@Model.Duration</li>
+                            <li><i class="far fa-user"></i>@Model.MaxPerson</li>
                             <li><i class="far fa-bookmark"></i>Adventure</li>
-                            <li><i class="far fa-map-marker-alt"></i>Norway Lake</li>
+                            <li><i class="far fa-map-marker-alt"></i>@Model.Location</li>
                         </ul>
                     </div>
                 </div>
@@ -223,6 +224,7 @@
                         </div>
                         <div class="blog-comments-single">
                             <img src="/assets/img/blog/com-3.jpg" alt="thumb">
+
                             <div class="blog-comments-content">
                                 <h5>Roxanna Graham</h5>
                                 <span><i class="far fa-clock"></i> 20 August, 2021</span>
@@ -364,7 +366,7 @@
                     <div class="widget-banner mt-30 mb-50">
                         <img src="/assets/img/widget/banner.jpg" alt="">
                         <div class="banner-content">
-                            <h2>Get <span>35% Off</span> On Norway Lake Tour</h2>
+                            <h2>Get <span>35% Off</span> On @Model.Title</h2>
                         </div>
                     </div>
                     <!-- tour banner end -->

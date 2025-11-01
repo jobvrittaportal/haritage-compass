@@ -1,2 +1,7 @@
 ﻿@await Component.InvokeAsync("HeroSection")
-@await Component.InvokeAsync("TourGuides", new { showHeading = false ,take = 4})
+@{
+  
+    var currentPage = ViewBag.CurrentPage ?? 1;
+   
+}
+@await Component.InvokeAsync("TourGuides", new { showHeading = false, take = 2,  currentPage = currentPage })

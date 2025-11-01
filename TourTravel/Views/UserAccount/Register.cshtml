@@ -1,0 +1,154 @@
+﻿@model TourTravel.Models.ApplicationUser
+@await Component.InvokeAsync("HeroSection")
+
+<!-- register area -->
+<div class="login-area py-120">
+    <div class="container">
+        <div class="col-md-5 mx-auto">
+            <div class="login-form">
+                <div class="login-header text-center mb-3">
+                    <img src="~/assets/img/logo/logo-dark.png" alt="Travelox Logo">
+                    <p>Create your Travelox account</p>
+                </div>
+
+                <!-- ✅ Success message -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success text-center">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                <!-- ✅ Error messages -->
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger text-center">@ViewBag.Error</div>
+                }
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div class="alert alert-danger text-center">@error.ErrorMessage</div>
+                    }
+                }
+
+                <!-- ✅ Form with loader -->
+                <form asp-action="Register" asp-controller="UserAccount" method="post" id="registerForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="Name" class="form-control" placeholder="Your Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="Email" class="form-control" placeholder="Your Email" required>
+                    </div>
+
+                    <!-- ✅ Password with show/hide icon -->
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-group">
+                            <input type="password" id="password" name="password"
+                                   class="form-control unified-input"
+                                   placeholder="Your Password" required>
+                            <button type="button" id="togglePassword" class="btn unified-btn" tabindex="-1">
+                                <i class="far fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-group">
+                        <input class="form-check-input" type="checkbox" id="agree" required>
+                        <label class="form-check-label" for="agree">
+                            I agree with the <a asp-controller="Pages" asp-action="TermsOfService">Terms Of Service</a>.
+                        </label>
+                    </div>
+
+                    <!-- ✅ Button with loader -->
+                    <div class="d-flex align-items-center">
+                        <button type="submit" id="registerBtn" class="login-btn w-100">
+                            <span class="btn-text"><i class="far fa-paper-plane"></i> Register</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="login-footer text-center mt-3">
+                    <p>Already have an account? <a asp-controller="UserAccount" asp-action="Login">Login</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Password toggle script -->
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        eyeIcon.classList.toggle('fa-eye');
+        eyeIcon.classList.toggle('fa-eye-slash');
+    });
+
+    // ✅ Loader logic
+    document.getElementById('registerForm').addEventListener('submit', function () {
+        const button = document.getElementById('registerBtn');
+        const spinner = button.querySelector('.spinner-border');
+        const text = button.querySelector('.btn-text');
+
+        button.disabled = true;
+        text.classList.add('d-none');
+        spinner.classList.remove('d-none');
+    });
+</script>
+
+<!-- ✅ Styles -->
+<style>
+    /* Input + Button unified look */
+    .input-group .unified-input {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #ced4da;
+        border-right: none;
+        box-shadow: none;
+    }
+
+        .input-group .unified-input:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+    .input-group .unified-btn {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #ced4da;
+        border-left: none;
+        box-shadow: none;
+    }
+
+        .input-group .unified-btn:focus,
+        .input-group .unified-btn:active {
+            background-color: #fff;
+            color: #000;
+            box-shadow: none;
+        }
+
+    /* Loader styling */
+    .login-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .spinner-border {
+        width: 1.2rem;
+        height: 1.2rem;
+        border-width: 2px;
+        color: #fff;
+    }
+</style>

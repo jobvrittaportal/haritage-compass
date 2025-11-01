@@ -4,7 +4,9 @@ namespace TourTravel.ViewModel
 {
     public class SingleBlogViewModel
     {
-        public Blog Blog { get; set; }
-        public List<Blog> RecentBlogs { get; set; }
+        public required Blog Blog { get; set; }
+        public required List<Blog> RecentBlogs { get; set; }
+        public required WebsiteSetting CompanyDetails { get; set; }
+    
     }
 }

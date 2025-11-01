@@ -1,5 +1,5 @@
 ﻿<!-- team-area -->
-@model List<TourTravel.Models.TourGuideView>
+@model List<TourTravel.Models.Team>
 <div class="team-area py-120">
     <div class="container">
       
@@ -39,139 +39,36 @@
                         </div>
                     </div>
                 </div>
-            }
-           
-            @* <div class="col-md-6 col-lg-3">
-                <div class="team-item">
-                    <img src="~/assets/img/team/team-2.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">Florence Long</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item active">
-                    <img src="~/assets/img/team/team-3.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">Melvin Castillo</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item">
-                    <img src="~/assets/img/team/team-4.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">John Welsh</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item active">
-                    <img src="~/assets/img/team/team-1.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">Malissa Fierro</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item">
-                    <img src="~/assets/img/team/team-2.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">Florence Long</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item active">
-                    <img src="~/assets/img/team/team-3.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">Melvin Castillo</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="team-item">
-                    <img src="~/assets/img/team/team-4.jpg" alt="thumb">
-                    <div class="team-content">
-                        <div class="team-social">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="team-bio">
-                            <a href="#">John Welsh</a>
-                            <p>Tour Manager</p>
-                        </div>
-                    </div>
-                </div>
-            </div> *@
+            }           
         </div>
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(ViewBag.CurrentPage <= 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("Team", "Pages", new { search = ViewBag.Search, currentPage = ViewBag.CurrentPage - 1 })">Previous</a>
+                    </li>
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                            <a class="page-link"
+                               href="@Url.Action("Team", "Pages", new { search = ViewBag.Search, currentPage = i })">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(ViewBag.CurrentPage >= ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("Team", "Pages", new { search = ViewBag.Search, currentPage = ViewBag.CurrentPage + 1 })">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
     </div>
 </div>
 <!-- team-area end -->

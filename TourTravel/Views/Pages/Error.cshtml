@@ -1,0 +1,23 @@
+﻿<main class="main">
+
+    <!-- breadcrumb -->
+    @await Component.InvokeAsync("HeroSection")
+    <!-- breadcrumb end -->
+    <!-- error area -->
+    <div class="error-area py-120">
+        <div class="container">
+            <div class="col-md-6 mx-auto">
+                <div class="error-wrapper">
+                    <img src="/assets/img/error/404.svg" alt="">
+                    <h2>Opos...  Page Not Found!</h2>
+                    <p>The page you looking for not found may be it not exist or removed.</p>
+                    <a asp-controller="Home" asp-action="Index" class="theme-btn"><i class="far fa-home"></i> Go Back Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- error area end -->
+
+
+
+</main>

@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-md-5">
                     <div class="top-header-right">
-                        <div class="lang">
+                        @* <div class="lang">
                             <select name="lang" class="select">
                                 <option value="1">ENG</option>
                                 <option value="2">RUS</option>
@@ -52,9 +52,9 @@
                                 <option value="5">CAD</option>
                                 <option value="6">MXN</option>
                             </select>
-                        </div>
+                        </div> *@
                         <div class="account">
-                            <a asp-controller="Pages" asp-action="Login"><i class="far fa-sign-in"></i>Login</a>
+                            <a asp-controller="UserAccount" asp-action="Login"><i class="far fa-sign-in"></i>Login</a>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                             </a>
                             <ul class="dropdown-menu fade-up">
                                 <li><a class="dropdown-item" asp-controller="Tours" asp-action="Index">Tour Package</a></li>
-                                <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageDetails">Tour Package Details</a></li>
+                                @* <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageDetails">Tour Package Details</a></li> *@
                                 <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageSearch">Tour Package Search</a></li>
                                 <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageOffer">Tour Package Offer</a></li>
                                 <li><a class="dropdown-item" asp-controller="Tours" asp-action="TourPackageBookings">Tour Package Booking</a></li>
@@ -110,15 +110,15 @@
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" href="#">Account Page</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="Login">Login</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Pages" asp-action="Register">Register</a></li>
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="Login">Login</a></li>
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="Register">Register</a></li>
                                         <li>
-                                            <a class="dropdown-item" asp-controller="Pages" asp-action="ForgotPassword">Forgot Password</a>
+                                            <a class="dropdown-item" asp-controller="UserAccount" asp-action="ForgotPassword">Forgot Password</a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a class="dropdown-item" href="404.html">404 Error</a></li>
-                                <li><a class="dropdown-item" href="coming-soon.html">Coming Soon</a></li>
+                                <li><a class="dropdown-item" asp-controller="Pages" asp-action="Error">404 Error</a></li>
+                                @* <li><a class="dropdown-item" asp-controller="Pages" asp-action="ComingSoon">Coming Soon</a></li> *@
                                 <li><a class="dropdown-item" asp-controller="Pages" asp-action="TermsOfService">Terms Of Service</a></li>
                                 <li><a class="dropdown-item" asp-controller="Pages" asp-action="PrivacyPolicy">Privacy Policy</a></li>
                             </ul>

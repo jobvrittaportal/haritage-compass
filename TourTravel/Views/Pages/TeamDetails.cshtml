@@ -1,4 +1,4 @@
-﻿@model TourTravel.ViewModel.TourGuideDetail
+﻿@model TourTravel.Models.Team
 @await Component.InvokeAsync("HeroSection")
 <!-- team single -->
 <div class="team-single pt-120 pb-80">
@@ -6,40 +6,40 @@
         <div class="row align-items-center">
             <div class="col-md-4">
                 <div class="team-single-img">
-                    <img src="@Model.TourGuide.ImageUrl" alt="@Model.TourGuide.Name">
+                    <img src="@Model.ImageUrl" alt="@Model.Name">
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="team-details">
-                    <h3>@Model.TourGuide.Name</h3>
-                    <p class="mb-3 team-tagline"><strong>@Model.TourGuide.Role</strong></p>
-                    <p>@Html.Raw(Model.TourGuide.Introduction)</p>
+                    <h3>@Model.Name</h3>
+                    <p class="mb-3 team-tagline"><strong>@Model.Role</strong></p>
+                    <p>@Html.Raw(Model.Introduction)</p>
                     <div class="team-details-info">
                         <ul>
-                            <li><a href="#"><i class="far fa-envelope"></i> @Model.TourGuide.Email</a></li>
-                            <li><a href="#"><i class="far fa-phone"></i> @Model.TourGuide.Phone</a></li>
+                            <li><a href="#"><i class="far fa-envelope"></i> @Model.Email</a></li>
+                            <li><a href="#"><i class="far fa-phone"></i> @Model.Phone</a></li>
                         </ul>
                     </div>
                     <div class="team-details-social">
-                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Facebook))
+                        @if (!string.IsNullOrEmpty(@Model.Facebook))
                         {
-                            <a href="@Model.TourGuide.Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="@Model.Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
                         }
-                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Twitter))
+                        @if (!string.IsNullOrEmpty(@Model.Twitter))
                         {
-                            <a href="@Model.TourGuide.Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="@Model.Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
                         }
-                        @if (!string.IsNullOrEmpty(@Model.TourGuide.Instagram))
+                        @if (!string.IsNullOrEmpty(@Model.Instagram))
                         {
-                            <a href="@Model.TourGuide.Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="@Model.Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
                         }
-                        @if (!string.IsNullOrEmpty(@Model.TourGuide.LinkedIn))
+                        @if (!string.IsNullOrEmpty(@Model.LinkedIn))
                         {
-                            <a href="@Model.TourGuide.LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                            <a href="@Model.LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
                         }
-                        @if (!string.IsNullOrEmpty(@Model.TourGuide.YouTube))
+                        @if (!string.IsNullOrEmpty(@Model.YouTube))
                         {
-                            <a href="@Model.TourGuide.YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+                            <a href="@Model.YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
                         }
                     </div>
                 </div>
@@ -56,13 +56,13 @@
                 <div class="biography">
                     <h4 class="mb-3">Biography</h4>
                     <p class="mb-10">
-                        @Html.Raw(Model.TourGuide.Biography)
+                        @Html.Raw(Model.Biography)
                     </p>
                 </div>
             </div>
             <div class="col-md-5">
                 <div class="biography-img">
-                    <img src="@Model.TourGuide.ImageUrl" alt="@Model.TourGuide.Name">
+                    <img src="@Model.ImageUrl" alt="@Model.Name">
                 </div>
             </div>
         </div>

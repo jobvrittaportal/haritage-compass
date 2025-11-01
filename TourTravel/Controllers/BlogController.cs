@@ -6,13 +6,16 @@ namespace TourTravel.Controllers
 {
     public class BlogController(MyDbContext db) : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(int currentpage = 1, string? search = null)
         {
-            ViewBag.Page = "Blogs";
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "Blogs");
+      
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Blogs");          
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.Search = search;
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -23,11 +26,13 @@ namespace TourTravel.Controllers
         }
         public IActionResult SingleBlog(int id)
         {
-            ViewBag.Page = "Blog Detail";
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "Blogs");
+           
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Single Blog");
+            var companyDetails = db.WebsiteSetting.OrderByDescending(f => f.Id).FirstOrDefault();
             if (page != null)
             {
                 ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
                 ViewBag.Description = page.Description;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
@@ -44,7 +49,8 @@ namespace TourTravel.Controllers
             var viewModel = new SingleBlogViewModel
             {
                 Blog = blog,
-                RecentBlogs = Recentblogs
+                RecentBlogs = Recentblogs,
+                CompanyDetails = companyDetails
             };
             return View(viewModel);
         }
