@@ -43,13 +43,16 @@
                         }
                     </td>
                     <td>@item.RotationTime sec</td>
-                    <td class="text-center">
-                        <a href="@Url.Action("Edit", "HeroSlider", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                    <td class="text-center" style="white-space:nowrap;">
+                        <a href="@Url.Action("Edit", "HeroSlider", new { id = item.Id })"
+                           class="btn btn-sm btn-primary me-1">
                             <i class="fa fa-edit"></i>
                         </a>
+
                         <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
                             <i class="fa fa-trash"></i>
                         </button>
+
                         @Html.AntiForgeryToken()
                     </td>
                 </tr>

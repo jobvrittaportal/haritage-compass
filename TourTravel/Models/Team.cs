@@ -3,7 +3,7 @@
     public class Team:Base
     {
         public required string Name { get; set; }
-        public required string Role { get; set; } = "Tour Guide";
+        public required string Role { get; set; } = "Team";
         public string? ImageUrl { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }

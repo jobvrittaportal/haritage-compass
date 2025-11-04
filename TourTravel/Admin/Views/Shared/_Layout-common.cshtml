@@ -169,6 +169,17 @@
                                     <div data-i18n="Connections">Tour Guide</div>
                                 </a>
                             </li>
+                           @* new *@
+                            <li class="menu-item">
+                                <a href="/admin/Team" class="menu-link">
+                                    <div data-i18n="Connections">Team</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="/admin/TourBooking" class="menu-link">
+                                    <div data-i18n="Connections">TourBooking</div>
+                                </a>
+                            </li>
                             <li class="menu-item">
                                 <a href="/admin/heroSlider" class="menu-link">
                                     <div data-i18n="Connections">Home Page Slider</div>
@@ -372,6 +383,30 @@
             document.getElementById('logoutForm').submit();
         });
     </script>
+
+    @* <!-- Simple Success Toast -->
+    <div id="simpleToast"
+         class="position-fixed top-0 end-0 m-3 px-4 py-2 rounded shadow"
+         style="background:#28a745; color:white; display:none; z-index:9999; font-weight:500;">
+    </div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById("simpleToast");
+            toast.innerHTML = message;
+            toast.style.display = "block";
+            toast.style.opacity = "1";
+
+            // fade out after 3 seconds
+            setTimeout(() => {
+                toast.style.transition = "opacity 0.5s";
+                toast.style.opacity = "0";
+                setTimeout(() => toast.style.display = "none", 500);
+            }, 3000);
+        }
+    </script> *@
+
+
 
 </body>
 @RenderSection("Scripts", required: false)
