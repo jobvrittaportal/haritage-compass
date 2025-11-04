@@ -1,28 +1,20 @@
-﻿@model IEnumerable<TourTravel.Models.TourGuideView>
+﻿@model IEnumerable<TourTravel.Models.Team>
 @{
-    ViewData["Title"] = "Tour Guides";
+    ViewData["Title"] = "Team";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
-}
-
-@if (TempData["success"] != null)
-{
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            showToast("@TempData["success"]");
-        });
-    </script>
 }
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Tour Guides</h4>   
-          <div class="d-flex align-items-center">
+        <h4 class="mb-0">Team</h4>
+
+        <div class="d-flex align-items-center">
             <form method="get" asp-action="Index" class="me-2">
                 <div class="input-group" style="width: 200px;">
                     <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search name/email" />
                     <button class="btn btn-outline-secondary"><i class="fa fa-search"></i></button>
                 </div>
             </form>
-            <a href="@Url.Action("Create", "TourGuide")" class="btn btn-primary ms-2"><i class="fa fa-plus"></i> New</a>
+            <a href="@Url.Action("Create", "Team")" class="btn btn-primary ms-2"><i class="fa fa-plus"></i> New</a>
         </div>
     </div>
 
@@ -80,28 +72,12 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <a href="@Url.Action("Edit", "TourGuide", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
+                        <a href="@Url.Action("Edit", "Team", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
+                        <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
                             <i class="fa fa-trash"></i>
                         </button>
-                        <!-- Delete Confirmation Modal -->
-                        <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-warning">
-                                        <h5 class="modal-title">Confirm Delete</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">Are you sure you want to delete?</div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         @Html.AntiForgeryToken()
                     </td>
                 </tr>
@@ -121,63 +97,30 @@
         </ul>
     </nav>
 </div>
-@* @section Scripts {
+
+
+@section Scripts {
     <script>
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', async () => {
-                if (!confirm('Are you sure you want to delete this guide?')) return;
+                if (!confirm('Are you sure you want to delete this Team?')) return;
 
                 const id = btn.dataset.id;
-                const res = await fetch(`/admin/TourGuide/Delete/${id}`, {
+                const res = await fetch(`/admin/Team/Delete/${id}`, {
                     method: 'POST',
                     headers: { 'RequestVerificationToken': token }
                 });
                 const data = await res.json();
 
                 if (data.success) {
-                    document.getElementById(`guideRow_${id}`).remove();
-                    alert('Tour guide deleted!');
+                    document.getElementById(`TeamRow_${id}`).remove();
+                    alert('Team deleted!');
                 } else {
                     alert(data.message);
                 }
             });
         });
     </script>
-} *@
-
-@section Scripts {
-    <script>
-        let deleteId = 0;
-
-        $(".btn-delete").click(function () {
-            deleteId = $(this).data("id");
-            $("#deleteConfirmModal").modal("show");
-        });
-
-        $("#confirmDeleteBtn").off("click").on("click", function () {
-            var token = $('input[name="__RequestVerificationToken"]').val();
-
-            $.ajax({
-                url: `/admin/TourGuide/Delete/${deleteId}`,
-                type: "POST",
-                headers: { "RequestVerificationToken": token },
-                success: function (res) {
-                    if (res.success) {
-                        $("#guideRow_" + deleteId).fadeOut();
-                        showToast(res.message);
-                    } else {
-                        showToast(res.message, "error");
-                    }
-                },
-                error: function () {
-                    showToast("❌ Server error", "error");
-                }
-            });
-
-            $("#deleteConfirmModal").modal("hide");
-        });
-    </script>
 }
-
