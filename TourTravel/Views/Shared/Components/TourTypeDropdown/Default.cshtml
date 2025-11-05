@@ -1,0 +1,9 @@
+@model List<TourTravel.ViewComponents.TourTypeDropdown>
+
+<select id="TourTypeId" name="TourTypeId" class="form-control" style="width:100%">
+    <option value="">-- Select Tour Type --</option>
+    @foreach (var dest in Model)
+    {
+        <option value="@dest.Id">@dest.Name</option>
+    }
+</select>

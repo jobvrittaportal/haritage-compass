@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-    <!-- required meta tags -->
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
@@ -30,8 +30,7 @@
     <!-- favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/logo/favicon.png">
 
-
-    <!-- css -->
+    <!-- CSS -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/css/fontawesome.min.css" rel="stylesheet" />
     <link href="/assets/css/themify-icons.css" rel="stylesheet" />
@@ -43,12 +42,36 @@
     <link href="/assets/css/nice-select.min.css" rel="stylesheet" />
     <link href="/assets/css/jquery-ui.min.css" rel="stylesheet" />
     <link href="/assets/css/animate.min.css" rel="stylesheet" />
-    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet" />
+
+    <!-- ✅ Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        /* ✅ Make Select2 full width and match Bootstrap height */
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 50px !important;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+
+        .select2-container--default .select2-selection__arrow {
+            height: 48px !important;
+        }
+
+        .select2-selection__rendered {
+            line-height: 48px !important;
+        }
+    </style>
 
 </head>
 
 <body>
-
 
     <!-- preloader -->
     <div class="preloader">
@@ -58,14 +81,13 @@
         </div>
     </div>
     <!-- preloader end -->
-
-    @* @await Html.PartialAsync("_Header") *@
     @await Component.InvokeAsync("Header")
+
     <main class="main">
         @RenderBody()
     </main>
+
     @await Component.InvokeAsync("Footer")
-    @* @await Html.PartialAsync("_Footer") *@
 
     <!-- scroll-top -->
     <a href="#" id="scroll-top"><i class="far fa-angle-double-up"></i></a>
@@ -80,7 +102,7 @@
         </div>
     </div>
 
-    <!-- js -->
+    <!-- JS -->
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/jquery.easing.min.js"></script>
@@ -96,7 +118,11 @@
     <script src="/assets/js/count-to.js"></script>
     <script src="/assets/js/main.js"></script>
 
+    <!-- ✅ Select2 JS (after jQuery) -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

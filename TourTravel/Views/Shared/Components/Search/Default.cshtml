@@ -1,49 +1,37 @@
-﻿<!-- search area -->
-<div class="search-area">
+<!-- search area -->
+<div class="search-area py-4">
     <div class="container">
-        <div class="search-form-wrapper">
-            <form action="#">
-                <div class="row align-items-end">
-                    <div class="col-md-6 col-lg-3 search-input">
-                        <div class="form-group">
-                            <label>Destination</label>
-                            <input type="text" class="form-control" placeholder="New York, USA">
-                            <div><i class="far fa-map-marker-alt"></i></div>
-                        </div>
+        <div class="search-form-wrapper bg-white p-4 rounded-3 shadow-sm">
+            <form id="searchForm">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3 col-lg-3">
+                        <label class="form-label fw-semibold">Destination</label>
+                        @await Component.InvokeAsync("DestinationDropdown")
                     </div>
-                    <div class="col-md-6 col-lg-2 search-input">
-                        <div class="form-group">
-                            <label>Check In</label>
-                            <input type="text" class="form-control date-picker" placeholder="MM / DD / YY">
-                            <div><i class="far fa-calendar-alt"></i></div>
-                        </div>
+
+                    <div class="col-md-2 col-lg-2">
+                        <label class="form-label fw-semibold">Check In</label>
+                        <input type="date" id="checkIn" class="form-control" />
                     </div>
-                    <div class="col-md-6 col-lg-2 search-input">
-                        <div class="form-group">
-                            <label>Check Out</label>
-                            <input type="text" class="form-control date-picker" placeholder="MM / DD / YY">
-                            <div><i class="far fa-calendar-alt"></i></div>
-                        </div>
+
+                    <div class="col-md-2 col-lg-2">
+                        <label class="form-label fw-semibold">Check Out</label>
+                        <input type="date" id="checkOut" class="form-control" />
                     </div>
-                    <div class="col-md-6 col-lg-3 search-input">
-                        <div class="form-group">
-                            <label>Travel Type</label>
-                            <select class="select">
-                                <option value="">Travel Type</option>
-                                <option value="1">Adventure Tours</option>
-                                <option value="2">City Tours</option>
-                                <option value="3">Couple Tours</option>
-                                <option value="4">Group Tours</option>
-                                <option value="5">Weekend Break</option>
-                                <option value="6">Business Tours</option>
-                            </select>
-                            <div class="nice-select-icon"><i class="far fa-globe-europe"></i></div>
-                        </div>
+
+                    <div class="col-md-2 col-lg-2">
+                        <label class="form-label fw-semibold">Tour Type</label>
+                        @await Component.InvokeAsync("TourTypeDropdown")
                     </div>
-                    <div class="col-md-6 col-lg-2 search-input">
-                        <button type="submit" class="search-btn">
-                            <i class="far fa-search"></i> Find
-                            Now
+
+                    <div class="col-md-1 col-lg-1">
+                        <label class="form-label fw-semibold">Persons</label>
+                        <input type="number" id="persons" class="form-control text-center">
+                    </div>
+
+                    <div class="col-md-2 col-lg-2 d-flex align-items-end">
+                        <button type="button" id="findNow" class="btn btn-warning w-100 fw-semibold">
+                            <i class="far fa-search me-2"></i> Find Now
                         </button>
                     </div>
                 </div>
@@ -51,4 +39,29 @@
         </div>
     </div>
 </div>
-<!-- search area end -->
+<!-- right below your form -->
+<script>
+    console.log("✅ Script loaded directly (partial view)");
+    const findNowButton = document.getElementById("findNow");
+    if (findNowButton) {
+        findNowButton.addEventListener("click", function () {
+            const cityId = document.getElementById("DestinationId")?.value;
+            const checkInDate = document.getElementById("checkIn")?.value;
+            const checkOutDate = document.getElementById("checkOut")?.value;
+
+            if (!cityId || !checkInDate || !checkOutDate) {
+                alert("Please select destination and both dates.");
+                return;
+            }
+
+            const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}&checkInDate=${encodeURIComponent(checkInDate)}&checkOutDate=${encodeURIComponent(checkOutDate)}`;
+            console.log("Redirecting to:", url);
+            window.location.href = url;
+        });
+    } else {
+        console.warn("Button not found");
+    }
+</script>
+
+}
+
