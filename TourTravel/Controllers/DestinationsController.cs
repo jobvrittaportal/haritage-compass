@@ -54,7 +54,7 @@ namespace TourTravel.Controllers
         var client = _clientFactory.CreateClient();
 
         // Set base address of your API
-        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
+        client.BaseAddress = new Uri("https://localhost:7154/api/");
 
         // Call the API that returns an array of city objects
         var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
@@ -78,9 +78,6 @@ namespace TourTravel.Controllers
 
       return View(destinations);
     }
-
-
-
 
 
 
@@ -156,12 +153,12 @@ namespace TourTravel.Controllers
     //      // ✅ Dummy map for Varanasi (or dynamic later)
     //      if (viewModel.CityName.ToLower().Contains("varanasi"))
     //      {
-    //        viewModel.MapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3560.440037562953!2d83.00572847515765!3d25.31764572923105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e2e2ed097ccff%3A0x4c4d893f7b7d21f8!2sVaranasi%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1698664099872!5m2!1sen!2sin";
+    //        viewModel.MapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3560.440037562953!2d83.00572847515765!3d25.31764572923105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e2e2ed097ccff%3A0x4c4d893f7b7d21f8!2sVaranasi%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1698664099872!5m2!1sen!2sin%22;
     //      }
     //      else
     //      {
     //        // Generic India map if no specific city found
-    //        viewModel.MapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3109311.309053843!2d74.88509104774865!3d20.59368435709005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDM1JzM3LjMiTiA3NMKwNTMnMjMuMiJF!5e0!3m2!1sen!2sin!4v1698664237564!5m2!1sen!2sin";
+    //        viewModel.MapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3109311.309053843!2d74.88509104774865!3d20.59368435709005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDM1JzM3LjMiTiA3NMKwNTMnMjMuMiJF!5e0!3m2!1sen!2sin!4v1698664237564!5m2!1sen!2sin%22;
     //      }
     //    }
     //  }
@@ -193,7 +190,7 @@ namespace TourTravel.Controllers
       try
       {
         var client = _clientFactory.CreateClient();
-        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
+        client.BaseAddress = new Uri("https://localhost:7154/api/");
 
         var response = await client.GetFromJsonAsync<DestinationDetailsViewModel>(
             $"Destination/getDestinationDetails?id={id}");
@@ -225,7 +222,7 @@ namespace TourTravel.Controllers
       ViewBag.Page = "Spot Detail";
 
       var client = _clientFactory.CreateClient();
-      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/Destination/getSpotsDetails?id={id}";
+      var apiUrl = $"https://localhost:7154/api/Destination/getSpotsDetails?id={id}";
 
       List<SpotDetailsViewModel>? spots = null;
 
@@ -248,8 +245,6 @@ namespace TourTravel.Controllers
 
 
 
-
-
   }
 
 
@@ -267,8 +262,6 @@ namespace TourTravel.Controllers
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
   }
-
-
 
 
 

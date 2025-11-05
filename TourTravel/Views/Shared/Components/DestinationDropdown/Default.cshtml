@@ -1,0 +1,65 @@
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        /* ✅ Increase Select2 height to match 50px input */
+        .select2-container--default .select2-selection--single {
+            height: 40px !important;
+            
+        }
+
+        .select2-container--default .select2-selection__arrow {
+            height: 48px !important;
+        }
+
+      
+    </style>
+
+</head>
+<body>
+    <select id="DestinationId" name="DestinationId" class="form-control" style="height: 40px;"></select>
+    <!--  jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--  Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const $dropdown = $('#DestinationId');
+            // Check if Select2 is loaded
+            if (typeof $.fn.select2 === "undefined") {
+                console.error("Select2 not loaded properly!");
+                return;
+            }
+            $dropdown.select2({
+                placeholder: 'Varanasi, UP, India',
+                allowClear: true,
+                minimumInputLength: 1,
+                ajax: {
+                    url: 'https://localhost:7154/api/Destination/getDestinationSearch',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { search: params.term };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(item => ({
+                                id: item.id,
+                                text: item.destination
+                            }))
+                        };
+                    },
+                    cache: true
+                },
+                language: {
+                    inputTooShort: function () {
+                        return "Type at least 1 character to search";
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

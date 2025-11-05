@@ -1,17 +1,4 @@
 <!DOCTYPE html>
-
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML /admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-/admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
 <html lang="en"
       class="light-style layout-menu-fixed"
       dir="ltr"
@@ -24,7 +11,6 @@
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
     <title>Heritage Compass</title>
-
     <meta name="description" content="" />
 
     <!-- Favicon -->
@@ -36,7 +22,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
           rel="stylesheet" />
 
-    <!-- Icons. Uncomment required icon fonts -->
+    <!-- Icons -->
     <link rel="stylesheet" href="/admin/assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
@@ -46,43 +32,77 @@
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-
     <link rel="stylesheet" href="/admin/assets/vendor/libs/apex-charts/apex-charts.css" />
 
-    <!-- Page CSS -->
+    <!-- ✅ Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-selection {
+            border-radius: 0.375rem !important; /* match Bootstrap 5 form style */
+            border-color: #d9dee3 !important;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-selection__arrow {
+            top: 6px !important;
+            right: 10px !important;
+        }
+    </style>
+
     <!-- Helpers -->
     <script src="/admin/vendor/js/helpers.js"></script>
 
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <!-- Config (theme setup) -->
     <script src="/admin/js/config.js"></script>
 </head>
 
 <body>
-   
 
     @RenderBody()
 
-
     <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
     <script src="/admin/vendor/libs/jquery/jquery.js"></script>
     <script src="/admin/vendor/libs/popper/popper.js"></script>
     <script src="/admin/vendor/js/bootstrap.js"></script>
     <script src="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-
     <script src="/admin/vendor/js/menu.js"></script>
-    <!-- endbuild -->
+
     <!-- Vendors JS -->
     <script src="/admin/vendor/libs/apex-charts/apexcharts.js"></script>
 
     <!-- Main JS -->
     <script src="/admin/js/main.js"></script>
-
-    <!-- Page JS -->
     <script src="/admin/js/dashboards-analytics.js"></script>
 
-    <!-- Place this tag in your head or just before your close body tag. -->
+    <!-- ✅ Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- ✅ Global Select2 Initializer -->
+    <script>
+        $(document).ready(function () {
+            if ($.fn.select2) {
+                // Initialize all select elements with .select2 class automatically
+                $('.select2').select2({
+                    placeholder: 'Select an option',
+                    allowClear: true
+                });
+            } else {
+                console.error("❌ Select2 not loaded properly!");
+            }
+        });
+    </script>
+
+    <!-- ✅ Render Page-Specific Scripts -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- GitHub Buttons (optional) -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>
