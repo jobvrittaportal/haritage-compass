@@ -100,11 +100,20 @@
             el.addEventListener('hidden.bs.toast', () => el.remove());
         }
 
-        $('#clearBtn').click(() => {
+        // $('#clearBtn').click(() => {
+        //     $('#blogForm')[0].reset();
+        //     if (editor) editor.setData('');
+        //     $('.text-danger').text('');
+        // });
+                $('#clearBtn').click(() => {
             $('#blogForm')[0].reset();
+            $('#image').val('');
             if (editor) editor.setData('');
-            $('.text-danger').text('');
+            $('span[data-valmsg-for]').text('');
+            $('.is-invalid').removeClass('is-invalid');
+            showToast('Form cleared successfully.', 'bg-info');
         });
+
 
         $('#blogForm').submit(function (e) {
             e.preventDefault();
@@ -115,7 +124,7 @@
             const slug = $('#SlugUrl').val().trim();
             const content = editor ? editor.getData().trim() : '';
 
-            if (!title || !author || !metaTitle || !metaDescription || !slug || !content) {
+            if (!title || !author || !metaTitle || !metaDescription || !slug || !content ) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }

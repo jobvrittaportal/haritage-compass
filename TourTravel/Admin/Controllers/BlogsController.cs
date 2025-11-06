@@ -65,13 +65,13 @@ namespace TourTravel.Admin.Controllers
         if (image == null || image.Length == 0)
           return Json(new { success = false, message = "Please upload a blog image." });
 
-        bool slugExists = await _db.Blog.AnyAsync(b => b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
+        bool slugExists = await _db.Blog.AnyAsync(b => b.SlugUrl.ToLower().Trim()== model.SlugUrl.ToLower().Trim());
         if (slugExists)
           return Json(new { success = false, message = "Slug URL already exists." });
 
-        bool titleexist = await _db.Blog.AnyAsync(b => b.Title.ToLower() == model.Title.ToLower());
+        bool titleexist = await _db.Blog.AnyAsync(b => b.Title.ToLower().Trim() == model.Title.ToLower().Trim());
         if (titleexist)
-          return Json(new { success = false, message = "already exists." });
+          return Json(new { success = false, message = "Title already exists." });
 
 
         // ✅ Validate file size (max 5MB)
@@ -131,33 +131,21 @@ namespace TourTravel.Admin.Controllers
         if (existing == null)
           return Json(new { success = false, message = "Record not found." });
 
-        bool slugExists = await _db.Blog
-            .AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower() == model.SlugUrl.ToLower());
+        if (image == null || image.Length == 0)
+         return Json(new { success = false, message = "Please upload a blog image." });
+
+        bool slugExists = await _db.Blog.AnyAsync(b => b.Id != model.Id && b.SlugUrl.ToLower().Trim() == model.SlugUrl.ToLower().Trim());
+
         if (slugExists)
           return Json(new { success = false, message = "Slug URL already exists." });
 
 
-        bool titleexist = await _db.Blog
-     .AnyAsync(b => b.Id != model.Id && b.Title.ToLower() == model.Title.ToLower());
+        bool titleexist = await _db.Blog .AnyAsync(b => b.Id != model.Id && b.Title.ToLower().Trim() == model.Title.ToLower().Trim());
 
         if (titleexist)
         {
           return Json(new { success = false, message = "This Title already exists. Please use a different one." });
         }
-
-
-        // ✅ Validate file size (max 5MB)
-        //if (image.Length > 5 * 1024 * 1024)
-        //  return Json(new { success = false, message = "Image size must be less than 5MB." });
-
-        //// ✅ Validate dimensions
-        //using (var stream = image.OpenReadStream())
-        //using (var img = Image.FromStream(stream))
-        //{
-        //  if (img.Width != 800 || img.Height != 600)
-        //    return Json(new { success = false, message = "Image dimensions must be 800x600." });
-        //}
-
 
         existing.Title = model.Title;
         existing.Content = model.Content;
@@ -200,26 +188,26 @@ namespace TourTravel.Admin.Controllers
       }
     }
 
-    // ✅ Delete Blog
-    [HttpPost("Delete/{id}")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id)
-    {
-      var blog = await _db.Blog.FindAsync(id);
-      if (blog == null) return NotFound();
+        // ✅ Delete Blog
+        // ✅ Delete Blog
+        [HttpPost("Delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var blog = await _db.Blog.FindAsync(id);
+            if (blog == null) return NotFound();
 
-      if (!string.IsNullOrEmpty(blog.ImageUrl))
-      {
-        string filePath = Path.Combine(_env.WebRootPath, blog.ImageUrl.TrimStart('/'));
-        if (System.IO.File.Exists(filePath))
-          System.IO.File.Delete(filePath);
-      }
+            if (!string.IsNullOrEmpty(blog.ImageUrl))
+            {
+                string filePath = Path.Combine(_env.WebRootPath, blog.ImageUrl.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
 
-      _db.Blog.Remove(blog);
-      await _db.SaveChangesAsync();
+            _db.Blog.Remove(blog);
+            await _db.SaveChangesAsync();
 
-      TempData["Success"] = "Blog deleted successfully.";
-      return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = "✅ Blog deleted successfully!" });
+        }
     }
-  }
 }

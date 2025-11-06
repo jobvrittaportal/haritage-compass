@@ -120,7 +120,7 @@
                             window.location.href = '/admin/PrivacyPolicy'; // ✅ redirect after toast
                         }, 2000);
                     } else {
-                        showToast('Something went wrong.', 'bg-danger');
+                       showToast(res.message || 'Something went wrong.', 'bg-danger');
                     }
                 },
                 error: function () {

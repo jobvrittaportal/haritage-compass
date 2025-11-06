@@ -40,17 +40,17 @@ namespace TourTravel.Admin.Controllers
     [ValidateAntiForgeryToken]
     public IActionResult Create(FAQ model)
     {
-      //var existingFAQ = _db.FAQ
-      // .FirstOrDefault(f => f.Question.Trim().ToLower() == model.Question.Trim().ToLower());
+            var existingFAQ = _db.FAQ
+             .FirstOrDefault(f => f.Question.Trim().ToLower() == model.Question.Trim().ToLower());
 
-      //if (existingFAQ != null)
-      //{
-      //  return Json(new { success = false, message = " already exists!" });
-      ////  return RedirectToAction("Index");
-      //}
+            if (existingFAQ != null)
+            {
+                return Json(new { success = false, message = " already exists!" });
+                
+            }
 
 
-      _db.FAQ.Add(model);
+         _db.FAQ.Add(model);
         _db.SaveChanges();
         TempData["Success"] = "FAQ added successfully!";
         return RedirectToAction("Index");
@@ -77,17 +77,17 @@ namespace TourTravel.Admin.Controllers
         if (existing == null)
           return NotFound();
 
-       // var duplicate = _db.FAQ
-       //  .FirstOrDefault(f => f.Question.Trim().ToLower() == model.Question.Trim().ToLower()
-       //                       && f.Id != model.Id);
+                var duplicate = _db.FAQ
+                 .FirstOrDefault(f => f.Question.Trim().ToLower() == model.Question.Trim().ToLower()
+                                      && f.Id != model.Id);
 
-       // if (duplicate != null)
-       // {
-       //   return Json(new { success = false, message = " already exists!" });
-       ////   return RedirectToAction("Index");
-       // }
+                if (duplicate != null)
+                {
+                    return Json(new { success = false, message = " already exists!" });
+                    //   return RedirectToAction("Index");
+                }
 
-        existing.Question = model.Question;
+                existing.Question = model.Question;
         existing.Answer = model.Answer;
         _db.SaveChanges();
 
@@ -99,19 +99,19 @@ namespace TourTravel.Admin.Controllers
       return View(model);
     }
 
-    // ✅ Delete
-    [HttpPost("delete/{id}")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
-    {
-      var faq = _db.FAQ.Find(id);
-      if (faq != null)
-      {
-        _db.FAQ.Remove(faq);
-        _db.SaveChanges();
-        TempData["Success"] = "FAQ deleted successfully!";
-      }
-      return RedirectToAction("Index");
+        // ✅ Delete
+        [HttpPost("delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            var faq = _db.FAQ.Find(id);
+            if (faq == null)
+                return Json(new { success = false, message = "FAQ not found!" });
+
+            _db.FAQ.Remove(faq);
+            _db.SaveChanges();
+
+            return Json(new { success = true, message = "FAQ deleted successfully!" });
+        }
     }
-  }
 }

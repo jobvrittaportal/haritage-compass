@@ -29,18 +29,19 @@ namespace TourTravel.Controllers
            
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Single Blog");
             var companyDetails = db.WebsiteSetting.OrderByDescending(f => f.Id).FirstOrDefault();
+             var blog = db.Blog.FirstOrDefault(b => b.Id == id);
             if (page != null)
             {
-                ViewBag.Title = page.Title;
+                ViewBag.Title = blog.MetaTitle;
                 ViewBag.Page = page.Page;
-                ViewBag.Description = page.Description;
+                ViewBag.Description = blog.MetaDescription;
                 ViewBag.Keywords = page.KeyWords;
                 ViewBag.Image = page.Image;
                 ViewBag.ImageHeight = page.ImgHeight;
                 ViewBag.ImageWidth = page.ImgWidth;
             }
 
-            var blog = db.Blog.FirstOrDefault(b => b.Id == id);
+           
             var Recentblogs = db.Blog.OrderByDescending(b => b.Id).Take(3).ToList();
             if (blog == null)
             {

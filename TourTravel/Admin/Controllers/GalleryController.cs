@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
@@ -15,16 +16,35 @@ namespace TourTravel.Admin.Controllers
       _env = env;
     }
 
-    // ✅ List all images
-    [HttpGet]
-    public IActionResult Index()
-    {
-      var images = _db.Gallery.OrderByDescending(x => x.Id).ToList();
-      return View("~/Views/Admin/Gallery/Index.cshtml", images);
-    }
+        // ✅ List all images
+        [HttpGet]
+        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize =5 )
+        {
+            var query = _db.Gallery.AsQueryable();
 
-    // ✅ Create Page
-    [HttpGet("create")]
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(b => b.Title.Contains(search));
+            }
+
+            int totalItems = await query.CountAsync();
+
+            var images = await query
+                .OrderByDescending(b => b.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.Search = search;
+            ViewBag.Page = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            return View("~/Views/Admin/Gallery/Index.cshtml", images);
+        }
+
+
+        // ✅ Create Page
+        [HttpGet("create")]
     public IActionResult Create()
     {
       return View("~/Views/Admin/Gallery/Create.cshtml");
@@ -110,28 +130,28 @@ namespace TourTravel.Admin.Controllers
       return RedirectToAction("Index");
     }
 
-    // ✅ Delete
-    [HttpPost("delete/{id}")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
-    {
-      var image = _db.Gallery.Find(id);
-      if (image != null)
-      {
-        // Delete file from wwwroot
-        if (!string.IsNullOrEmpty(image.ImageUrl))
+        // ✅ Delete
+        // ✅ Delete
+        [HttpPost("delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
         {
-          string filePath = Path.Combine(_env.WebRootPath, image.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
-          if (System.IO.File.Exists(filePath))
-            System.IO.File.Delete(filePath);
+            var image = _db.Gallery.Find(id);
+            if (image == null)
+                return Json(new { success = false, message = "Image not found!" });
+
+            // Delete file from wwwroot
+            if (!string.IsNullOrEmpty(image.ImageUrl))
+            {
+                string filePath = Path.Combine(_env.WebRootPath, image.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
+            _db.Gallery.Remove(image);
+            _db.SaveChanges();
+
+            return Json(new { success = true, message = "✅ Image deleted successfully!" });
         }
-
-        _db.Gallery.Remove(image);
-        _db.SaveChanges();
-        TempData["Success"] = "Image deleted successfully!";
-      }
-
-      return RedirectToAction("Index");
     }
-  }
 }

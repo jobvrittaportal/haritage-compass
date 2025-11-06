@@ -58,6 +58,16 @@ namespace TourTravel.Controllers.Admin
 
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(model.Title))
+                {
+                    bool titleExists = await _db.HeroSlider.AnyAsync(t => t.Title == model.Title);
+                    if (titleExists)
+                    {
+                        ModelState.AddModelError("Title", "Title already exists.");
+                        return View("~/Views/Admin/HeroSlider/Create.cshtml", model);
+                    }
+                }
+
                 // Save image file
                 string folderPath = Path.Combine(_env.WebRootPath, "uploads", "HeroSlider");
                 if (!Directory.Exists(folderPath))
@@ -103,6 +113,15 @@ namespace TourTravel.Controllers.Admin
 
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(model.Title))
+                {
+                    bool titleExists = await _db.HeroSlider.AnyAsync(t => t.Title == model.Title);
+                    if (titleExists)
+                    {
+                        ModelState.AddModelError("Title", "Title already exists.");
+                        return View("~/Views/Admin/HeroSlider/Edit.cshtml", model);
+                    }
+                }
                 existing.Title = model.Title;
                 existing.SubTitle = model.SubTitle;
                 existing.Description = model.Description;
@@ -134,17 +153,41 @@ namespace TourTravel.Controllers.Admin
             return View("~/Views/Admin/HeroSlider/Edit.cshtml", model);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpPost("delete/{id}")]
+
+        [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Delete(int id)
+
         {
+
             var slider = await _db.HeroSlider.FindAsync(id);
+
             if (slider == null)
-                return Json(new { success = false, message = "Slider not found" });
+
+                return Json(new { success = false, message = "❌ Slider not found!" });
+
+            // ✅ Delete slider image from folder
+
+            if (!string.IsNullOrEmpty(slider.Image))
+
+            {
+
+                string filePath = Path.Combine(_env.WebRootPath, slider.Image.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(filePath))
+
+                    System.IO.File.Delete(filePath);
+
+            }
 
             _db.HeroSlider.Remove(slider);
+
             await _db.SaveChangesAsync();
 
-            return Json(new { success = true });
+            return Json(new { success = true, message = "✅ Slider deleted successfully!" });
+
         }
+
     }
 }

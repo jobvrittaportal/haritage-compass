@@ -99,22 +99,41 @@
                 showToast('Please fill in both Question and Answer fields.', 'bg-danger');
                 return;
             }
-
-            $.ajax({
-                url: '@Url.Action("Create", "FAQ")',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function (response) {
+                    $.ajax({
+            url: '@Url.Action("Create", "FAQ")',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.success) {
                     showToast('FAQ added successfully!', 'bg-success');
                     setTimeout(() => window.location.href = '/admin/faq', 1500);
-
                     $('#faqForm')[0].reset();
                     if (editor) editor.setData('');
-                },
-                error: function () {
-                    showToast('Something went wrong!', 'bg-danger');
+                } else {
+                    // Show message returned from backend
+                    showToast(response.message || 'Something went wrong!', 'bg-danger');
                 }
-            });
+            },
+            error: function () {
+                showToast('Server error occurred!', 'bg-danger');
+            }
+        });
+
+            // $.ajax({
+            //     url: '@Url.Action("Create", "FAQ")',
+            //     type: 'POST',
+            //     data: $(this).serialize(),
+            //     success: function (response) {
+            //         showToast('FAQ added successfully!', 'bg-success');
+            //         setTimeout(() => window.location.href = '/admin/faq', 1500);
+
+            //         $('#faqForm')[0].reset();
+            //         if (editor) editor.setData('');
+            //     },
+            //     error: function () {
+            //         showToast('Something went wrong!', 'bg-danger');
+            //     }
+            // });
         });
 
     </script>
