@@ -26,7 +26,7 @@
 
                     <div class="col-md-1 col-lg-1">
                         <label class="form-label fw-semibold">Persons</label>
-                        <input type="number" id="persons" class="form-control text-center">
+                        <input type="number" id="maxPerson" class="form-control text-center">
                     </div>
 
                     <div class="col-md-2 col-lg-2 d-flex align-items-end">
@@ -41,20 +41,20 @@
 </div>
 <!-- right below your form -->
 <script>
-    console.log("✅ Script loaded directly (partial view)");
     const findNowButton = document.getElementById("findNow");
     if (findNowButton) {
         findNowButton.addEventListener("click", function () {
             const cityId = document.getElementById("DestinationId")?.value;
             const checkInDate = document.getElementById("checkIn")?.value;
             const checkOutDate = document.getElementById("checkOut")?.value;
+            const maxPerson = document.getElementById("maxPerson")?.value;
 
-            if (!cityId || !checkInDate || !checkOutDate) {
+            if (!cityId || !checkInDate || !checkOutDate || !maxPerson) {
                 alert("Please select destination and both dates.");
                 return;
             }
 
-            const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}&checkInDate=${encodeURIComponent(checkInDate)}&checkOutDate=${encodeURIComponent(checkOutDate)}`;
+            const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}&checkInDate=${encodeURIComponent(checkInDate)}&checkOutDate=${encodeURIComponent(checkOutDate)}&maxPerson=${encodeURIComponent(maxPerson)}`;
             console.log("Redirecting to:", url);
             window.location.href = url;
         });

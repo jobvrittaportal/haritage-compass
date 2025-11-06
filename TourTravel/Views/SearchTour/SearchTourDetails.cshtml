@@ -1,0 +1,382 @@
+ <!-- tour-details -->
+@model TourTravel.Controllers.PackageDetailsDto
+
+
+@await Component.InvokeAsync("HeroSection")
+<div class="tour-single py-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tour-single-img">
+                    <img src="@(Model.PackageImage)" alt="@Model.PackageImage">
+                </div>
+
+                <div class="tour-single-header">
+                    <div class="tour-single-content">
+                        <div class="tour-single-info">
+                            <h3>@Model.Name</h3>
+                            <div class="tour-single-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                @*   <span>@Model.ReviewsCount</span> *@
+                            </div>
+                        </div>
+                        <div class="tour-single-price">
+                            <span>@Model.BasePrice.ToString("0")</span>
+                            <p>Per Person</p>
+                        </div>
+
+                    </div>
+                    <div class="tour-single-meta">
+                        <ul>
+                            <li><i class="far fa-clock"></i>@Model.Duration</li>
+                            <li><i class="far fa-user"></i>@Model.MaxPerson</li>
+                            <li><i class="far fa-bookmark"></i>Adventure</li>
+                            <li><i class="far fa-map-marker-alt"></i>@Model.CityName</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Tour Overview</h3>
+                <p class="mt-20">
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
+                    laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                    architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+                    aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                    voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                    consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
+                    dolore magnam aliquam quaerat voluptatem.
+                </p>
+
+                <div class="destination-country-info">
+                    <h3>Included And Excluded</h3>
+                    <p class="mt-10">
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
+                        voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
+                        occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
+                        mollitia animi, id est laborum et dolorum fuga.
+                    </p>
+                    <ul class="country-info-list clearfix">
+                        <li><i class="fas fa-plane-departure"></i><span>Departure Location</span>Norway Airport</li>
+                        <li><i class="fas fa-plane-departure"></i><span>Return Location</span>Norway Airport</li>
+                        <li><i class="fas fa-clock"></i><span>Departure Time</span>2 Hours Before Flight</li>
+                        <li><i class="fas fa-bed"></i><span>Bedroom</span>4 Bedrooms</li>
+                        <li><i class="fas fa-check-circle text-success"></i><span>Air Fares</span>Yes</li>
+                        <li><i class="fas fa-check-circle text-success"></i><span>4 Nights Hotel</span>Yes</li>
+                        <li><i class="fas fa-check-circle text-success"></i><span>Entrance Fees</span>Yes</li>
+                        <li><i class="fas fa-check-circle text-success"></i><span>Tour Guide</span>Yes</li>
+                        <li><i class="fas fa-times-circle text-danger"></i><span>Insurance</span>No</li>
+                        <li><i class="fas fa-times-circle text-danger"></i><span>Food & Drinks</span>No</li>
+                        <li><i class="fas fa-times-circle text-danger"></i><span>Additional Services</span>No</li>
+
+                    </ul>
+                </div>
+
+
+                <div class="tour-plan mt-30">
+                    <h3>Tour Plan</h3>
+                    <p class="mt-10">
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
+                        voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
+                        occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
+                        mollitia animi, id est laborum et dolorum fuga.
+                    </p>
+
+                    <div class="tour-content-box">
+                        <div class="tour-single-box">
+                            <span>01</span>
+                            <h4>09:00AM - 12:00PM</h4>
+                            <h3>DAY 01 - Norway City Visit</h3>
+                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                            <ul>
+                                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
+                                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
+                                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
+                            </ul>
+                        </div>
+                        <div class="tour-single-box">
+                            <span>02</span>
+                            <h4>09:00AM - 12:00PM</h4>
+                            <h3>DAY 02 - Norway City Visit</h3>
+                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                            <ul>
+                                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
+                                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
+                                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
+                            </ul>
+                        </div>
+                        <div class="tour-single-box pb-0">
+                            <span>03</span>
+                            <h4>09:00AM - 12:00PM</h4>
+                            <h3>DAY 03 - Norway City Visit</h3>
+                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                            <ul>
+                                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
+                                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
+                                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="destination-single-gallery">
+                    <h3>Tour Gallery</h3>
+                    <p class="mt-10">
+                        Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati
+                        cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi,
+                        id est laborum et dolorum fuga.
+                    </p>
+                    <div class="row mt-20 popup-gallery">
+                        <div class="col-md-8">
+                            <div class="destination-single-gallery-img">
+                                <img src="/assets/img/destination/1.jpg" alt="">
+                                <a class="popup-img" href="assets/img/destination/1.jpg">
+                                    <i class="far fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="destination-single-gallery-img">
+                                <img src="/assets/img/destination/13.jpg" alt="">
+                                <a class="popup-img" href="assets/img/destination/13.jpg">
+                                    <i class="far fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="destination-single-gallery-img">
+                                <img src="/assets/img/destination/14.jpg" alt="">
+                                <a class="popup-img" href="assets/img/destination/14.jpg">
+                                    <i class="far fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="destination-single-gallery-img">
+                                <img src="/assets/img/destination/15.jpg" alt="">
+                                <a class="popup-img" href="assets/img/destination/15.jpg">
+                                    <i class="far fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="destination-single-gallery-img">
+                                <img src="/assets/img/destination/16.jpg" alt="">
+                                <a class="popup-img" href="assets/img/destination/16.jpg">
+                                    <i class="far fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-single-map">
+                    <h3>Tour Map</h3>
+                    <p class="mt-20">
+                        On the other hand, we denounce with righteous indignation and dislike men who are so
+                        beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire,
+                        that they cannot foresee the pain and trouble that are bound to ensue; and equal blame
+                        belongs to those who fail in their duty through weakness of will, which is the same as
+                        saying through shrinking from toil and pain.
+                    </p>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96708.34194156103!2d-74.03927096447748!3d40.759040329405195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4a01c8df6fb3cb8!2sSolomon%20R.%20Guggenheim%20Museum!5e0!3m2!1sen!2sbd!4v1619410634508!5m2!1sen!2s"
+                            style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+
+
+                <div class="blog-comments mt-50">
+                    <h4>Reviews (20)</h4>
+                    <div class="blog-comments-wrapper">
+                        <div class="blog-comments-single">
+                            <img src="/assets/img/blog/com-1.jpg" alt="thumb">
+                            <div class="blog-comments-content">
+                                <h5>Kristin Alvarado</h5>
+                                <span><i class="far fa-clock"></i> 20 August, 2021</span>
+                                <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
+                                <div class="text-warning">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <a href="#"><i class="far fa-reply"></i> Reply</a>
+                            </div>
+                        </div>
+                        <div class="blog-comments-single blog-comments-reply">
+                            <img src="/assets/img/blog/com-2.jpg" alt="thumb">
+                            <div class="blog-comments-content">
+                                <h5>Dannie Wilcox</h5>
+                                <span><i class="far fa-clock"></i> 20 August, 2021</span>
+                                <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
+                                <div class="text-warning">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <a href="#"><i class="far fa-reply"></i> Reply</a>
+                            </div>
+                        </div>
+                        <div class="blog-comments-single">
+                            <img src="/assets/img/blog/com-3.jpg" alt="thumb">
+
+                            <div class="blog-comments-content">
+                                <h5>Roxanna Graham</h5>
+                                <span><i class="far fa-clock"></i> 20 August, 2021</span>
+                                <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
+                                <div class="text-warning">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <a href="#"><i class="far fa-reply"></i> Reply</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="blog-comments-form">
+                        <h4>Leave Your Review</h4>
+                        <form action="#">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="review-rate mb-20">
+                                        <span> Your Rate : </span>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Your Name*">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" placeholder="Your Email*">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" rows="5" placeholder="Your Review*"></textarea>
+                                    </div>
+                                    <button type="submit" class="comment-btn"><i class="far fa-paper-plane"></i> Submit Review</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="tour-sidebar">
+
+                    <!-- booking form -->
+                    <div class="search-area">
+                        <div class="search-form-wrapper">
+                            <h4>Book This Tour</h4>
+                            <form action="#">
+                                <div class="row align-items-end">
+                                    <div class="col-12 search-input">
+                                        <div class="form-group">
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control" placeholder="First Name">
+                                            <div><i class="far fa-user"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 search-input">
+                                        <div class="form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control" placeholder="Last Name">
+                                            <div><i class="far fa-user"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 search-input">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" placeholder="Your Email">
+                                            <div><i class="far fa-envelope"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 search-input">
+                                        <div class="form-group">
+                                            <label>Phone</label>
+                                            <input type="text" class="form-control" placeholder="Your Phone">
+                                            <div><i class="far fa-phone"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 search-input">
+                                        <div class="form-group">
+                                            <label>Date</label>
+                                            <input type="text" class="form-control date-picker"
+                                                   placeholder="MM / DD / YY">
+                                            <div><i class="far fa-calendar-alt"></i></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="additional-service mt-30">
+                                        <h5>Additional Service</h5>
+                                        <ul>
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="ser1">
+                                                    <label class="form-check-label" for="ser1"> Tour Guide</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="ser2">
+                                                    <label class="form-check-label" for="ser2"> Insurance</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="ser3">
+                                                    <label class="form-check-label" for="ser3"> Dinner</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="ser4">
+                                                    <label class="form-check-label" for="ser4"> Car Rent</label>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="col-12 mt-10">
+                                        <button type="submit" class="search-btn"> <i class="far fa-check-circle"></i>Book Now</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- booking form end -->
+                    <!-- tour banner -->
+                    <div class="widget-banner mt-30 mb-50">
+                        <img src="/assets/img/widget/banner.jpg" alt="">
+                        <div class="banner-content">
+                            <h2>Get <span>35% Off</span> On @Model.Name</h2>
+                        </div>
+                    </div>
+                    <!-- tour banner end -->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- tour-details end -->
