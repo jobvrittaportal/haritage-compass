@@ -133,12 +133,13 @@
                     if (res.success) {
                         $(`#row_` + deleteId).fadeOut();
                         showToast(res.message);
+                        setTimeout(() => window.location.href = '/admin/Blogs', 1500);
                     } else {
-                        showToast(res.message, "error");
+                            showToast(res.message, "bg-danger");
                     }
                 },
                 error: function () {
-                    showToast("❌ Server error", "error");
+                        showToast("❌ Server error", "bg-danger");
                 }
             });
 

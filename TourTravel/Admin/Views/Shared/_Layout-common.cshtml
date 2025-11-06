@@ -387,15 +387,29 @@
     <!-- Simple Success Toast -->
     <div id="simpleToast"
          class="position-fixed top-0 end-0 m-3 p-3 rounded shadow"
-         style="background:#3BD72E; color:white; display:none; z-index:9999; font-weight:500;">
+         style="display:none; z-index:9999; color:#fff; font-weight:500;">
     </div>
 
     <script>
-        function showToast(message) {
+        // ? Reusable Toast Function with color/type
+        function showToast(message, type = 'bg-success') {
             const toast = document.getElementById("simpleToast");
+
+            // Set default background based on type
+            let bgColor;
+            switch (type) {
+                case 'bg-success': bgColor = '#3BD72E'; break; // green
+                case 'bg-danger': bgColor = '#DC3545'; break; // red
+                case 'bg-warning': bgColor = '#FFC107'; break; // yellow
+                case 'bg-info': bgColor = '#0DCAF0'; break; // blue
+                default: bgColor = type; // direct hex or custom color
+            }.0
+
+            toast.style.background = bgColor;
             toast.innerHTML = message;
             toast.style.display = "block";
             toast.style.opacity = "1";
+            toast.style.transition = "none";
 
             // fade out after 3 seconds
             setTimeout(() => {
@@ -405,6 +419,7 @@
             }, 3000);
         }
     </script>
+
 
 
 

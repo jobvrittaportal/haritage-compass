@@ -119,6 +119,9 @@
                         $("#deleteConfirmModal").modal("hide");
                         $("#sliderRow_" + deleteId).fadeOut();
                         showToast(res.message);
+                         setTimeout(() => {
+                        window.location.href = '/admin/HeroSlider';
+                    }, 1500);
                     } else {
                         showToast(res.message);
                     }

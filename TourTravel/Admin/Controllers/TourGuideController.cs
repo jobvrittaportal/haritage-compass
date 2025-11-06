@@ -50,57 +50,52 @@ namespace TourTravel.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TourGuideView model, IFormFile? ImageFile)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid data." });
+
+            if (ImageFile == null || ImageFile.Length == 0)
             {
-                // Check email duplicate
-                if (!string.IsNullOrEmpty(model.Email))
-                {
-                    bool emailExists = await _db.TourGuideView.AnyAsync(t => t.Email == model.Email);
-                    if (emailExists)
-                    {
-                        ModelState.AddModelError("Email", "Email already exists.");
-                        return View("~/Views/Admin/TourGuide/Create.cshtml", model);
-                    }
-                }
-
-                // Check phone duplicate
-                if (!string.IsNullOrEmpty(model.Phone))
-                {
-                    bool phoneExists = await _db.TourGuideView.AnyAsync(t => t.Phone == model.Phone);
-                    if (phoneExists)
-                    {
-                        ModelState.AddModelError("Phone", "Phone number already exists.");
-                        return View("~/Views/Admin/TourGuide/Create.cshtml", model);
-                    }
-                }
-
-                // Image upload
-                if (ImageFile != null)
-                {
-                    string folderPath = Path.Combine(_env.WebRootPath, "uploads", "TourGuide");
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
-
-                    string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-                    string filePath = Path.Combine(folderPath, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageFile.CopyToAsync(stream);
-                    }
-
-                    model.ImageUrl = "/uploads/TourGuide/" + fileName;
-                }
-
-                _db.TourGuideView.Add(model);
-                await _db.SaveChangesAsync();
-
-                TempData["success"] = "Tour Guide created successfully!";
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = false, message = "Profile image is required." });
             }
 
-            return View("~/Views/Admin/TourGuide/Create.cshtml", model);
+            // Email duplicate check
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                bool emailExists = await _db.TourGuideView.AnyAsync(t => t.Email == model.Email);
+                if (emailExists)
+                    return Json(new { success = false, message = "Email already exists." });
+            }
+
+            // Phone duplicate check
+            if (!string.IsNullOrEmpty(model.Phone))
+            {
+                bool phoneExists = await _db.TourGuideView.AnyAsync(t => t.Phone == model.Phone);
+                if (phoneExists)
+                    return Json(new { success = false, message = "Phone number already exists." });
+            }
+
+            // Image upload
+            if (ImageFile != null)
+            {
+                string folderPath = Path.Combine(_env.WebRootPath, "uploads", "TourGuide");
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
+                string filePath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                    await ImageFile.CopyToAsync(stream);
+
+                model.ImageUrl = "/uploads/TourGuide/" + fileName;
+            }
+
+            _db.TourGuideView.Add(model);
+            await _db.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Tour Guide created successfully!" });
         }
+
 
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
@@ -115,33 +110,35 @@ namespace TourTravel.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TourGuideView model, IFormFile? ImageFile)
         {
-            var existing = await _db.TourGuideView.FindAsync(id);
-            if (existing == null) return NotFound();
-
-            if (ModelState.IsValid)
+            try
             {
+                var existing = await _db.TourGuideView.FindAsync(id);
+                if (existing == null)
+                    return Json(new { success = false, message = "Tour Guide not found." });
+
+                if (!ModelState.IsValid)
+                    return Json(new { success = false, message = "Invalid data submitted." });
+
+                // ✅ Duplicate checks (using model.Id instead of id)
                 if (!string.IsNullOrEmpty(model.Email))
                 {
                     bool emailExists = await _db.TourGuideView
-                        .AnyAsync(t => t.Email == model.Email && t.Id != id);
+                        .AnyAsync(t => t.Email.Trim().ToLower() == model.Email.Trim().ToLower()
+                                    && t.Id != model.Id);
                     if (emailExists)
-                    {
-                        ModelState.AddModelError("Email", "Email already exists.");
-                        return View("~/Views/Admin/TourGuide/Edit.cshtml", model);
-                    }
+                        return Json(new { success = false, message = "Email already exists!" });
                 }
 
                 if (!string.IsNullOrEmpty(model.Phone))
                 {
                     bool phoneExists = await _db.TourGuideView
-                        .AnyAsync(t => t.Phone == model.Phone && t.Id != id);
+                        .AnyAsync(t => t.Phone.Trim() == model.Phone.Trim()
+                                    && t.Id != model.Id);
                     if (phoneExists)
-                    {
-                        ModelState.AddModelError("Phone", "Phone number already exists.");
-                        return View("~/Views/Admin/TourGuide/Edit.cshtml", model);
-                    }
+                        return Json(new { success = false, message = "Phone number already exists!" });
                 }
 
+                // ✅ Update basic fields
                 existing.Name = model.Name;
                 existing.Role = model.Role;
                 existing.Email = model.Email;
@@ -154,55 +151,68 @@ namespace TourTravel.Controllers.Admin
                 existing.Introduction = model.Introduction;
                 existing.Biography = model.Biography;
 
-                if (ImageFile != null)
+                // ✅ Handle image upload
+                if (ImageFile != null && ImageFile.Length > 0)
                 {
-                    string folderPath = Path.Combine(_env.WebRootPath, "uploads", "TourGuide");
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
+                    string uploadDir = Path.Combine(_env.WebRootPath, "uploads", "TourGuide");
+                    if (!Directory.Exists(uploadDir))
+                        Directory.CreateDirectory(uploadDir);
 
                     string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-                    string filePath = Path.Combine(folderPath, fileName);
+                    string filePath = Path.Combine(uploadDir, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
                         await ImageFile.CopyToAsync(stream);
+
+                    if (!string.IsNullOrEmpty(existing.ImageUrl))
+                    {
+                        var oldPath = Path.Combine(_env.WebRootPath, existing.ImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
                     }
 
                     existing.ImageUrl = "/uploads/TourGuide/" + fileName;
                 }
 
                 await _db.SaveChangesAsync();
-
-                TempData["success"] = "Tour Guide updated successfully!";
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Tour Guide updated successfully!" });
             }
-
-            return View("~/Views/Admin/TourGuide/Edit.cshtml", model);
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
         }
+
+
+
 
         [HttpPost("Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var guide = await _db.TourGuideView.FindAsync(id);
-            if (guide == null)
+            try
             {
-                TempData["Error"] = "Tour guide not found.";
-                return RedirectToAction("Index");
-            }
+                var guide = await _db.TourGuideView.FindAsync(id);
+                if (guide == null)
+                    return Json(new { success = false, message = "Tour guide not found." });
 
-            // Delete the image file if it exists
-            if (!string.IsNullOrEmpty(guide.ImageUrl))
+                // ✅ Delete the image file if it exists
+                if (!string.IsNullOrEmpty(guide.ImageUrl))
+                {
+                    string filePath = Path.Combine(_env.WebRootPath, guide.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                    if (System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+                }
+
+                _db.TourGuideView.Remove(guide);
+                await _db.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Tour guide successfully deleted." });
+            }
+            catch (Exception ex)
             {
-                string filePath = Path.Combine(_env.WebRootPath, guide.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
-                if (System.IO.File.Exists(filePath))
-                    System.IO.File.Delete(filePath);
+                return Json(new { success = false, message = "Error deleting tour guide: " + ex.Message });
             }
-
-            _db.TourGuideView.Remove(guide);
-            await _db.SaveChangesAsync();
-            return Json(new { success = true, message = " Tour Guide Successfully Deleted" });
-            //return RedirectToAction(nameof(Index));
         }
 
     }

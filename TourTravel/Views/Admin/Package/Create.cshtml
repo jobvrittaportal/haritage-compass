@@ -142,10 +142,11 @@
             el.addEventListener('hidden.bs.toast', () => el.remove());
         }
 
-        $('#clearBtn').click(() => {
+                $('#clearBtn').click(() => {
             $('#submit')[0].reset();
             if (editor) editor.setData('');
-            $('.text-danger').text('');
+            $('span[data-valmsg-for]').text(''); // keep red stars intact
+            $('.is-invalid').removeClass('is-invalid'); // optional
         });
 
         $('#submit').submit(function (e) {

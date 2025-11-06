@@ -167,6 +167,7 @@
                     if (res.success) {
                         $("#guideRow_" + deleteId).fadeOut();
                         showToast(res.message);
+                        setTimeout(() => window.location.href = '/admin/TourGuide', 1500);
                     } else {
                         showToast(res.message, "error");
                     }
