@@ -63,24 +63,7 @@
             .catch(error => console.error(error));
 
         // ✅ Toast Function
-        function showToast(message, type = 'bg-primary') {
-            const toastId = 'toast' + Date.now();
-            const toastHtml = `
-                                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
-                                             role="alert" aria-live="assertive" aria-atomic="true">
-                                            <div class="d-flex">
-                                                <div class="toast-body fw-semibold">${message}</div>
-                                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                                        data-bs-dismiss="toast" aria-label="Close"></button>
-                                            </div>
-                                        </div>`;
-            $('#toastContainer').prepend(toastHtml);
-
-            const toastEl = document.getElementById(toastId);
-            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
-            bsToast.show();
-            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-        }
+     
 
         // ✅ Clear button
         $('#clearBtn').click(() => {
@@ -106,8 +89,8 @@
                 data: $(this).serialize(),
                 success: function (response) {
                    if (response.success) {
-                    showToast('FAQ added successfully!', 'bg-success');
-                    setTimeout(() => window.location.href = '/admin/faq', 1500);
+                   showToast(response.message, 'bg-success');
+                    setTimeout(() => window.location.href = '/admin/FAQ', 1500);
                     $('#faqForm')[0].reset();
                     if (editor) editor.setData('');
                 } else {

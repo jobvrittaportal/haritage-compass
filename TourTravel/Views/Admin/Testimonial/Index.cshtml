@@ -159,6 +159,7 @@
                     if (res.success) {
                         $(`#row_` + deleteId).fadeOut();
                         showToast(res.message);
+                         setTimeout(() => window.location.href = '/admin/Testimonial', 1500);
                     } else {
                         showToast(res.message, "error");
                     }

@@ -57,7 +57,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Upload Image (800×600)</label>
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
+                    <input type="file" name="image" id="ImageUrl" class="form-control" accept="image/*" required />
                     @if (!string.IsNullOrEmpty(Model.ImageUrl))
                     {
                         <img src="@Model.ImageUrl" alt="Blog Image" class="mt-2 rounded" width="100" height="60" />
@@ -120,23 +120,7 @@
         });
 
                 })
-                .catch(error => console.error(error));
-
-            // ✅ Toast function
-            function showToast(message, type = 'bg-primary') {
-                const toastId = 'toast' + Date.now();
-                const html = `<div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2">
-                                <div class="d-flex">
-                                    <div class="toast-body fw-semibold">${message}</div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                                </div>
-                              </div>`;
-                $('#toastContainer').prepend(html);
-                const el = document.getElementById(toastId);
-                const toast = new bootstrap.Toast(el, { delay: 3000 });
-                toast.show();
-                el.addEventListener('hidden.bs.toast', () => el.remove());
-            }
+                .catch(error => console.error(error));      
 
             // ✅ Handle form submit
             $('#blogForm').submit(function (e) {
@@ -154,7 +138,7 @@
                     return;
                 }
 
-                const imageFile = $('#image')[0].files[0];
+                const imageFile = $('#ImageUrl')[0].files[0];
                 if (imageFile) {
                     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
                     const maxSize = 5 * 1024 * 1024;

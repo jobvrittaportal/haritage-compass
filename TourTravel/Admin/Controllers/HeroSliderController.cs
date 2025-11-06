@@ -17,7 +17,7 @@ namespace TourTravel.Controllers.Admin
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 2)
         {
             var query = _db.HeroSlider.AsQueryable();
 
