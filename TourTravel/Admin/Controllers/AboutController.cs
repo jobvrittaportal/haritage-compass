@@ -242,8 +242,7 @@ namespace TourTravel.Admin.Controllers
       _db.About.Remove(about);
       await _db.SaveChangesAsync();
 
-      TempData["Success"] = "About deleted successfully.";
-      return RedirectToAction(nameof(Index));
-    }
+       return Json(new { success = true, message = "About Delete successfully." });
+     }
   }
 }

@@ -48,7 +48,7 @@
                 {
                     foreach (var item in Model)
                     {
-                        <tr>
+                        <tr id="row_@item.Id">
                             <td>@item.Question</td>
                             <td>@Html.Raw(item.Answer.Length > 80 ? item.Answer.Substring(0, 80) + "..." : item.Answer)</td>
 
@@ -61,18 +61,36 @@
                                    title="Edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
+                                <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <!-- Delete Confirmation Modal -->
+                                <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning">
+                                                <h5 class="modal-title">Confirm Delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">Are you sure you want to delete?</div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.AntiForgeryToken()
 
-
-                                <!-- Delete Button -->
+                                @* <!-- Delete Button -->
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post"
                                       class="d-inline-block" onsubmit="return confirm('Are you sure?');">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-icon btn-sm btn-danger" title="Delete">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
-                                </form>
+                                </form> *@
                             </td>
-
                         </tr>
                     }
                 }
@@ -97,5 +115,37 @@
 
         $('[data-bs-toggle="tooltip"]').tooltip();
 
+    </script>
+    <script>
+       
+        let deleteId = 0;
+
+        $(".btn-delete").click(function () {
+            deleteId = $(this).data("id");
+            $("#deleteConfirmModal").modal("show");
+        });
+
+        $("#confirmDeleteBtn").off("click").on("click", function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: `/admin/FAQ/Delete/${deleteId}`,
+                type: "POST",
+                headers: { "RequestVerificationToken": token },
+                success: function (res) {
+                    if (res.success) {
+                        $(`#row_` + deleteId).fadeOut();
+                        showToast(res.message);
+                    } else {
+                        showToast(res.message, "error");
+                    }
+                },
+                error: function () {
+                    showToast("❌ Server error", "error");
+                }
+            });
+
+            $("#deleteConfirmModal").modal("hide");
+        });
     </script>
 }
