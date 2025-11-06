@@ -166,8 +166,9 @@ namespace TourTravel.Admin.Controllers
     public IActionResult Delete(int id)
     {
       var image = _db.Testimonial.Find(id);
-      if (image != null)
-      {
+      if (image == null)
+         return Json(new { success = false, message = "Image not found!" });
+            
         // Delete file from wwwroot
         if (!string.IsNullOrEmpty(image.ImageUrl))
         {
@@ -178,10 +179,7 @@ namespace TourTravel.Admin.Controllers
 
         _db.Testimonial.Remove(image);
         _db.SaveChanges();
-        TempData["Success"] = " deleted successfully.";
-      }
-
-      return RedirectToAction("Index");
-    }
+            return Json(new { success = true, message = "Image Delete Successfully!" });
+     }
   }
 }

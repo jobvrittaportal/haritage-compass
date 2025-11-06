@@ -180,6 +180,7 @@ namespace TourTravel.Controllers.Admin
         }
 
         [HttpPost("Delete/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var guide = await _db.Team.FindAsync(id);
@@ -189,7 +190,7 @@ namespace TourTravel.Controllers.Admin
             _db.Team.Remove(guide);
             await _db.SaveChangesAsync();
 
-            return Json(new { success = true, messsge = " Team delete successfully"});
+            return Json(new { success = true, message = " Team delete successfully"});
         }
     }
 }
