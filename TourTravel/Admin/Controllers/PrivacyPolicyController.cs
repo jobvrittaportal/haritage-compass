@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
@@ -39,13 +40,32 @@ namespace TourTravel.Admin.Controllers
     [ValidateAntiForgeryToken]
     public IActionResult Create(PrivacyPolicy model)
     {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
+                {
+                    return Json(new { success = false, message = "Please fill all required fields." });
+                }
 
-      _db.PrivacyPolicy.Add(model);
-      _db.SaveChanges();
-      return Json(new { success = true, message = "Privacy Policy Added successfully!" });
-    //  return RedirectToAction("Index");
+                var existingTitle = _db.PrivacyPolicy.FirstOrDefault(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower());
 
-    }
+                if (existingTitle != null)
+                {
+                    return Json(new { success = false, message = " already exists!" });
+                }
+
+                _db.PrivacyPolicy.Add(model);
+                _db.SaveChanges();
+                return Json(new { success = true, message = "Privacy Policy Added successfully!" });
+            }
+
+            
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
+
+        }
 
     // ✅ Edit Page
     [HttpGet("edit/{id}")]
@@ -67,6 +87,13 @@ namespace TourTravel.Admin.Controllers
         if (existing == null)
           return NotFound();
 
+         bool titleexist =  _db.PrivacyPolicy.Any(b => b.Id != model.Id && b.Title.ToLower() == model.Title.ToLower());
+
+          if (titleexist)
+            {
+              return Json(new { success = false, message = "This Title already exists. Please use a different one." });
+            }
+
         existing.Title = model.Title;
         existing.Description = model.Description;
         _db.SaveChanges();
@@ -79,18 +106,17 @@ namespace TourTravel.Admin.Controllers
       return View(model);
     }
 
-    [HttpPost("delete/{id}")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
-    {
-      var privacyPolicy = _db.PrivacyPolicy.Find(id);
-      if (privacyPolicy != null)
-      {
-        _db.PrivacyPolicy.Remove(privacyPolicy);
-        _db.SaveChanges();
-        TempData["Success"] = "Privacy Policy deleted successfully!";
-      }
-      return RedirectToAction("Index");
+        [HttpPost("delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            var privacyPolicy = _db.PrivacyPolicy.Find(id);
+            if (privacyPolicy == null)
+                return Json(new { success = false, message = "Privacy Policy not found!" });
+            _db.PrivacyPolicy.Remove(privacyPolicy);
+            _db.SaveChanges();
+
+            return Json(new { success = true, message = "Privacy Policy Delete Successfully!" });
+        }
     }
-  }
 }

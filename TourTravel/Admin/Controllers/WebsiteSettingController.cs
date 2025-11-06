@@ -44,7 +44,7 @@ namespace TourTravel.Admin.Controllers
     {
 
       // Check if email already exists
-      var existing = _db.WebsiteSetting.FirstOrDefault(w => w.Email == model.Email);
+      var existing = _db.WebsiteSetting.FirstOrDefault(w => w.Email.Trim().ToLower() == model.Email.Trim().ToLower());
       if (existing != null)
       {
         return Json(new { success = false, message = "Email already exists. Cannot add duplicate." });
@@ -79,7 +79,7 @@ namespace TourTravel.Admin.Controllers
 
         // Check if the new email is already used by another record
         var emailExists = _db.WebsiteSetting
-                             .Any(w => w.Email == model.Email && w.Id != id);
+                             .Any(w => w.Email.Trim().ToLower() == model.Email.Trim().ToLower() && w.Id != id);
         if (emailExists)
         {
           return Json(new { success = false, message = "Email already exists. Cannot update." });

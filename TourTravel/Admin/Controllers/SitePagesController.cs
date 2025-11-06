@@ -17,7 +17,7 @@ namespace TourTravel.Controllers.Admin
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize =5)
         {
             var query = _db.SitePages.AsQueryable();
 
@@ -55,6 +55,15 @@ namespace TourTravel.Controllers.Admin
 
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(model.Title))
+                {
+                    bool TitleExists = await _db.SitePages.AnyAsync(t => t.Title == model.Title);
+                    if (TitleExists)
+                    {
+                        ModelState.AddModelError("Title", "Title already exists.");
+                        return View("~/Views/Admin/SitePages/Create.cshtml", model);
+                    }
+                }
                 // Save image file
                 string folderPath = Path.Combine(_env.WebRootPath, "uploads", "SitePages");
                 if (!Directory.Exists(folderPath))
@@ -98,6 +107,12 @@ namespace TourTravel.Controllers.Admin
 
             if (ModelState.IsValid)
             {
+                bool TitleExists = await _db.SitePages.AnyAsync(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower() && t.Id != model.Id);
+                if (TitleExists)
+                {
+                    ModelState.AddModelError("Title", "Title already exists.");
+                    return View("~/Views/Admin/SitePages/Edit.cshtml", model);
+                }
                 existing.Page = model.Page;
                 existing.Title = model.Title;
                 existing.Description = model.Description;

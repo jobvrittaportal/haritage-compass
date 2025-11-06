@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
@@ -39,8 +40,17 @@ namespace TourTravel.Admin.Controllers
     [ValidateAntiForgeryToken]
     public IActionResult Create(TermsOfService model)
     {
+            if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
+            {
+                return Json(new { success = false, message = "Please fill all required fields." });
+            }
+            var existingTitle = _db.TermsOfService.FirstOrDefault(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower());
+            if (existingTitle != null)
+            {
+                return Json(new { success = false, message = " already exists!" });
+            }
 
-      _db.TermsOfService.Add(model);
+       _db.TermsOfService.Add(model);
       _db.SaveChanges();
       TempData["Success"] = "Term Of Service added successfully!";
       return Json(new { success = true, message = "Term Of Service added successfully!" });
@@ -64,9 +74,15 @@ namespace TourTravel.Admin.Controllers
       if (ModelState.IsValid)
       {
         var existing = _db.TermsOfService.Find(id);
-        if (existing == null)
-          return NotFound();
 
+        if (existing == null) return NotFound();
+
+         bool titleexist = _db.TermsOfService.Any(b => b.Id != model.Id && b.Title.Trim().ToLower() == model.Title.Trim().ToLower());
+
+         if (titleexist)
+          {
+           return Json(new { success = false, message = "This Title already exists. Please use a different one." });
+          }
         existing.Title = model.Title;
         existing.Description = model.Description;
         _db.SaveChanges();
@@ -78,19 +94,18 @@ namespace TourTravel.Admin.Controllers
       TempData["Error"] = "Failed to update Term Of Service.";
       return View(model);
     }
+        [HttpPost("delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            var termsOfService = _db.TermsOfService.Find(id);
+            if (termsOfService == null)
+                return Json(new { success = false, message = "Terms of Service not found!" });
 
-    [HttpPost("delete/{id}")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
-    {
-      var termsOfService = _db.TermsOfService.Find(id);
-      if (termsOfService != null)
-      {
-        _db.TermsOfService.Remove(termsOfService);
-        _db.SaveChanges();
-        TempData["Success"] = "TermsOfService deleted successfully!";
-      }
-      return RedirectToAction("Index");
+            _db.TermsOfService.Remove(termsOfService);
+            _db.SaveChanges();
+
+            return Json(new { success = true, message = "Terms of Service deleted successfully!" });
+        }
     }
-  }
 }

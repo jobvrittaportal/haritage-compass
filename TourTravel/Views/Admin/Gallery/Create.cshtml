@@ -89,11 +89,66 @@
         });
 
         // Form Validation
-        $('#galleryForm').submit(function (e) {
-            if (!$('#ImageFile').val()) {
-                e.preventDefault();
-                showToast('Please select an image to upload.', 'bg-warning');
+               // Form Validation
+              $('#galleryForm').submit(function (e) {
+            e.preventDefault();
+
+            const title = $('#Title').val().trim();
+            const imageFile = $('#ImageFile')[0].files[0];
+
+            // Basic validation
+            if (!title || !imageFile) {
+                showToast('Please fill all required fields.', 'bg-danger');
+                return;
             }
+
+            // Validate file type and size
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!allowedTypes.includes(imageFile.type)) {
+                showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
+                return;
+            }
+
+            if (imageFile.size > maxSize) {
+                showToast('Image size must be less than 5MB.', 'bg-danger');
+                return;
+            }
+
+            // Validate image dimensions
+            const img = new Image();
+            img.src = URL.createObjectURL(imageFile);
+
+            img.onload = function () {
+                if (img.width !== 420 || img.height !== 420) {
+                    showToast('Image dimensions must be exactly 420x420 pixels.', 'bg-danger');
+                    return;
+                }
+
+                // ? If everything is valid, submit form via AJAX
+                const formData = new FormData($('#galleryForm')[0]);
+
+                $.ajax({
+                    url: '@Url.Action("Create", "Gallery")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        showToast('Image added successfully!', 'bg-success');
+                        setTimeout(() => window.location.href = '/admin/gallery', 1500);
+                    },
+                    error: function () {
+                        showToast('Something went wrong. Please try again.', 'bg-danger');
+                    }
+                });
+            };
+
+            img.onerror = function () {
+                showToast('Invalid image file.', 'bg-danger');
+            };
         });
+
     </script>
 }

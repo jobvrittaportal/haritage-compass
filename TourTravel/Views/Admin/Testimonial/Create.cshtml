@@ -118,12 +118,20 @@
         
             const quote = editor ? editor.getData().trim() : '';
 
-            if (!AuthorName || !Role || !Rating ) {
+            if (!AuthorName || !Role || !Rating || !quote ) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-
+             if (Rating > 5) {
+                showToast('Rating Will Less Than 5', 'bg-danger');
+                return;
+            }
             const imageFile = $('#image')[0].files[0];
+             if (imageFile == null || imageFile.Length == 0){
+                 showToast('Please Upload Image.', 'bg-danger');
+                        return;
+             }
+             
             if (imageFile) {
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
                 const maxSize = 5 * 1024 * 1024; // 5MB

@@ -191,12 +191,15 @@ namespace TourTravel.Controllers
                             Stay tuned for exciting travel content and deals tailored just for you.
                         </p>
 
-                        <p style='text-align:center; margin-top:30px;'>
-                            <a href='https://heritage-compass.jobvritta.com' 
-                               style='background-color:#1a73e8; color:white; padding:12px 25px; border-radius:5px; text-decoration:none; font-size:16px;'>
-                               Visit Our Website
-                            </a>
-                        </p>
+                        <h2 style='text-align:center; margin-top:30px;'>
+                          <a href='https://heritage-compass.jobvritta.com' 
+                                style='background-color:#fbc02d; color:#ffffff; padding:12px 25px; border-radius:6px; text-decoration:none; font-size:20px; font-weight:500;'>
+                           Visit Tour&Travel
+                         </a>
+
+
+
+                        </h2>
 
                         <p style='font-size:13px; color:#777; margin-top:30px;'>
                             You are receiving this email because you subscribed to our newsletter.<br/>

@@ -105,12 +105,16 @@
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
-                    showToast('FAQ Updated successfully!', 'bg-success');
+                   if (response.success) {
+                    showToast('FAQ added successfully!', 'bg-success');
                     setTimeout(() => window.location.href = '/admin/faq', 1500);
-
                     $('#faqForm')[0].reset();
                     if (editor) editor.setData('');
-                },
+                } else {
+                    // Show message returned from backend
+                    showToast(response.message || 'Something went wrong!', 'bg-danger');
+                }
+            },
                 error: function () {
                     showToast('Something went wrong!', 'bg-danger');
                 }

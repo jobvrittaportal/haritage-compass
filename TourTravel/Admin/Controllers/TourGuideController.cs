@@ -181,16 +181,29 @@ namespace TourTravel.Controllers.Admin
         }
 
         [HttpPost("Delete/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var guide = await _db.TourGuideView.FindAsync(id);
             if (guide == null)
-                return Json(new { success = false, message = "Tour guide not found" });
+            {
+                TempData["Error"] = "Tour guide not found.";
+                return RedirectToAction("Index");
+            }
+
+            // Delete the image file if it exists
+            if (!string.IsNullOrEmpty(guide.ImageUrl))
+            {
+                string filePath = Path.Combine(_env.WebRootPath, guide.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
 
             _db.TourGuideView.Remove(guide);
             await _db.SaveChangesAsync();
-
-            return Json(new { success = true });
+            return Json(new { success = true, message = " Tour Guide Successfully Deleted" });
+            //return RedirectToAction(nameof(Index));
         }
+
     }
 }
