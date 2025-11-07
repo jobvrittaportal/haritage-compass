@@ -50,16 +50,24 @@ namespace TourTravel.Admin.Controllers
             return View("~/Views/Admin/Gallery/Create.cshtml");
         }
 
-        // ✅ Upload Image
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Gallery model, IFormFile? imageUrl)
         {
-            if (imageUrl != null && imageUrl.Length > 0)
+            try
             {
-                string folderPath = Path.Combine(_env.WebRootPath, "Gallery");
-                Directory.CreateDirectory(folderPath);
+                if (string.IsNullOrWhiteSpace(model.Title))
+                    return Json(new { success = false, message = "Title is required." });
 
+                if (imageUrl == null || imageUrl.Length == 0)
+                    return Json(new { success = false, message = "Please select an image to upload." });
+
+                // Validate folder
+                string folderPath = Path.Combine(_env.WebRootPath, "Gallery");
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                // Save image
                 string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(imageUrl.FileName)}";
                 string filePath = Path.Combine(folderPath, uniqueFileName);
 
@@ -69,19 +77,17 @@ namespace TourTravel.Admin.Controllers
                 }
 
                 model.ImageUrl = "/Gallery/" + uniqueFileName;
-
                 _db.Gallery.Add(model);
                 _db.SaveChanges();
-                TempData["Success"] = "Image uploaded successfully!";
-            }
-            else
-            {
-                TempData["Error"] = "Please select an image to upload.";
-                return View("~/Views/Admin/Gallery/Index.cshtml", model);
-            }
 
-            return RedirectToAction("Index");
+                return Json(new { success = true, message = "Image uploaded successfully!" });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "An error occurred while uploading the image." });
+            }
         }
+
 
         // ✅ Edit Page
         [HttpGet("edit/{id}")]
@@ -92,42 +98,57 @@ namespace TourTravel.Admin.Controllers
             return View("~/Views/Admin/Gallery/Edit.cshtml", image);
         }
 
-        // ✅ Update Image
         [HttpPost("edit/{id}")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Gallery model, IFormFile? newImage)
         {
-            var existing = _db.Gallery.Find(id);
-            if (existing == null) return NotFound();
-
-
-            if (newImage != null && newImage.Length > 0)
+            try
             {
-                string folderPath = Path.Combine(_env.WebRootPath, "Gallery");
-                Directory.CreateDirectory(folderPath);
+                var existing = _db.Gallery.Find(id);
+                if (existing == null)
+                    return Json(new { success = false, message = "Image not found!" });
 
-                string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(newImage.FileName)}";
-                string filePath = Path.Combine(folderPath, uniqueFileName);
+                // ✅ Validate title duplication
+                bool titleExists = _db.Gallery.Any(g => g.Id != id && g.Title.Trim().ToLower() == model.Title.Trim().ToLower());
+                if (titleExists)
+                    return Json(new { success = false, message = "This title already exists. Please choose a different one." });
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                // ✅ Update title
+                existing.Title = model.Title;
+
+                // ✅ Handle new image upload (if provided)
+                if (newImage != null && newImage.Length > 0)
                 {
-                    newImage.CopyTo(stream);
+                    string folderPath = Path.Combine(_env.WebRootPath, "Gallery");
+                    Directory.CreateDirectory(folderPath);
+
+                    string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(newImage.FileName)}";
+                    string filePath = Path.Combine(folderPath, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        newImage.CopyTo(stream);
+                    }
+
+                    // ✅ Delete old image safely
+                    if (!string.IsNullOrEmpty(existing.ImageUrl))
+                    {
+                        string oldPath = Path.Combine(_env.WebRootPath, existing.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
+                    }
+
+                    existing.ImageUrl = "/Gallery/" + uniqueFileName;
                 }
 
-                // Delete old image
-                if (!string.IsNullOrEmpty(existing.ImageUrl))
-                {
-                    string oldPath = Path.Combine(_env.WebRootPath, existing.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
-                    if (System.IO.File.Exists(oldPath))
-                        System.IO.File.Delete(oldPath);
-                }
-
-                existing.ImageUrl = "/Gallery/" + uniqueFileName;
+                _db.SaveChanges();
+                return Json(new { success = true, message = "Gallery image updated successfully!" });
             }
-
-            _db.SaveChanges();
-            TempData["Success"] = "Image updated successfully!";
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                // Optional: log ex.Message
+                return Json(new { success = false, message = "An error occurred while updating the image. Please try again." });
+            }
         }
 
         // ✅ Delete

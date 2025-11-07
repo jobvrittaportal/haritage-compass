@@ -4,42 +4,42 @@ using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
 {
-  [Route("admin/[controller]")]
-  public class PrivacyPolicyController : Controller
-  {
-    private readonly MyDbContext _db;
-
-    public PrivacyPolicyController(MyDbContext db)
+    [Route("admin/[controller]")]
+    public class PrivacyPolicyController : Controller
     {
-      _db = db;
-    }
+        private readonly MyDbContext _db;
 
-    // ✅ List View
-    [HttpGet]
-    public IActionResult Index(string search = "")
-    {
-      var query = _db.PrivacyPolicy.AsQueryable();
+        public PrivacyPolicyController(MyDbContext db)
+        {
+            _db = db;
+        }
 
-      if (!string.IsNullOrWhiteSpace(search))
-        query = query.Where(x => x.Title.Contains(search));
+        // ✅ List View
+        [HttpGet]
+        public IActionResult Index(string search = "")
+        {
+            var query = _db.PrivacyPolicy.AsQueryable();
 
-      var model = query.OrderByDescending(x => x.Id).ToList();
-      ViewBag.Search = search;
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(x => x.Title.Contains(search));
 
-      return View("~/Views/Admin/PrivacyPolicy/Index.cshtml", model);
-    }
+            var model = query.OrderByDescending(x => x.Id).ToList();
+            ViewBag.Search = search;
 
-    // ✅ Create Page
-    [HttpGet("create")]
-    public IActionResult Create()
-    {
-      return View("~/Views/Admin/PrivacyPolicy/Create.cshtml");
-    }
+            return View("~/Views/Admin/PrivacyPolicy/Index.cshtml", model);
+        }
 
-    [HttpPost("create")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(PrivacyPolicy model)
-    {
+        // ✅ Create Page
+        [HttpGet("create")]
+        public IActionResult Create()
+        {
+            return View("~/Views/Admin/PrivacyPolicy/Create.cshtml");
+        }
+
+        [HttpPost("create")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(PrivacyPolicy model)
+        {
             try
             {
                 if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
@@ -47,7 +47,7 @@ namespace TourTravel.Admin.Controllers
                     return Json(new { success = false, message = "Please fill all required fields." });
                 }
 
-                var existingTitle = _db.PrivacyPolicy.FirstOrDefault(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower());
+                var existingTitle = _db.PrivacyPolicy.FirstOrDefault(t => t.Title.Trim().ToLower().Trim() == model.Title.Trim().ToLower().Trim());
 
                 if (existingTitle != null)
                 {
@@ -59,7 +59,7 @@ namespace TourTravel.Admin.Controllers
                 return Json(new { success = true, message = "Privacy Policy Added successfully!" });
             }
 
-            
+
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error: " + ex.Message });
@@ -67,44 +67,44 @@ namespace TourTravel.Admin.Controllers
 
         }
 
-    // ✅ Edit Page
-    [HttpGet("edit/{id}")]
-    public IActionResult Edit(int id)
-    {
-      var privacyPolicy = _db.PrivacyPolicy.Find(id);
-      if (privacyPolicy == null)
-        return NotFound();
-      return View("~/Views/Admin/PrivacyPolicy/Edit.cshtml", privacyPolicy);
-    }
+        // ✅ Edit Page
+        [HttpGet("edit/{id}")]
+        public IActionResult Edit(int id)
+        {
+            var privacyPolicy = _db.PrivacyPolicy.Find(id);
+            if (privacyPolicy == null)
+                return NotFound();
+            return View("~/Views/Admin/PrivacyPolicy/Edit.cshtml", privacyPolicy);
+        }
 
-    [HttpPost("edit/{id}")]
-    [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, PrivacyPolicy model)
-    {
-      if (ModelState.IsValid)
-      {
-        var existing = _db.PrivacyPolicy.Find(id);
-        if (existing == null)
-          return NotFound();
-
-         bool titleexist =  _db.PrivacyPolicy.Any(b => b.Id != model.Id && b.Title.ToLower() == model.Title.ToLower());
-
-          if (titleexist)
+        [HttpPost("edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, PrivacyPolicy model)
+        {
+            if (ModelState.IsValid)
             {
-              return Json(new { success = false, message = "This Title already exists. Please use a different one." });
+                var existing = _db.PrivacyPolicy.Find(id);
+                if (existing == null)
+                    return NotFound();
+
+                bool titleexist = _db.PrivacyPolicy.Any(b => b.Id != model.Id && b.Title.ToLower().Trim() == model.Title.ToLower().Trim());
+
+                if (titleexist)
+                {
+                    return Json(new { success = false, message = "This Title already exists. Please use a different one." });
+                }
+
+                existing.Title = model.Title;
+                existing.Description = model.Description;
+                _db.SaveChanges();
+
+                return Json(new { success = true, message = "Privacy Policy Updated successfully!" });
+                // return RedirectToAction("Index");
             }
 
-        existing.Title = model.Title;
-        existing.Description = model.Description;
-        _db.SaveChanges();
-
-        return Json(new { success = true, message = "Privacy Policy Updated successfully!" });
-       // return RedirectToAction("Index");
-      }
-
-      TempData["Error"] = "Failed to update Term Of Service.";
-      return View(model);
-    }
+          
+            return View(model);
+        }
 
         [HttpPost("delete/{id}")]
         [ValidateAntiForgeryToken]

@@ -49,57 +49,68 @@ namespace TourTravel.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Team model, IFormFile? ImageFile)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid data." });
+
+            // ✅ Image validation
+            if (ImageFile == null || ImageFile.Length == 0)
             {
-                // Check email duplicate
-                if (!string.IsNullOrEmpty(model.Email))
-                {
-                    bool emailExists = await _db.Team.AnyAsync(t => t.Email.Trim().ToLower() == model.Email.Trim().ToLower());
-                    if (emailExists)
-                    {
-                        ModelState.AddModelError("Email", "Email already exists.");
-                        return View("~/Views/Admin/Team/Create.cshtml", model);
-                    }
-                }
-
-                // Check phone duplicate
-                if (!string.IsNullOrEmpty(model.Phone))
-                {
-                    bool phoneExists = await _db.Team.AnyAsync(t => t.Phone == model.Phone);
-                    if (phoneExists)
-                    {
-                        ModelState.AddModelError("Phone", "Phone number already exists.");
-                        return View("~/Views/Admin/Team/Create.cshtml", model);
-                    }
-                }
-
-                // Image upload
-                if (ImageFile != null)
-                {
-                    string folderPath = Path.Combine(_env.WebRootPath, "uploads", "Team");
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
-
-                    string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-                    string filePath = Path.Combine(folderPath, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageFile.CopyToAsync(stream);
-                    }
-
-                    model.ImageUrl = "/uploads/Team/" + fileName;
-                }
-
-                _db.Team.Add(model);
-                await _db.SaveChangesAsync();
-
-                TempData["success"] = "Team created successfully!";
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = false, message = "Profile image is required." });
             }
 
-            return View("~/Views/Admin/Team/Create.cshtml", model);
+            // ✅ Email duplicate check
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                bool emailExists = await _db.Team
+                    .AnyAsync(t => t.Email.Trim().ToLower() == model.Email.Trim().ToLower());
+
+                if (emailExists)
+                    return Json(new { success = false, message = "Email already exists." });
+            }
+
+            // ✅ Phone duplicate check
+            if (!string.IsNullOrEmpty(model.Phone))
+            {
+                bool phoneExists = await _db.Team
+                    .AnyAsync(t => t.Phone.Trim() == model.Phone.Trim());
+
+                if (phoneExists)
+                    return Json(new { success = false, message = "Phone number already exists." });
+            }
+
+            // ✅ Image upload
+            try
+            {
+                string folderPath = Path.Combine(_env.WebRootPath, "uploads", "Team");
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
+                string filePath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                    await ImageFile.CopyToAsync(stream);
+
+                model.ImageUrl = "/uploads/Team/" + fileName;
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Image upload failed: " + ex.Message });
+            }
+
+            // ✅ Save to DB
+            try
+            {
+                _db.Team.Add(model);
+                await _db.SaveChangesAsync();
+                return Json(new { success = true, message = "Team member created successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error saving team: " + ex.Message });
+            }
         }
+
 
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)

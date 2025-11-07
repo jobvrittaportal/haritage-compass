@@ -137,6 +137,7 @@
                     if (res.success) {
                         $("#privacyRow_" + deleteId).fadeOut();
                         showToast(res.message);
+                         setTimeout(() => window.location.href = '/admin/PrivacyPolicy', 1500);
                     } else {
                         showToast(res.message, "error");
                     }

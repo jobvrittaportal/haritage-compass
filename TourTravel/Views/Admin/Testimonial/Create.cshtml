@@ -90,7 +90,7 @@
             $('#Role').val('');
             $('#Rating').val('');
             if (editor) editor.setData('');
-            $('.text-danger').text('');
+           
             showToast('Form cleared successfully.', 'bg-info');
         });
 
@@ -106,8 +106,8 @@
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-             if (Rating > 5) {
-                showToast('Rating Will Less Than 5', 'bg-danger');
+             if (Rating > 5 || Rating<1) {
+                showToast('Rating Will Between 1 to 5', 'bg-danger');
                 return;
             }
             const imageFile = $('#image')[0].files[0];

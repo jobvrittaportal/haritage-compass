@@ -14,77 +14,161 @@
         </div>
 
         <div class="card-body">
-            @* Display validation errors *@
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                            <li>@error.ErrorMessage</li>
-                        }
-                    </ul>
-                </div>
-            }
-
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <form id="heroSliderForm" asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
                 @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Title <span class="text-danger">*</span></label>
-                        <input asp-for="Title" class="form-control" required />
+                        <input asp-for="Title" id="Title" class="form-control" required />
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">SubTitle <span class="text-danger">*</span></label>
-                        <input asp-for="SubTitle" class="form-control" required />
+                        <input asp-for="SubTitle" id="SubTitle" class="form-control" required />
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Description <span class="text-danger">*</span></label>
-                        <textarea asp-for="Description" class="form-control" id="Description"></textarea>
+                        <textarea asp-for="Description" id="Description" class="form-control"></textarea>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Rotation Time (seconds) <span class="text-danger">*</span></label>
-                        <input asp-for="RotationTime" type="number" class="form-control" min="1" required />
+                        <input asp-for="RotationTime" id="RotationTime" type="number" class="form-control" min="1" required />
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Upload Image <span class="text-danger">*</span></label>
-                        <input type="file" name="ImageFile" class="form-control" accept="image/*" required />
-                        @if (ViewData.ModelState["Image"]?.Errors.Count > 0)
-                        {
-                            <span class="text-danger">@ViewData.ModelState["Image"].Errors[0].ErrorMessage</span>
-                        }
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" required />
                     </div>
                 </div>
 
+                <div id="previewContainer" class="mb-3"></div>
+
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <button type="submit" class="btn btn-success">Save</button>
-                    <a href="@Url.Action("Index", "HeroSlider")" class="btn btn-secondary">Cancel</a>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- Toast Container -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+
     <script>
         let editor;
         ClassicEditor
             .create(document.querySelector('#Description'))
-            .then(newEditor => {
-                editor = newEditor;
-            })
+            .then(newEditor => { editor = newEditor; })
             .catch(console.error);
 
-        // Sync CKEditor data to textarea before form submit
-        const form = document.querySelector('form[asp-action="Create"]');
-        form.addEventListener('submit', () => {
-            document.querySelector('#Description').value = editor.getData();
+     
+        
+
+        // ✅ Image preview
+        $('#ImageFile').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    $('#previewContainer').html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: cover;" />`);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ✅ Clear Form
+        $('#clearBtn').click(function () {
+            $('#heroSliderForm')[0].reset();
+            $('#previewContainer').empty();
+            if (editor) editor.setData('');
+            showToast('Form cleared successfully.', 'bg-info');
+        });
+
+        // ✅ AJAX Submit
+        $('#heroSliderForm').submit(function (e) {
+            e.preventDefault();
+
+            $('#Description').val(editor.getData());
+
+            const title = $('#Title').val().trim();
+            const subtitle = $('#SubTitle').val().trim();
+            const desc = $('#Description').val().trim();
+            const rotation = $('#RotationTime').val().trim();
+            const imageFile = $('#ImageFile')[0].files[0];
+
+            if (!title || !subtitle || !desc || !rotation || !imageFile) {
+                showToast('Please fill all required fields.', 'bg-danger');
+                return;
+            }
+            if(rotation>3){
+                showToast('Rotation Time Is Less Than 3.', 'bg-warning');
+                return;
+            }
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            const maxSize = 5 * 1024 * 1024;
+
+            if (!allowedTypes.includes(imageFile.type)) {
+                showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
+                return;
+            }
+
+            if (imageFile.size > maxSize) {
+                showToast('Image size must be less than 5MB.', 'bg-danger');
+                return;
+            }
+
+            // 🟨 Future use: uncomment below to re-enable image dimension check
+            /*
+            const img = new Image();
+            img.src = URL.createObjectURL(imageFile);
+            img.onload = function () {
+                if (img.width < 1200 || img.height < 600) {
+                    showToast('Image dimensions should be at least 1200x600 pixels.', 'bg-warning');
+                    return;
+                }
+                uploadHeroSlider();
+            };
+            img.onerror = function () {
+                showToast('Invalid image file.', 'bg-danger');
+            };
+            return;
+            */
+
+            // ✅ Proceed without checking dimensions
+            uploadHeroSlider();
+
+            function uploadHeroSlider() {
+                const formData = new FormData($('#heroSliderForm')[0]);
+                $.ajax({
+                    url: '@Url.Action("Create", "HeroSlider")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            showToast(response.message, 'bg-success');
+                            setTimeout(() => window.location.href = '/admin/heroslider', 1500);
+                        } else {
+                            showToast(response.message || 'Something went wrong.', 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Server error. Please try again.', 'bg-danger');
+                    }
+                });
+            }
         });
     </script>
 }
