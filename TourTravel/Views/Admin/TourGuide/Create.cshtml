@@ -45,6 +45,11 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Twitter</label>
+                        <input asp-for="Twitter" class="form-control" id="Twitter" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Instagram</label>
                         <input asp-for="Instagram" class="form-control" id="Instagram" />
                     </div>
@@ -53,21 +58,24 @@
                         <label class="form-label fw-semibold">LinkedIn</label>
                         <input asp-for="LinkedIn" class="form-control" id="LinkedIn" />
                     </div>
-
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Upload Profile Image (800*600)</label>
+                        <label class="form-label fw-semibold">YouTube</label>
+                        <input asp-for="YouTube" class="form-control" id="YouTube" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Upload Profile Image (800*600)<span class="text-danger">*</span></label>
                         <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
                     </div>
 
                     <div id="previewContainer" class="mb-3 text-center"></div>
 
                     <div class="col-md-12 mb-3">
-                        <label class="form-label fw-semibold">Introduction</label>
+                        <label class="form-label fw-semibold">Introduction<span class="text-danger">*</span></label>
                         <textarea asp-for="Introduction" id="Introduction" class="form-control"></textarea>
                     </div>
-
+                    q`s
                     <div class="col-md-12 mb-3">
-                        <label class="form-label fw-semibold">Biography</label>
+                        <label class="form-label fw-semibold">Biography<span class="text-danger">*</span></label>
                         <textarea asp-for="Biography" id="Biography" class="form-control"></textarea>
                     </div>
                 </div>
@@ -136,8 +144,9 @@
             const role = $('#Role').val().trim();
             const email = $('#Email').val().trim();
             const phone = $('#Phone').val().trim();
-
-            if (!name || !role || !email || !phone) {
+              const intro = introEditor ? introEditor.getData().trim() : '';
+            const bio = bioEditor ? bioEditor.getData().trim() : '';
+            if (!name || !role || !email || !phone|| !intro || !bio) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
@@ -147,6 +156,8 @@
                 showToast('Profile image is required.', 'bg-danger');
                 return;
             }
+
+
 
             const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
             const maxSize = 5 * 1024 * 1024; // 5MB

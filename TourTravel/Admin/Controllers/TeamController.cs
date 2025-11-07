@@ -123,35 +123,38 @@ namespace TourTravel.Controllers.Admin
 
         [HttpPost("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, TourGuideView model, IFormFile? ImageFile)
+        public async Task<IActionResult> Edit(int id, Team model, IFormFile? ImageFile)
         {
-            var existing = await _db.Team.FindAsync(id);
-            if (existing == null) return NotFound();
-
-            if (ModelState.IsValid)
+            try
             {
+                var existing = await _db.Team.FindAsync(id);
+                if (existing == null)
+                    return Json(new { success = false, message = "Team member not found." });
+
+                if (!ModelState.IsValid)
+                    return Json(new { success = false, message = "Invalid data submitted." });
+
+                // ✅ Duplicate email check (excluding current record)
                 if (!string.IsNullOrEmpty(model.Email))
                 {
                     bool emailExists = await _db.Team
-                        .AnyAsync(t => t.Email == model.Email && t.Id != id);
+                        .AnyAsync(t => t.Email.Trim().ToLower() == model.Email.Trim().ToLower() && t.Id != model.Id);
+
                     if (emailExists)
-                    {
-                        ModelState.AddModelError("Email", "Email already exists.");
-                        return View("~/Views/Admin/Team/Edit.cshtml", model);
-                    }
+                        return Json(new { success = false, message = "Email already exists!" });
                 }
 
+                // ✅ Duplicate phone check (excluding current record)
                 if (!string.IsNullOrEmpty(model.Phone))
                 {
                     bool phoneExists = await _db.Team
-                        .AnyAsync(t => t.Phone == model.Phone && t.Id != id);
+                        .AnyAsync(t => t.Phone.Trim() == model.Phone.Trim() && t.Id != model.Id);
+
                     if (phoneExists)
-                    {
-                        ModelState.AddModelError("Phone", "Phone number already exists.");
-                        return View("~/Views/Admin/Team/Edit.cshtml", model);
-                    }
+                        return Json(new { success = false, message = "Phone number already exists!" });
                 }
 
+                // ✅ Update core fields
                 existing.Name = model.Name;
                 existing.Role = model.Role;
                 existing.Email = model.Email;
@@ -164,31 +167,39 @@ namespace TourTravel.Controllers.Admin
                 existing.Introduction = model.Introduction;
                 existing.Biography = model.Biography;
 
-                if (ImageFile != null)
+                // ✅ Handle image upload
+                if (ImageFile != null && ImageFile.Length > 0)
                 {
-                    string folderPath = Path.Combine(_env.WebRootPath, "uploads", "Team");
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
+                    string uploadDir = Path.Combine(_env.WebRootPath, "uploads", "Team");
+                    if (!Directory.Exists(uploadDir))
+                        Directory.CreateDirectory(uploadDir);
 
                     string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-                    string filePath = Path.Combine(folderPath, fileName);
+                    string filePath = Path.Combine(uploadDir, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
                         await ImageFile.CopyToAsync(stream);
+
+                    // ✅ Delete old image (if exists)
+                    if (!string.IsNullOrEmpty(existing.ImageUrl))
+                    {
+                        var oldPath = Path.Combine(_env.WebRootPath, existing.ImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
                     }
 
                     existing.ImageUrl = "/uploads/Team/" + fileName;
                 }
 
                 await _db.SaveChangesAsync();
-
-                TempData["success"] = "Team updated successfully!";
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Team member updated successfully!" });
             }
-
-            return View("~/Views/Admin/Team/Edit.cshtml", model);
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
         }
+
 
         [HttpPost("Delete/{id}")]
         [ValidateAntiForgeryToken]
