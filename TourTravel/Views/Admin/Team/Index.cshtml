@@ -34,7 +34,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Image</th>
-                <th>Social Links</th>
+                @* <th>Social Links</th> *@
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
@@ -52,7 +52,7 @@
                             <img src="@item.ImageUrl" alt="Guide" width="60" height="60" class="rounded-circle" />
                         }
                     </td>
-                    <td>
+                    @* <td>
                         <div class="dropdown">
                             <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">Links</button>
                             <ul class="dropdown-menu">
@@ -78,7 +78,7 @@
                                 }
                             </ul>
                         </div>
-                    </td>
+                    </td> *@
                     <td class="text-center">
                         <a href="@Url.Action("Edit", "Team", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
                             <i class="fa fa-edit"></i>
@@ -142,6 +142,7 @@
                     if (res.success) {
                         $(`#guideRow_` + deleteId).fadeOut();
                         showToast(res.message);
+                         setTimeout(() => window.location.href = '/admin/Team', 1500);
                     } else {
                         showToast(res.message, "error");
                     }

@@ -121,31 +121,7 @@
         </ul>
     </nav>
 </div>
-@* @section Scripts {
-    <script>
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-        document.querySelectorAll('.btn-delete').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                if (!confirm('Are you sure you want to delete this guide?')) return;
-
-                const id = btn.dataset.id;
-                const res = await fetch(`/admin/TourGuide/Delete/${id}`, {
-                    method: 'POST',
-                    headers: { 'RequestVerificationToken': token }
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    document.getElementById(`guideRow_${id}`).remove();
-                    alert('Tour guide deleted!');
-                } else {
-                    alert(data.message);
-                }
-            });
-        });
-    </script>
-} *@
 
 @section Scripts {
     <script>
