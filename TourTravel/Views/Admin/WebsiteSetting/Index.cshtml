@@ -15,7 +15,7 @@
 
         <!-- Right side (search + New button) -->
         <div class="d-flex align-items-center">
-            <form method="get" asp-action="Index" class="me-2">
+        @*     <form method="get" asp-action="Index" class="me-2">
                 <div class="input-group" style="width: 170px;">
                     <input type="text" name="search" value="@ViewBag.Search"
                            class="form-control" placeholder="Search" />
@@ -23,10 +23,10 @@
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
-            </form>
-            <a href="@Url.Action("Create", "WebsiteSetting")" class="btn btn-primary">
+            </form> *@
+          @*   <a href="@Url.Action("Create", "WebsiteSetting")" class="btn btn-primary">
                 <i class="fa fa-plus"></i> New
-            </a>
+            </a> *@
         </div>
     </div>
 
@@ -73,13 +73,13 @@
 
 
                                 <!-- Delete Button -->
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post"
+                           @*      <form asp-action="Delete" asp-route-id="@item.Id" method="post"
                                       class="d-inline-block" onsubmit="return confirm('Are you sure?');">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-icon btn-sm btn-danger" title="Delete">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
-                                </form>
+                                </form> *@
                             </td>
 
                         </tr>

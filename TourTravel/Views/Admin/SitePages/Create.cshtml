@@ -1,4 +1,4 @@
-﻿@model TourTravel.Models.SitePages
+@model TourTravel.Models.SitePages
 @{
     ViewData["Title"] = "Add Site Page";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
@@ -74,77 +74,92 @@
 
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <button type="submit" class="btn btn-success">Save</button>
-                    <a href="@Url.Action("Index", "SitePages")" class="btn btn-secondary">Cancel</a>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">
+                        Clear
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
         let editor;
         ClassicEditor
             .create(document.querySelector('#Description'))
-            .then(newEditor => {
-                editor = newEditor;
-            })
+            .then(newEditor => editor = newEditor)
             .catch(console.error);
 
         const form = document.getElementById('sitePageForm');
         const imageInput = document.getElementById('ImageFile');
-        const widthInput = document.getElementById('ImgWidth');
-        const heightInput = document.getElementById('ImgHeight');
         const imageError = document.getElementById('imageError');
         const previewContainer = document.getElementById('previewContainer');
         const imagePreview = document.getElementById('imagePreview');
+        const clearBtn = document.getElementById('clearBtn');
 
-        // When user selects an image
+        // Image preview logic
         imageInput.addEventListener('change', function () {
             imageError.textContent = '';
-            previewContainer.style.display = 'none'; // hide previous preview
-
+            previewContainer.style.display = 'none';
             const file = this.files[0];
             if (!file) return;
-
-            // Validate file type
             if (!file.type.startsWith('image/')) {
                 imageError.textContent = 'Please upload only image files (JPEG, PNG, etc.).';
                 this.value = '';
                 return;
             }
-
             const img = new Image();
             img.onload = function () {
-                const enteredWidth = parseInt(widthInput.value);
-                const enteredHeight = parseInt(heightInput.value);
-
-                if (enteredWidth && enteredHeight) {
-                    if (img.width !== enteredWidth || img.height !== enteredHeight) {
-                        imageError.textContent = `⚠️ Uploaded image size is ${img.width}x${img.height}px, expected ${enteredWidth}x${enteredHeight}px.`;
-                        imageInput.value = '';
-                        previewContainer.style.display = 'none';
-                        return;
-                    }
-                }
-
-                // Show preview
                 imagePreview.src = URL.createObjectURL(file);
                 previewContainer.style.display = 'block';
             };
             img.src = URL.createObjectURL(file);
         });
 
-        // Before submitting form, inject CKEditor data
-        form.addEventListener('submit', (e) => {
-            document.querySelector('#Description').value = editor.getData();
-            if (imageError.textContent !== '') {
-                e.preventDefault();
-                alert('Please fix image validation errors before submitting.');
-            }
+        //  Submit form using AJAX
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            imageError.textContent = '';
+            const formData = new FormData(form);
+            formData.set("Description", editor.getData()); // get CKEditor data
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'bg-success');
+                        setTimeout(() => window.location.href = '/admin/SitePages', 1500);
+
+                    } else {
+                        showToast(data.message || 'An error occurred. Please try again.', 'bg-danger');
+                    }
+                })
+                .catch(() => showToast('An unexpected error occurred.', 'bg-danger'));
         });
+
+        //  Clear button logic
+        clearBtn.addEventListener('click', () => {
+            form.reset();
+            editor.setData('');
+            imageError.textContent = '';
+            previewContainer.style.display = 'none';
+            imagePreview.src = '#';
+            showToast('Form cleared successfully!', 'bg-success');
+        });
+
     </script>
 }
