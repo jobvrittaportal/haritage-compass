@@ -111,8 +111,8 @@
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-            if(rotation>3){
-                showToast('Rotation Time Is Less Than 3.', 'bg-warning');
+            if(rotation>3 ||rotation<1 ){
+                showToast('Rotation Time Is Between 1 to 3.', 'bg-warning');
                 return;
             }
             const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
