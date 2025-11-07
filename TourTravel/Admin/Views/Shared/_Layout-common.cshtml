@@ -384,7 +384,7 @@
         });
     </script>
 
-    <!-- Simple Success Toast -->
+    @* <!-- Simple Success Toast -->
     <div id="simpleToast"
          class="position-fixed top-0 end-0 m-3 p-3 rounded shadow"
          style="display:none; z-index:9999; color:#fff; font-weight:500;">
@@ -418,7 +418,76 @@
                 setTimeout(() => toast.style.display = "none", 500);
             }, 3000);
         }
+    </script> *@
+    <div id="simpleToast"
+         class="position-fixed top-0 end-0 m-3 p-3 rounded shadow"
+         style="display:none; z-index:9999; color:#fff; font-weight:500; cursor:pointer;">
+    </div>
+
+    <script>
+        let toastTimeout; // main hide timer
+        let fadeTimeout;  // fade-out transition timer
+        let isPaused = false;
+
+        // ? Reusable Toast Function
+        function showToast(message, type = 'bg-success') {
+            const toast = document.getElementById("simpleToast");
+
+            // Clear any previous timers
+            clearTimeout(toastTimeout);
+            clearTimeout(fadeTimeout);
+
+            // Choose background color
+            let bgColor;
+            switch (type) {
+                case 'bg-success': bgColor = '#3BD72E'; break;
+                case 'bg-danger':  bgColor = '#DC3545'; break;
+                case 'bg-warning': bgColor = '#FFC107'; break;
+                case 'bg-info':    bgColor = '#0DCAF0'; break;
+                default:           bgColor = type; // custom color or hex
+            }
+
+            // Set up toast
+            toast.style.background = bgColor;
+            toast.innerHTML = message;
+            toast.style.display = "block";
+            toast.style.opacity = "1";
+            toast.style.transition = "none";
+            isPaused = false;
+
+            // ? Auto fade after 3s
+            toastTimeout = setTimeout(() => startFadeOut(toast), 3000);
+
+            // ?? Pause fade when hovered
+            toast.addEventListener("mouseenter", () => {
+                if (!isPaused) {
+                    clearTimeout(toastTimeout);
+                    clearTimeout(fadeTimeout);
+                    isPaused = true;
+                    toast.style.transition = "none";
+                    toast.style.opacity = "1";
+                }
+            });
+
+            // ? Resume fade when hover ends
+            toast.addEventListener("mouseleave", () => {
+                if (isPaused) {
+                    isPaused = false;
+                    toastTimeout = setTimeout(() => startFadeOut(toast), 1000); // resume fade after 1s
+                }
+            });
+        }
+
+        // ?? Fade out helper
+        function startFadeOut(toast) {
+            toast.style.transition = "opacity 0.5s";
+            toast.style.opacity = "0";
+            fadeTimeout = setTimeout(() => {
+                toast.style.display = "none";
+            }, 500);
+        }
     </script>
+
 
 
 
