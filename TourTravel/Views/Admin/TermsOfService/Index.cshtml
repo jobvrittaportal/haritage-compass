@@ -137,6 +137,7 @@
                     if (res.success) {
                         $("#termsOfServicRow_" + deleteId).fadeOut();
                         showToast(res.message);
+                         setTimeout(() => window.location.href = '/admin/TermsOfService', 1500);
                     } else {
                         showToast(res.message, "error");
                     }

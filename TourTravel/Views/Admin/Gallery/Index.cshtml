@@ -24,7 +24,9 @@
         <table class="table table-hover table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
+                    <th>Title</th>
                     <th>Image</th>
+                    
                     <th style="width: 130px;">Actions</th>
                 </tr>
             </thead>
@@ -35,7 +37,9 @@
                     {
                         <tr id="row_@item.Id">
 
-
+                            <td>
+                                @item.Title
+                            </td>
                             <td>
                                 @if (!string.IsNullOrEmpty(item.ImageUrl))
                                 {
@@ -46,6 +50,7 @@
                                     <span class="text-muted">No image</span>
                                 }
                             </td>
+                            
                             <td class="text-center">
                                 <!-- Edit Button -->
 
@@ -136,7 +141,8 @@
                     if (res.success) {
                         $("#deleteConfirmModal").modal("hide");
                         $("#row_" + deleteId).fadeOut();
-                        showToast(res.message); 
+                        showToast(res.message);
+                         setTimeout(() => window.location.href = '/admin/gallery', 1500);
                     } else {
                         showToast(res.message);
                     }

@@ -50,48 +50,36 @@ namespace TourTravel.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(HeroSlider model, IFormFile? ImageFile)
         {
-            // Server-side validation for image
             if (ImageFile == null)
+                return Json(new { success = false, message = "The Image field is required." });
+
+            if (!string.IsNullOrEmpty(model.Title))
             {
-                ModelState.AddModelError("Image", "The Image field is required.");
+                bool titleExists = await _db.HeroSlider.AnyAsync(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower());
+                if (titleExists)
+                    return Json(new { success = false, message = "This title already exists!" });
             }
 
-            if (ModelState.IsValid)
+            string folderPath = Path.Combine(_env.WebRootPath, "uploads", "HeroSlider");
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
+            string filePath = Path.Combine(folderPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                if (!string.IsNullOrEmpty(model.Title))
-                {
-                    bool titleExists = await _db.HeroSlider.AnyAsync(t => t.Title == model.Title);
-                    if (titleExists)
-                    {
-                        ModelState.AddModelError("Title", "Title already exists.");
-                        return View("~/Views/Admin/HeroSlider/Create.cshtml", model);
-                    }
-                }
-
-                // Save image file
-                string folderPath = Path.Combine(_env.WebRootPath, "uploads", "HeroSlider");
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
-
-                string fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-                string filePath = Path.Combine(folderPath, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await ImageFile.CopyToAsync(stream);
-                }
-
-                model.Image = "/uploads/HeroSlider/" + fileName;
-
-                _db.HeroSlider.Add(model);
-                await _db.SaveChangesAsync();
-
-                TempData["success"] = "Hero Slider created successfully!";
-                return RedirectToAction(nameof(Index));
+                await ImageFile.CopyToAsync(stream);
             }
 
-            return View("~/Views/Admin/HeroSlider/Create.cshtml", model);
+            model.Image = "/uploads/HeroSlider/" + fileName;
+            _db.HeroSlider.Add(model);
+            await _db.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Hero Slider created successfully!" });
         }
+
+
 
 
 
@@ -108,25 +96,29 @@ namespace TourTravel.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, HeroSlider model, IFormFile? ImageFile)
         {
-            var existing = await _db.HeroSlider.FindAsync(id);
-            if (existing == null) return NotFound();
-
-            if (ModelState.IsValid)
+            try
             {
+                var existing = await _db.HeroSlider.FindAsync(id);
+                if (existing == null)
+                    return Json(new { success = false, message = "Home Page Slider not found." });
+
+                // ✅ Check for duplicate title (excluding current record)
                 if (!string.IsNullOrEmpty(model.Title))
                 {
-                    bool titleExists = await _db.HeroSlider.AnyAsync(t => t.Title == model.Title);
+                    bool titleExists = await _db.HeroSlider
+                        .AnyAsync(t => t.Title.Trim().ToLower() == model.Title.Trim().ToLower() && t.Id != id);
+
                     if (titleExists)
-                    {
-                        ModelState.AddModelError("Title", "Title already exists.");
-                        return View("~/Views/Admin/HeroSlider/Edit.cshtml", model);
-                    }
+                        return Json(new { success = false, message = "A Home Page Slider with this title already exists." });
                 }
+
+                // ✅ Update basic fields
                 existing.Title = model.Title;
                 existing.SubTitle = model.SubTitle;
                 existing.Description = model.Description;
                 existing.RotationTime = model.RotationTime;
 
+                // ✅ Image upload (optional)
                 if (ImageFile != null)
                 {
                     string folderPath = Path.Combine(_env.WebRootPath, "uploads", "HeroSlider");
@@ -141,17 +133,28 @@ namespace TourTravel.Controllers.Admin
                         await ImageFile.CopyToAsync(stream);
                     }
 
+                    // Delete old image if exists
+                    if (!string.IsNullOrEmpty(existing.Image))
+                    {
+                        var oldImagePath = Path.Combine(_env.WebRootPath, existing.Image.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                            System.IO.File.Delete(oldImagePath);
+                    }
+
                     existing.Image = "/uploads/HeroSlider/" + fileName;
                 }
 
                 await _db.SaveChangesAsync();
 
-                TempData["success"] = "Hero Slider updated successfully!";
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Home Page Slider updated successfully!" });
             }
-
-            return View("~/Views/Admin/HeroSlider/Edit.cshtml", model);
+            catch (Exception ex)
+            {
+                // log ex if needed
+                return Json(new { success = false, message = "An unexpected error occurred. Please try again." });
+            }
         }
+
 
         [HttpPost("delete/{id}")]
 
