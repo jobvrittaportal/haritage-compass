@@ -41,12 +41,14 @@ public class RoleController : Controller
     // Check if role already exists
     var existingRole = await _roleManager.FindByNameAsync(Name);
     if (existingRole != null)
-      return BadRequest("A role with this name already exists.");
+      return Json(new { success = false, message = "A role with this name already exists.!" });
+
+
 
     var role = new IdentityRole(Name);
     var result = await _roleManager.CreateAsync(role);
 
-    return result.Succeeded ? RedirectToAction("Index") : BadRequest(result.Errors);
+    return Json(new { success = true, message = "Added successfully!" });
   }
 
 
@@ -55,11 +57,11 @@ public class RoleController : Controller
   public async Task<IActionResult> Edit(string Id, string Name)
   {
     var role = await _roleManager.FindByIdAsync(Id);
-    if (role == null) return View("~/Views/Admin/Role/Index.cshtml") ;
+    if (role == null) return View("~/Views/Admin/Role/Index.cshtml");
     role.Name = Name;
     role.NormalizedName = Name.ToUpper();
     var result = await _roleManager.UpdateAsync(role);
-    return result.Succeeded ?     RedirectToAction("Index") : BadRequest(result.Errors);
+    return Json(new { success = true, message = "Update successfully!" });
   }
 
   [HttpPost]
@@ -69,6 +71,6 @@ public class RoleController : Controller
     var role = await _roleManager.FindByIdAsync(Id);
     if (role == null) return View("~/Views/Admin/Role/Index.cshtml");
     var result = await _roleManager.DeleteAsync(role);
-    return result.Succeeded ? RedirectToAction("Index") : BadRequest(result.Errors);
+    return Json(new { success = true, message = "Delete successfully!" });
   }
 }
