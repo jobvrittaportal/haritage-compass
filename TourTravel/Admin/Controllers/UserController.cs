@@ -31,50 +31,70 @@ namespace TourTravel.Controllers
     [HttpPost]
     public async Task<IActionResult> Create(ApplicationUser model, string password)
     {
-
-      //if (!ModelState.IsValid)
-      //{
-      //  // Optional: log validation errors
-      //  var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-      //  return BadRequest(new { message = "Validation failed", errors });
-      //}
-      // Check if email/username already exists
       var existingUser = await _userManager.FindByEmailAsync(model.Email);
       if (existingUser != null)
-      {
-        ModelState.AddModelError("", "A user with this email already exists.");
-        return View("~/Admin/Views/User/Index.cshtml", model);
-      }
+        return Json(new { success = false, message = "A user with this email already exists." });
+
       var user = new ApplicationUser
-        {
-          UserName = model.Email,
-          Email = model.Email,
-          Name = model.Name,
-          IsActive = model.IsActive
-        };
+      {
+        UserName = model.Email,
+        Email = model.Email,
+        Name = model.Name,
+        IsActive = model.IsActive
+      };
 
-        var result = await _userManager.CreateAsync(user, password);
+      var result = await _userManager.CreateAsync(user, password);
+      if (result.Succeeded)
+        return Json(new { success = true, message = "User added successfully!" });
 
-        if (result.Succeeded)
-          return RedirectToAction("Index");
-
-        foreach (var error in result.Errors)
-          ModelState.AddModelError("", error.Description);
-      
-
-      return View("~/Admin/Views/User/Index.cshtml", model);
+      var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+      return Json(new { success = false, message = errors });
     }
 
-    // 🔹 Edit User (GET)
-    //[HttpGet]
-    //public async Task<IActionResult> Edit(string id)
-    //{
-    //  var user = await _userManager.FindByIdAsync(id);
-    //  if (user == null) return NotFound();
-    //  return View("~/Admin/Views/User/Index.cshtml", user);
-    //}
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Edit(ApplicationUser model, string? password)
+    {
+      var user = await _userManager.FindByIdAsync(model.Id);
+      if (user == null)
+        return Json(new { success = false, message = "User not found." });
 
-    // 🔹 Edit User (POST)
+      user.Name = model.Name;
+      user.Email = model.Email;
+      user.UserName = model.Email;
+      user.IsActive = model.IsActive;
+
+      var result = await _userManager.UpdateAsync(user);
+      if (!result.Succeeded)
+      {
+        var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+        return Json(new { success = false, message = errors });
+      }
+
+      // Update password only if provided
+      if (!string.IsNullOrEmpty(password))
+      {
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var passwordResult = await _userManager.ResetPasswordAsync(user, token, password);
+        if (!passwordResult.Succeeded)
+        {
+          var errors = string.Join(", ", passwordResult.Errors.Select(e => e.Description));
+          return Json(new { success = false, message = errors });
+        }
+      }
+
+      return Json(new { success = true, message = "User updated successfully!" });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(string id)
+    {
+      var user = await _userManager.FindByIdAsync(id);
+      if (user == null) return NotFound();
+      return View("~/Admin/Views/User/Index.cshtml", user);
+    }
+
+    //  Edit User (POST)
     //[Authorize]
     //[HttpPost]
     //public async Task<IActionResult> Edit(ApplicationUser model)
@@ -97,49 +117,49 @@ namespace TourTravel.Controllers
     //  return View(model);
     //}
 
-    [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> Edit(ApplicationUser model, string? password)
-    {
-      var user = await _userManager.FindByIdAsync(model.Id);
-      if (user == null) return NotFound();
+    //[Authorize]
+    //[HttpPost]
+    //public async Task<IActionResult> Edit(ApplicationUser model, string? password)
+    //{
+    //  var user = await _userManager.FindByIdAsync(model.Id);
+    //  if (user == null) return NotFound();
 
-      // Update user basic info
-      user.Name = model.Name;
-      user.Email = model.Email;
-      user.UserName = model.Email;
-      user.IsActive = model.IsActive;
+    //  // Update user basic info
+    //  user.Name = model.Name;
+    //  user.Email = model.Email;
+    //  user.UserName = model.Email;
+    //  user.IsActive = model.IsActive;
 
-      var result = await _userManager.UpdateAsync(user);
+    //  var result = await _userManager.UpdateAsync(user);
 
-      if (!result.Succeeded)
-      {
-        foreach (var error in result.Errors)
-          ModelState.AddModelError("", error.Description);
+    //  if (!result.Succeeded)
+    //  {
+    //    foreach (var error in result.Errors)
+    //      ModelState.AddModelError("", error.Description);
 
-        return View(model);
-      }
+    //    return View(model);
+    //  }
 
-      // Update password if provided
-      if (!string.IsNullOrEmpty(password))
-      {
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var passwordResult = await _userManager.ResetPasswordAsync(user, token, password);
+    //  // Update password if provided
+    //  if (!string.IsNullOrEmpty(password))
+    //  {
+    //    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+    //    var passwordResult = await _userManager.ResetPasswordAsync(user, token, password);
 
-        if (!passwordResult.Succeeded)
-        {
-          foreach (var error in passwordResult.Errors)
-            ModelState.AddModelError("", error.Description);
+    //    if (!passwordResult.Succeeded)
+    //    {
+    //      foreach (var error in passwordResult.Errors)
+    //        ModelState.AddModelError("", error.Description);
 
-          return View(model);
-        }
-      }
+    //      return View(model);
+    //    }
+    //  }
 
-      return RedirectToAction("Index");
-    }
+    //  return RedirectToAction("Index");
+    //}
 
 
-    // 🔹 Delete User
+    //  Delete User
 
     [HttpPost]
     [Authorize]
@@ -149,7 +169,7 @@ namespace TourTravel.Controllers
       if (user == null) return NotFound();
 
       await _userManager.DeleteAsync(user);
-      return RedirectToAction("Index");
+      return Json(new { success = true, message = "Deleted successfully!" });
     }
   }
 }
