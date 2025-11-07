@@ -40,15 +40,8 @@
                     </div>
                 </div>
 
-                <h3>Tour Overview</h3>
                 <p class="mt-20">
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-                    laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                    architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                    aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                    voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                    consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
-                    dolore magnam aliquam quaerat voluptatem.
+                    @Html.Raw(Model.Desc)
                 </p>
 
                 <div class="destination-country-info">
@@ -123,7 +116,7 @@
                 </div>
 
 
-                <div class="destination-single-gallery">
+                @* <div class="destination-single-gallery">
                     <h3>Tour Gallery</h3>
                     <p class="mt-10">
                         Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
@@ -173,7 +166,55 @@
                             </div>
                         </div>
                     </div>
+                </div> *@
+
+                <div class="destination-single-gallery">
+                    <h3>Tour Gallery</h3>
+                    <p class="mt-10">
+                        Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati
+                        cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi,
+                        id est laborum et dolorum fuga.
+                    </p>
+
+                    <div class="row mt-20 popup-gallery">
+                        @if (Model?.Spots != null && Model.Spots.Any())
+                        {
+                            foreach (var spot in Model.Spots)
+                            {
+                                if (spot.Images != null && spot.Images.Any())
+                                {
+                                    <div class="col-md-12 mb-4">
+                                        <h5 class="fw-bold text-warning">@spot.Title</h5>
+                                        <p class="text-muted mb-3"> @Html.Raw(spot.Description)</p>
+
+                                        <div class="row">
+                                            @foreach (var img in spot.Images)
+                                            {
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="destination-single-gallery-img position-relative">
+                                                        <img src="@img.ImageUrl" alt="@spot.Title" class="img-fluid rounded-3" />
+                                                        <a class="popup-img" href="@img.ImageUrl">
+                                                            <i class="far fa-plus"></i>
+                                                        </a>
+
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">No spots found for this tour.</p>
+                        }
+                    </div>
                 </div>
+
+        
+
 
                 <div class="destination-single-map">
                     <h3>Tour Map</h3>
@@ -183,9 +224,22 @@
                         that they cannot foresee the pain and trouble that are bound to ensue; and equal blame
                         belongs to those who fail in their duty through weakness of will, which is the same as
                         saying through shrinking from toil and pain.
-                    </p>
+              @*       </p>
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96708.34194156103!2d-74.03927096447748!3d40.759040329405195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4a01c8df6fb3cb8!2sSolomon%20R.%20Guggenheim%20Museum!5e0!3m2!1sen!2sbd!4v1619410634508!5m2!1sen!2s"
-                            style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            style="border:0;" allowfullscreen="" loading="lazy"></iframe> *@
+                        @{
+                            // Construct the Google Maps embed URL dynamically
+                            string googleMapUrl = $"https://www.google.com/maps/embed/v1/place?key=AIzaSyBF2784voy6go8CoGUbLCWdEZw0alX8fHI&q={Model.Latitude},{Model.Longitude}&zoom=12";
+                        }
+
+                        <iframe width="100%"
+                                height="400"
+                                style="border:0"
+                                loading="lazy"
+                                allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade"
+                                src="@googleMapUrl">
+                        </iframe>
                 </div>
 
 
