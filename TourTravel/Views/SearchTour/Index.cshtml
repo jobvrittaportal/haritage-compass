@@ -113,17 +113,11 @@
                                 <input type="text" class="form-control" name="PhoneNumber" placeholder="Your Phone Number" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="subject" placeholder="Your Subject" required>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <textarea name="message" cols="30" rows="4" class="form-control" placeholder="Write Your Message"></textarea>
-                            </div>
-                        </div>
+                      
                     </div>
+                    <!-- Google reCAPTCHA -->
+                    <div class="g-recaptcha mt-4 mb-3" data-sitekey="6LdyVAQsAAAAAOv8DkGgtnjpuDt0FEdNmPnsgz3F"></div>
+
 
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-warning px-4">
@@ -138,6 +132,9 @@
 </div>
 
 @section Scripts {
+    <!-- Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <script>
         let selectedPackageId = null;
 
@@ -145,7 +142,7 @@
             const form = document.getElementById("contact-form");
             const bookNowButtons = document.querySelectorAll(".book-now-btn");
 
-            // Capture which package ID was clicked
+            // Capture clicked package
             bookNowButtons.forEach(btn => {
                 btn.addEventListener("click", (e) => {
                     selectedPackageId = e.currentTarget.getAttribute("data-package-id");
@@ -155,12 +152,18 @@
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
 
+                // Verify CAPTCHA first
+                const captchaResponse = grecaptcha.getResponse();
+                if (!captchaResponse) {
+                    alert("⚠️ Please verify that you're not a robot.");
+                    return;
+                }
+
                 const formData = {
                     name: form.name.value.trim(),
                     email: form.email.value.trim(),
                     phoneNumber: form.PhoneNumber.value.trim(),
-                    subject: form.subject.value.trim(),
-                    message: form.message.value.trim()
+                    captchaToken: captchaResponse
                 };
 
                 try {
@@ -177,6 +180,8 @@
                     if (response.ok) {
                         alert("✅ Enquiry sent successfully!");
                         form.reset();
+                        grecaptcha.reset(); // reset CAPTCHA
+
                         const modal = bootstrap.Modal.getInstance(document.getElementById("contactModal"));
                         modal.hide();
 
@@ -195,7 +200,6 @@
         });
     </script>
 }
-
 <style>
     .tour-item {
         background: #fff;

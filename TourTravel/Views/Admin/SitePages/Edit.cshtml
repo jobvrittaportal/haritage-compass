@@ -1,4 +1,4 @@
-﻿@model TourTravel.Models.SitePages
+@model TourTravel.Models.SitePages
 @{
     ViewData["Title"] = "Edit Site Page";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
@@ -75,13 +75,14 @@
 
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <button type="submit" class="btn btn-success">Update</button>
-                    <a href="@Url.Action("Index", "SitePages")" class="btn btn-secondary">Cancel</a>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">
+                        Clear
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
@@ -90,53 +91,61 @@
         let editor;
         ClassicEditor
             .create(document.querySelector('#Description'))
-            .then(newEditor => {
-                editor = newEditor;
-            })
+            .then(newEditor => editor = newEditor)
             .catch(console.error);
 
         const form = document.getElementById('editSitePageForm');
         const imageInput = document.getElementById('ImageFile');
-        const widthInput = document.getElementById('ImgWidth');
-        const heightInput = document.getElementById('ImgHeight');
         const imageError = document.getElementById('imageError');
+        const clearBtn = document.getElementById('clearBtn');
 
-        // Validate new image when selected
+        //  Image validation
         imageInput.addEventListener('change', function () {
             imageError.textContent = '';
             const file = this.files[0];
             if (!file) return;
 
-            // Validate file type (only image)
             if (!file.type.startsWith('image/')) {
                 imageError.textContent = 'Please upload only image files (JPEG, PNG, etc.).';
                 this.value = '';
                 return;
             }
-
-            // Check image dimensions
-            const img = new Image();
-            img.onload = function () {
-                const enteredWidth = parseInt(widthInput.value);
-                const enteredHeight = parseInt(heightInput.value);
-
-                if (enteredWidth && enteredHeight) {
-                    if (img.width !== enteredWidth || img.height !== enteredHeight) {
-                        imageError.textContent = `⚠️ Uploaded image size is ${img.width}x${img.height}px, expected ${enteredWidth}x${enteredHeight}px.`;
-                        imageInput.value = '';
-                    }
-                }
-            };
-            img.src = URL.createObjectURL(file);
         });
 
-        // Before submitting form, inject CKEditor data and check errors
-        form.addEventListener('submit', (e) => {
-            document.querySelector('#Description').value = editor.getData();
-            if (imageError.textContent !== '') {
-                e.preventDefault();
-                alert('Please fix image validation errors before submitting.');
-            }
+        //  Submit form using AJAX
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            imageError.textContent = '';
+
+            const formData = new FormData(form);
+            formData.set("Description", editor.getData());
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message || 'Updated Successfully.', 'bg-success');
+
+                        // Optional: redirect after toast disappears
+                        setTimeout(() => {
+                            window.location.href = '/Admin/SitePages/Index';
+                        }, 2500);
+                    } else {
+                        showToast(data.message || 'An error occurred. Please try again.', 'bg-danger');
+                    }
+                })
+                .catch(() => showToast('An unexpected error occurred.', 'bg-danger'));
+        });
+
+        // ✅ Clear form button logic
+        clearBtn.addEventListener('click', () => {
+            form.reset();
+            editor.setData('');
+            imageError.textContent = '';
+            showToast('Form cleared successfully!', 'bg-success');
         });
     </script>
 }
