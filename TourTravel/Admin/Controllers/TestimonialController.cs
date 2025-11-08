@@ -199,7 +199,7 @@ namespace TourTravel.Admin.Controllers
 
             _db.Testimonial.Remove(image);
             _db.SaveChanges();
-            return Json(new { success = true, message = "Image Delete Successfully!" });
+            return Json(new { success = true, message = "Deleted Successfully!" });
         }
     }
 }

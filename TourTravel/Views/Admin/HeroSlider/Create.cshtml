@@ -34,8 +34,15 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Rotation Time (seconds) <span class="text-danger">*</span></label>
-                        <input asp-for="RotationTime" id="RotationTime" type="number" class="form-control" min="1" required />
+                        <select asp-for="RotationTime" id="RotationTime" class="form-control" required>
+                            <option value="">-- Select Rotation Time --</option>
+                            <option value="1">1 second</option>
+                            <option value="2">2 seconds</option>
+                            <option value="3">3 seconds</option>
+                        </select>
+                        <span asp-validation-for="RotationTime" class="text-danger"></span>
                     </div>
+
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Upload Image <span class="text-danger">*</span></label>

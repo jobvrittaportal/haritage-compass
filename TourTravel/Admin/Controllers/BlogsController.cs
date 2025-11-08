@@ -207,7 +207,7 @@ namespace TourTravel.Admin.Controllers
             _db.Blog.Remove(blog);
             await _db.SaveChangesAsync();
 
-            return Json(new { success = true, message = "✅ Blog deleted successfully!" });
+            return Json(new { success = true, message = "Blog deleted successfully!" });
         }
     }
 }

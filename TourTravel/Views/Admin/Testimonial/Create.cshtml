@@ -18,7 +18,7 @@
                 @Html.AntiForgeryToken()
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">AuthorName</label><span class="text-danger">*</span>
+                    <label class="form-label fw-semibold">Author Name</label><span class="text-danger">*</span>
                     <input asp-for="AuthorName" id="AuthorName" class="form-control" placeholder="Enter AuthorName" required />
                     <span asp-validation-for="AuthorName" class="text-danger"></span>
                 </div>
@@ -30,9 +30,17 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Rating</label><span class="text-danger">*</span>
-                    <input asp-for="Rating" id="Rating" class="form-control" rows="5" placeholder="Enter Rating (1–5)" min="1" max="5" required></input>
+                    <select asp-for="Rating" id="Rating" class="form-control" required>
+                        <option value="">-- Select Rating --</option>
+                        <option value="1">1 - Very Poor</option>
+                        <option value="2">2 - Poor</option>
+                        <option value="3">3 - Average</option>
+                        <option value="4">4 - Good</option>
+                        <option value="5">5 - Excellent</option>
+                    </select>
                     <span asp-validation-for="Rating" class="text-danger"></span>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Quote</label><span class="text-danger">*</span>
                     <textarea asp-for="Quote" id="Quote" class="form-control" rows="5" placeholder="Enter Quote" required></textarea>
