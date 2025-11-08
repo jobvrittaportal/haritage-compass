@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Upload New Image (800×600)</label>
+                    <label class="form-label fw-semibold">Upload New Image (800×600) <span class="text-danger">*</span></label>
                     <input type="file" name="image" id="image" class="form-control" accept="image/*" />
                     @if (!string.IsNullOrEmpty(Model.Image))
                     {
@@ -100,30 +100,36 @@
             .then(newEditor => editor = newEditor)
             .catch(error => console.error(error));
 
-        // ✅ Toast Function
-        function showToast(message, type = 'bg-primary') {
-            const toastId = 'toast' + Date.now();
-            const toastHtml = `
-                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 shadow-lg mb-2"
-                             role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="d-flex">
-                                <div class="toast-body fw-semibold">${message}</div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                        data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                        </div>`;
-            $('#toastContainer').prepend(toastHtml);
-            const toastEl = document.getElementById(toastId);
-            const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
-            bsToast.show();
-            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-        }
+     
 
-        // ✅ Clear Button
-        $('#clearBtn').click(() => {
+              // ✅ Clear Button Functionality
+        $('#clearBtn').on('click', function () {
+            // Reset form fields (HTML inputs)
             $('#aboutEditForm')[0].reset();
+
+            // Clear CKEditor data
             if (editor) editor.setData('');
+
+            // Explicitly clear all textareas (sometimes reset() doesn’t clear dynamic values)
+            $('#aboutEditForm').find('textarea').each(function () {
+                $(this).val('');
+            });
+
+            // Explicitly clear all input fields except hidden ones
+            $('#aboutEditForm').find('input[type="text"], input[type="file"]').val('');
+
+            // Clear validation messages and invalid states
+            $('span[data-valmsg-for]').text('');
+            $('.is-invalid').removeClass('is-invalid');
+
+            // If you have a live image preview, reset it
+            $('#image').val(''); // clear selected image
+            $('img[alt="Current Image"]').attr('src', '@Model.Image'); // restore current saved image
+
+            // ✅ Confirmation toast
+            showToast('Form cleared successfully.', 'bg-info');
         });
+
 
         // ✅ Form Submit with AJAX
         $('#aboutEditForm').submit(function (e) {

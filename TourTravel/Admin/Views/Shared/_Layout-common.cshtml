@@ -66,7 +66,7 @@
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="" class="app-brand-link">
+                    <div class="app-brand-link d-flex align-items-center">
                         <span class="app-brand-logo demo">
                           
                                 <defs>
@@ -104,16 +104,16 @@
                                         </g>
                                     </g>
                                 </g>
-                            </svg>
+                            
                         </span>
                         <span class="app-brand-text demo menu-text fw-bolder mr-0 fs-5">
                             Heritage Compass
                         </span>
-                    </a>
+                    </div>
 
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                    <span class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
                         <i class="bx bx-chevron-left bx-sm align-middle"></i>
-                    </a>
+                    </span>
                 </div>
 
                 <div class="menu-inner-shadow"></div>
@@ -134,7 +134,7 @@
                     </li>
                   
 
-                    <li class="menu-item @(currentPath.Contains("/admin/blogs") || currentPath.Contains("/admin/faq") || currentPath.Contains("/admin/gallery") || currentPath.Contains("/admin/testimonial") || currentPath.Contains("/admin/tourguide") || currentPath.Contains("/admin/team") || currentPath.Contains("/admin/heroslider") ? "open active" : "")">
+                    <li class="menu-item @(currentPath.Contains("/admin/blogs") || currentPath.Contains("/admin/faq") || currentPath.Contains("/admin/gallery") || currentPath.Contains("/admin/testimonial") || currentPath.Contains("/admin/tourguide") || currentPath.Contains("/admin/team") || currentPath.Contains("/admin/heroslider") ? "open " : "")">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="Account Settings">Master</div>
@@ -341,7 +341,11 @@
     </div>
     <!-- / Layout wrapper -->
     
-
+    <style>
+     .app-brand-text {
+         text-transform: none !important;
+     }
+</style>
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="/admin/assets/vendor/libs/jquery/jquery.js"></script>
