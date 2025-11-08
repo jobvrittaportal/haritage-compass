@@ -1,7 +1,13 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Admin/Views/Shared/_Layout.cshtml";
+    
 }
+@{
+
+    var currentPath = Context.Request.Path.ToString().ToLower();
+}
+
 <!DOCTYPE html>
 
 <html lang="en"
@@ -126,61 +132,45 @@
                     <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">Pages</span>
                     </li>
-                    <li class="menu-item">
+                  
+
+                    <li class="menu-item @(currentPath.Contains("/admin/blogs") || currentPath.Contains("/admin/faq") || currentPath.Contains("/admin/gallery") || currentPath.Contains("/admin/testimonial") || currentPath.Contains("/admin/tourguide") || currentPath.Contains("/admin/team") || currentPath.Contains("/admin/heroslider") ? "open active" : "")">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="Account Settings">Master</div>
                         </a>
                         <ul class="menu-sub">
-                          
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/blogs") )">
                                 <a href="/admin/blogs" class="menu-link">
                                     <div data-i18n="Notifications">Blogs</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
-                                <a href="/admin/FAQ" class="menu-link">
+                            <li class="menu-item @(currentPath.Contains("/admin/faq"))">
+                                <a href="/admin/faq" class="menu-link">
                                     <div data-i18n="Connections">FAQ</div>
                                 </a>
                             </li>
-
-                            @* <li class="menu-item">
-                                <a href="/admin/package" class="menu-link">
-                                    <div data-i18n="Connections">Package</div>
-                                </a>
-                            </li> *@
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/gallery"))">
                                 <a href="/admin/gallery" class="menu-link">
                                     <div data-i18n="Connections">Gallery</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/testimonial") )">
                                 <a href="/admin/testimonial" class="menu-link">
                                     <div data-i18n="Connections">Testimonial</div>
                                 </a>
                             </li>
-                            @* <li class="menu-item">
-                                <a href="/admin/destination" class="menu-link">
-                                    <div data-i18n="Notifications">Destination</div>
-                                </a>
-                            </li> *@
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/tourguide"))">
                                 <a href="/admin/tourGuide" class="menu-link">
                                     <div data-i18n="Connections">Tour Guide</div>
                                 </a>
                             </li>
-                           @* new *@
-                            <li class="menu-item">
-                                <a href="/admin/Team" class="menu-link">
+                            <li class="menu-item @(currentPath.Contains("/admin/team"))">
+                                <a href="/admin/team" class="menu-link">
                                     <div data-i18n="Connections">Team</div>
                                 </a>
                             </li>
-                            @* <li class="menu-item">
-                                <a href="/admin/TourBooking" class="menu-link">
-                                    <div data-i18n="Connections">TourBooking</div>
-                                </a>
-                            </li> *@
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/heroslider"))">
                                 <a href="/admin/heroSlider" class="menu-link">
                                     <div data-i18n="Connections">Home Page Slider</div>
                                 </a>
@@ -188,65 +178,64 @@
                         </ul>
                     </li>
 
-                    <li class="menu-item">
+
+                    <li class="menu-item @(currentPath.Contains("/admin/about") || currentPath.Contains("/admin/termsofservice") || currentPath.Contains("/admin/privacypolicy") ? "open" : "")">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="Account Settings">Pages</div>
                         </a>
                         <ul class="menu-sub">
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/about"))">
                                 <a href="/admin/about" class="menu-link">
                                     <div data-i18n="Account">About Us</div>
                                 </a>
                             </li>
-                         
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/termsofservice"))">
                                 <a href="/admin/termsOfService" class="menu-link">
                                     <div data-i18n="Connections">Terms Of Service</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item @(currentPath.Contains("/admin/privacypolicy"))">
                                 <a href="/admin/privacyPolicy" class="menu-link">
                                     <div data-i18n="Connections">Privacy Policy</div>
                                 </a>
                             </li>
-                           
-                        
                         </ul>
                     </li>
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                            <div data-i18n="Authentications">Setting</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="/admin/user" class="menu-link">
-                                    <div data-i18n="Basic">User</div>
-                                </a>
 
-                            </li>
-                           
-                            <li class="menu-item">
-                                <a href="/admin/Role" class="menu-link">
-                                    <div data-i18n="Basic">Roles</div>
+                            <li class="menu-item @(currentPath.Contains("/admin/user") || currentPath.Contains("/admin/role") || currentPath.Contains("/admin/websitesetting") || currentPath.Contains("/admin/sitepages") ? "open" : "")">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                                    <div data-i18n="Authentications">Setting</div>
                                 </a>
+                                <ul class="menu-sub">
+                                    <li class="menu-item @(currentPath.Contains("/admin/user") )">
+                                        <a href="/admin/user" class="menu-link">
+                                            <div data-i18n="Basic">User</div>
+                                        </a>
+                                    </li>
+
+                                    <li class="menu-item @(currentPath.Contains("/admin/role"))">
+                                        <a href="/admin/Role" class="menu-link">
+                                            <div data-i18n="Basic">Roles</div>
+                                        </a>
+                                    </li>
+
+                                    <li class="menu-item @(currentPath.Contains("/admin/websitesetting"))">
+                                        <a href="/admin/WebsiteSetting" class="menu-link">
+                                            <div data-i18n="Basic">Website Setting</div>
+                                        </a>
+                                    </li>
+
+                                    <li class="menu-item @(currentPath.Contains("/admin/sitepages"))">
+                                        <a href="/admin/SitePages" class="menu-link">
+                                            <div data-i18n="Basic">Site Pages</div>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li class="menu-item">
-                                <a href="/admin/WebsiteSetting" class="menu-link">
-                                    <div data-i18n="Basic">Website Setting</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/admin/SitePages" class="menu-link">
-                                    <div data-i18n="Basic">Site Pages</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
               
-
-                </ul>
+                 </ul>
             </aside>
             <!-- / Menu -->
             <!-- Layout container -->
