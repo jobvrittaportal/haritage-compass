@@ -51,17 +51,33 @@ public class RoleController : Controller
     return Json(new { success = true, message = "Added successfully!" });
   }
 
-
   [HttpPost]
   [Authorize]
   public async Task<IActionResult> Edit(string Id, string Name)
   {
     var role = await _roleManager.FindByIdAsync(Id);
-    if (role == null) return View("~/Views/Admin/Role/Index.cshtml");
+    if (role == null)
+      return Json(new { success = false, message = "Role not found." });
+
+    // Check if another role with the same name exists
+    var existingRole = await _roleManager.FindByNameAsync(Name);
+    if (existingRole != null && existingRole.Id != role.Id)
+    {
+      return Json(new { success = false, message = "A role with this name already exists. Please choose a different name." });
+    }
+
+    // Update role name
     role.Name = Name;
     role.NormalizedName = Name.ToUpper();
+
     var result = await _roleManager.UpdateAsync(role);
-    return Json(new { success = true, message = "Update successfully!" });
+    if (!result.Succeeded)
+    {
+      var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+      return Json(new { success = false, message = errors });
+    }
+
+    return Json(new { success = true, message = "Role updated successfully!" });
   }
 
   [HttpPost]

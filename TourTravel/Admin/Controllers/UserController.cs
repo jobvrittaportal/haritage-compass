@@ -59,6 +59,13 @@ namespace TourTravel.Controllers
       if (user == null)
         return Json(new { success = false, message = "User not found." });
 
+      // Check for duplicate email (but ignore the same user)
+      var existingUser = await _userManager.FindByEmailAsync(model.Email);
+      if (existingUser != null && existingUser.Id != user.Id)
+      {
+        return Json(new { success = false, message = "Email already exists. Please use a different email." });
+      }
+
       user.Name = model.Name;
       user.Email = model.Email;
       user.UserName = model.Email;
