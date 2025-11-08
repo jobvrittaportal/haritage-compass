@@ -1,4 +1,4 @@
-﻿@model TourTravel.Models.TourGuideView
+@model TourTravel.Models.TourGuideView
 
 @{
     ViewData["Title"] = "Edit Tour Guide";
@@ -118,23 +118,29 @@
                 .then(editor => bioEditor = editor)
                 .catch(console.error);
 
-            // ✅ Clear form
+            // 🧹 Clear form
             $('#clearBtn').on('click', function () {
-                $('#guideForm')[0].reset();
+                const form = $('#guideForm')[0];
                 if (introEditor) introEditor.setData('');
                 if (bioEditor) bioEditor.setData('');
                 $('span[data-valmsg-for]').text('');
                 $('.is-invalid').removeClass('is-invalid');
-
                 const imgEl = $('img[alt="Guide Image"]');
                 if (imgEl.length) {
-                    imgEl.attr('src', '/images/no-image.png').attr('width', '100').attr('height', '60');
+                    imgEl.attr('src', '/images/no-image.png')
+                        .attr('width', '100')
+                        .attr('height', '60');
                 }
-
+                $('#ImageFile').val('');
                 showToast('Form cleared successfully.', 'bg-info');
             });
 
-            // ✅ Submit handler
+
+            //  Validation regex patterns
+            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{10,15}$/;
+
+            //  Submit handler
             $('#guideForm').submit(function (e) {
                 e.preventDefault();
 
@@ -147,6 +153,22 @@
 
                 if (!name || !role || !email || !phone|| !intro || !bio) {
                     showToast('Please fill all required fields.', 'bg-danger');
+                    return;
+                }
+
+                //  Empty field check
+                if (!emailRegex.test(email)) {
+                    showToast('Please enter a valid email address (e.g., name@example.com).', 'bg-danger');
+                    return;
+                }
+
+                if (!phoneRegex.test(phone)) {
+                    showToast('Please enter a valid phone number with 10–15 digits.', 'bg-danger');
+                    return;
+                }
+                //  Phone validation
+                if (!phoneRegex.test(phone)) {
+                    showToast('Please enter a valid phone number.', 'bg-danger');
                     return;
                 }
 
@@ -185,7 +207,7 @@
                 }
             });
 
-            // ✅ Submit form via AJAX
+            //  Submit form via AJAX
             function submitForm() {
                 const intro = introEditor ? introEditor.getData().trim() : '';
                 const bio = bioEditor ? bioEditor.getData().trim() : '';
@@ -215,7 +237,6 @@
                 });
             }
 
-            // ✅ Toast function
           
         });
     </script>
