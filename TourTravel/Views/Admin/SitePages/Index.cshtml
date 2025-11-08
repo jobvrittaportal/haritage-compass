@@ -120,6 +120,7 @@
 
                     //  Show success toast from server message
                     showToast(data.message || 'Site Page deleted successfully.', 'bg-success');
+                    setTimeout(() => window.location.href = '/admin/SitePages', 1500);
                 } else {
                     showToast(data.message || 'An error occurred while deleting.', 'bg-danger');
                 }

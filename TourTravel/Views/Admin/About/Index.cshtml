@@ -12,7 +12,7 @@
         <!-- Left side -->
         <h4 class="mb-0">About Us</h4>
 
-        <!-- Right side (search + New button) -->
+        @* <!-- Right side (search + New button) -->
         <div class="d-flex align-items-center">
             <form method="get" asp-action="Index" class="me-2">
                 <div class="input-group" style="width: 170px;">
@@ -26,7 +26,7 @@
             <a href="@Url.Action("Create", "About")" class="btn btn-primary">
                 <i class="fa fa-plus"></i> New
             </a>
-        </div>
+        </div> *@
     </div>
 
  
@@ -58,9 +58,9 @@
                         <a href="@Url.Action("Edit", "About", new { id = item.Id })" class="btn btn-sm btn-primary me-1">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
+                        @* <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
                             <i class="fa fa-trash"></i>
-                        </button>
+                        </button> *@
                         <!-- Delete Confirmation Modal -->
                         <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
