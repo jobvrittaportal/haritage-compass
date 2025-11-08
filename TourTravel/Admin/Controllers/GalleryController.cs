@@ -172,7 +172,7 @@ namespace TourTravel.Admin.Controllers
             _db.Gallery.Remove(image);
             _db.SaveChanges();
 
-            return Json(new { success = true, message = "✅ Image deleted successfully!" });
+            return Json(new { success = true, message = "Image deleted successfully!" });
         }
     }
 }

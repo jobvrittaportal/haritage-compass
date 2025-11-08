@@ -168,7 +168,7 @@ namespace TourTravel.Controllers.Admin
 
             if (slider == null)
 
-                return Json(new { success = false, message = "❌ Slider not found!" });
+                return Json(new { success = false, message = "Slider not found!" });
 
             // ✅ Delete slider image from folder
 
@@ -188,7 +188,7 @@ namespace TourTravel.Controllers.Admin
 
             await _db.SaveChangesAsync();
 
-            return Json(new { success = true, message = "✅ Slider deleted successfully!" });
+            return Json(new { success = true, message = "Home Slider deleted successfully!" });
 
         }
 

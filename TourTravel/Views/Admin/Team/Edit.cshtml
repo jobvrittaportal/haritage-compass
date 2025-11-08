@@ -118,20 +118,36 @@
                 .catch(console.error);
 
             // ✅ Clear form
-            $('#clearBtn').on('click', function () {
-                $('#teamForm')[0].reset();
-                if (introEditor) introEditor.setData('');
-                if (bioEditor) bioEditor.setData('');
-                $('span[data-valmsg-for]').text('');
-                $('.is-invalid').removeClass('is-invalid');
+                 $('#clearBtn').on('click', function () {
+            // Reset all form fields
+            $('#teamForm')[0].reset();
 
-                const imgEl = $('img[alt="Team Image"]');
-                if (imgEl.length) {
-                    imgEl.attr('src', '/images/no-image.png').attr('width', '100').attr('height', '60');
-                }
+            // Clear CKEditor contents
+            if (introEditor) introEditor.setData('');
+            if (bioEditor) bioEditor.setData('');
 
-                showToast('Form cleared successfully.', 'bg-info');
-            });
+            // Remove validation errors and messages
+            $('span[data-valmsg-for]').text('');
+            $('.is-invalid').removeClass('is-invalid');
+
+            // Reset image preview to default placeholder
+            const imgEl = $('img[alt="Team Image"]');
+            if (imgEl.length) {
+                imgEl.attr('src', '/images/no-image.png').attr('width', '100').attr('height', '60');
+            }
+
+            // Clear text and link fields (name, role, social media links, etc.)
+            $('#Name, #Role, #Email, #Phone, #Facebook, #Twitter, #Instagram, #LinkedIn, #YouTube').val('');
+
+            // Clear file input
+            $('#ImageFile').val('');
+
+            showToast('Form cleared successfully.', 'bg-info');
+        });
+
+         //  Validation regex patterns
+            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{10,15}$/;
 
             // ✅ Submit handler
             $('#teamForm').submit(function (e) {
@@ -147,7 +163,21 @@
                     showToast('Please fill all required fields.', 'bg-danger');
                     return;
                 }
+                   //  Empty field check
+                if (!emailRegex.test(email)) {
+                    showToast('Please enter a valid email address (e.g., name@example.com).', 'bg-danger');
+                    return;
+                }
 
+                if (!phoneRegex.test(phone)) {
+                    showToast('Please enter a valid phone number with 10–15 digits.', 'bg-danger');
+                    return;
+                }
+                //  Phone validation
+                if (!phoneRegex.test(phone)) {
+                    showToast('Please enter a valid phone number.', 'bg-danger');
+                    return;
+                }
                 const file = $('#ImageFile')[0].files[0];
                 const hasOldImage = '@Model.ImageUrl' !== '';
 

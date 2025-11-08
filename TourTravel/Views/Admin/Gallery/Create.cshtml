@@ -61,29 +61,11 @@
                 reader.readAsDataURL(file);
             }
         });
-
-        // ? Toast Function
-        function showToast(message, bgClass) {
-            const toastId = 'toast' + Date.now();
-            const toastHTML = `
-                <div id="${toastId}" class="toast align-items-center text-white ${bgClass}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2500">
-                    <div class="d-flex">
-                        <div class="toast-body">${message}</div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>`;
-            $('#toastContainer').append(toastHTML);
-            const toastElement = new bootstrap.Toast(document.getElementById(toastId));
-            toastElement.show();
-            toastElement._element.addEventListener('hidden.bs.toast', () => {
-                $('#' + toastId).remove();
-            });
-        }
-
+   
         // ? Clear Form
         $('#clearBtn').click(function () {
             $('#galleryForm')[0].reset();
-            $('#previewContainer').empty();
+          
             showToast('Form cleared successfully.', 'bg-info');
         });
 

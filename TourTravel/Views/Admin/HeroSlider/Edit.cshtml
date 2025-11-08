@@ -36,8 +36,15 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Rotation Time (seconds) <span class="text-danger">*</span></label>
-                        <input asp-for="RotationTime" id="RotationTime" type="number" class="form-control" min="1" required />
+                        <select asp-for="RotationTime" id="RotationTime" class="form-control" required>
+                            <option value="">-- Select Rotation Time --</option>
+                            <option value="1">1 second</option>
+                            <option value="2">2 seconds</option>
+                            <option value="3">3 seconds</option>
+                        </select>
+                        <span asp-validation-for="RotationTime" class="text-danger"></span>
                     </div>
+
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Current Image</label><br />
@@ -53,8 +60,9 @@
 
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <button type="submit" class="btn btn-success">Update</button>
-                    <a href="@Url.Action("Index", "HeroSlider")" class="btn btn-secondary">Cancel</a>
+                    <button type="button" id="clearFormBtn" class="btn btn-secondary">Clear</button>
                 </div>
+
             </form>
         </div>
     </div>
@@ -90,6 +98,25 @@
             } else {
                 $('#previewContainer').empty();
             }
+        });
+                // ✅ Clear form function
+        $('#clearFormBtn').click(function () {
+            // Clear input fields
+            $('#Title').val('');
+            $('#SubTitle').val('');
+            $('#RotationTime').val('');
+            $('#ImageFile').val('');        
+            if (editor) {
+                editor.setData('');
+            }
+
+            $('#previewContainer').empty();
+
+            // Reset validation messages
+            $('.text-danger').text('');
+
+            // Optional toast
+            showToast('Form cleared successfully.', 'bg-info');
         });
 
         // ✅ AJAX Submit

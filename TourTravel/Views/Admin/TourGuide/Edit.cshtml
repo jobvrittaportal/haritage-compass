@@ -118,22 +118,34 @@
                 .then(editor => bioEditor = editor)
                 .catch(console.error);
 
-            // 🧹 Clear form
-            $('#clearBtn').on('click', function () {
-                const form = $('#guideForm')[0];
-                if (introEditor) introEditor.setData('');
-                if (bioEditor) bioEditor.setData('');
-                $('span[data-valmsg-for]').text('');
-                $('.is-invalid').removeClass('is-invalid');
-                const imgEl = $('img[alt="Guide Image"]');
-                if (imgEl.length) {
-                    imgEl.attr('src', '/images/no-image.png')
-                        .attr('width', '100')
-                        .attr('height', '60');
-                }
-                $('#ImageFile').val('');
-                showToast('Form cleared successfully.', 'bg-info');
-            });
+            
+                    // ✅ Clear form
+                  $('#clearBtn').on('click', function () {
+            // Reset all form inputs
+            $('#guideForm')[0].reset();
+
+            // Clear CKEditor contents
+            if (introEditor) introEditor.setData('');
+            if (bioEditor) bioEditor.setData('');
+
+            // Clear all validation messages and error styles
+            $('span[data-valmsg-for]').text('');
+            $('.is-invalid').removeClass('is-invalid');
+
+            // Clear image preview (set default placeholder)
+            const imgEl = $('img[alt="Guide Image"]');
+            if (imgEl.length) {
+                imgEl.attr('src', '/images/no-image.png').attr('width', '100').attr('height', '60');
+            }
+
+            // Clear all text inputs (for social links and others)
+            $('#Name, #Role, #Email, #Phone, #Facebook, #Twitter, #Instagram, #LinkedIn, #YouTube').val('');
+
+            // Clear file input manually
+            $('#ImageFile').val('');
+
+            showToast('Form cleared successfully.', 'bg-info');
+        });
 
 
             //  Validation regex patterns
