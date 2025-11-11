@@ -136,7 +136,7 @@
                 success: function (res) {
                     if (res.success) {
                         showToast(res.message, 'bg-success');
-                        setTimeout(() => window.location.href = '/admin/gallery', 1500);
+                        setTimeout(() => window.location.href = '/admin/gallery', 3000);
                     } else {
                         showToast(res.message, 'bg-danger');
                     }

@@ -166,7 +166,7 @@
                     success: function (response) {
                         if (response.success) {
                             showToast(response.message, 'bg-success');
-                            setTimeout(() => window.location.href = '/admin/heroslider', 1500);
+                            setTimeout(() => window.location.href = '/admin/heroslider', 3000);
                         } else {
                             showToast(response.message || 'Something went wrong.', 'bg-danger');
                         }

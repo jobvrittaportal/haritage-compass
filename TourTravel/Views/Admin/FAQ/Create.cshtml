@@ -89,7 +89,7 @@
             success: function (response) {
                 if (response.success) {
                   showToast(response.message, 'bg-success');
-                    setTimeout(() => window.location.href = '/admin/FAQ', 1500);
+                    setTimeout(() => window.location.href = '/admin/FAQ', 3000);
                     $('#faqForm')[0].reset();
                     if (editor) editor.setData('');
                 } else {

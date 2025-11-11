@@ -231,7 +231,7 @@
                     success: function (res) {
                         if (res.success) {
                             showToast(res.message || 'Team member updated successfully!', 'bg-success');
-                            setTimeout(() => window.location.href = '/admin/Team', 1500);
+                            setTimeout(() => window.location.href = '/admin/Team', 3000);
                         } else {
                             showToast(res.message || 'Error updating team member.', 'bg-danger');
                         }

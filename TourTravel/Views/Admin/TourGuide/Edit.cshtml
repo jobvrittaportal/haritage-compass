@@ -238,7 +238,7 @@
                     success: function (res) {
                         if (res.success) {
                             showToast(res.message || 'Tour guide updated successfully!', 'bg-success');
-                            setTimeout(() => window.location.href = '/admin/TourGuide', 1500);
+                            setTimeout(() => window.location.href = '/admin/TourGuide', 3000);
                         } else {
                             showToast(res.message || 'Error updating tour guide.', 'bg-danger');
                         }
