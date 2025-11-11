@@ -64,16 +64,17 @@
                                 </button>
                                 <!-- Delete Confirmation Modal -->
                                 <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
                                         <div class="modal-content">
-                                            <div class="modal-header ">
-                                                <h5 class="modal-title">Confirm Delete</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <div class="modal-header">
+                                                <h5 class="modal-title w-100 text-center">Confirm Delete</h5>
                                             </div>
-                                            <div class="modal-body">Are you sure you want to delete?</div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <div class="modal-body text-center">
+                                                Are you sure you want to delete?
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-center">
                                                 <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +143,7 @@
                         $("#deleteConfirmModal").modal("hide");
                         $("#row_" + deleteId).fadeOut();
                         showToast(res.message);
-                         setTimeout(() => window.location.href = '/admin/gallery', 1500);
+                         setTimeout(() => window.location.href = '/admin/gallery', 3000);
                     } else {
                         showToast(res.message);
                     }
