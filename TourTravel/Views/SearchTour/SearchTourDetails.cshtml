@@ -43,106 +43,194 @@
                 <p class="mt-20">
                     @Html.Raw(Model.Desc)
                 </p>
-
-                @* <div class="destination-country-info">
-                    <h3>Included And Excluded</h3>
-                    <p class="mt-10">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
-                        voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
-                        occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
-                        mollitia animi, id est laborum et dolorum fuga.
-                    </p>
-                    <ul class="country-info-list clearfix">
-                        <li><i class="fas fa-plane-departure"></i><span>Departure Location</span>Norway Airport</li>
-                        <li><i class="fas fa-plane-departure"></i><span>Return Location</span>Norway Airport</li>
-                        <li><i class="fas fa-clock"></i><span>Departure Time</span>2 Hours Before Flight</li>
-                        <li><i class="fas fa-bed"></i><span>Bedroom</span>4 Bedrooms</li>
-                        <li><i class="fas fa-check-circle text-success"></i><span>Air Fares</span>Yes</li>
-                        <li><i class="fas fa-check-circle text-success"></i><span>4 Nights Hotel</span>Yes</li>
-                        <li><i class="fas fa-check-circle text-success"></i><span>Entrance Fees</span>Yes</li>
-                        <li><i class="fas fa-check-circle text-success"></i><span>Tour Guide</span>Yes</li>
-                        <li><i class="fas fa-times-circle text-danger"></i><span>Insurance</span>No</li>
-                        <li><i class="fas fa-times-circle text-danger"></i><span>Food & Drinks</span>No</li>
-                        <li><i class="fas fa-times-circle text-danger"></i><span>Additional Services</span>No</li>
-
-                    </ul>
-                </div>
- *@
-
                 <div class="destination-country-info">
                     <h3>Included And Excluded</h3>
                     <p class="mt-10">
                         Below is the list of activities and services included or excluded in this package.
                     </p>
-
-                    <ul class="country-info-list clearfix">
+                    <div class="itinerary-filters mt-4 mb-4">
+                        <label><input type="checkbox" id="chkMorning" checked> Morning</label>
+                        <label><input type="checkbox" id="chkAfternoon"> Afternoon</label>
+                        <label><input type="checkbox" id="chkEvening"> Evening</label>
+                    </div>
+                    <!-- Morning -->
+                    <ul id="morningIncluded" class="country-info-list clearfix">
                         @if (Model?.MorningCheckInItinerary != null && Model.MorningCheckInItinerary.Any())
                         {
                             foreach (var activity in Model.MorningCheckInItinerary)
                             {
-                               
-                                    <li>
-                                        <i class="fas fa-check-circle text-success"></i>
-                                        <span>@activity.ActivityName</span>Yes
-                                    </li>
-                              
+                                <li>
+                                    <i class="@activity.ActivityTypeIcon"></i>
+                                    <span>@activity.ActivityName</span> Yes
+                                </li>
                             }
                         }
                         else
                         {
-                            <li><span>No activities available for this package.</span></li>
+                            <li><span>No morning activities available.</span></li>
+                        }
+                    </ul>
+
+                    <!-- Afternoon -->
+                    <ul id="afternoonIncluded" class="country-info-list clearfix" style="display:none;">
+                        @if (Model?.AfternoonCheckInItinerary != null && Model.AfternoonCheckInItinerary.Any())
+                        {
+                            foreach (var activity in Model.AfternoonCheckInItinerary)
+                            {
+                                <li>
+                                    <i class="@activity.ActivityTypeIcon"></i>
+                                    <span>@activity.ActivityName</span> Yes
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li><span>No afternoon activities available.</span></li>
+                        }
+                    </ul>
+
+                    <!-- Evening -->
+                    <ul id="eveningIncluded" class="country-info-list clearfix" style="display:none;">
+                        @if (Model?.EveningCheckInItinerary != null && Model.EveningCheckInItinerary.Any())
+                        {
+                            foreach (var activity in Model.EveningCheckInItinerary)
+                            {
+                                <li>
+                                    <i class="@activity.ActivityTypeIcon"></i>
+                                    <span>@activity.ActivityName</span> Yes
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li><span>No evening activities available.</span></li>
                         }
                     </ul>
                 </div>
 
+               
 
 
 
-                <div class="tour-plan mt-30">
-                    <h3>Tour Plan</h3>
-                    <p class="mt-10">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
-                        voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
-                        occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
-                        mollitia animi, id est laborum et dolorum fuga.
-                    </p>
-
-                    <div class="tour-content-box">
-                        <div class="tour-single-box">
-                            <span>01</span>
-                            <h4>09:00AM - 12:00PM</h4>
-                            <h3>DAY 01 - Norway City Visit</h3>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                            <ul>
-                                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
-                                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
-                                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
-                            </ul>
-                        </div>
-                        <div class="tour-single-box">
-                            <span>02</span>
-                            <h4>09:00AM - 12:00PM</h4>
-                            <h3>DAY 02 - Norway City Visit</h3>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                            <ul>
-                                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
-                                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
-                                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
-                            </ul>
-                        </div>
-                        <div class="tour-single-box pb-0">
-                            <span>03</span>
-                            <h4>09:00AM - 12:00PM</h4>
-                            <h3>DAY 03 - Norway City Visit</h3>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                            <ul>
-                                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
-                                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
-                                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
-                            </ul>
-                        </div>
+                <div id="morningItinerary" class="tour-plan mt-30">
+@*                     <h3>Morning Itinerary</h3>
+ *@                    <div class="tour-content-box">
+                        @if (Model?.MorningCheckInItinerary != null && Model.MorningCheckInItinerary.Any())
+                        {
+                            int index = 1;
+                            foreach (var activity in Model.MorningCheckInItinerary)
+                            {
+                                <div class="tour-single-box @(index == Model.MorningCheckInItinerary.Count() ? "pb-0" : "")">
+                                    <span>@index.ToString("00")</span>
+                                    <h4>@activity.StartTimeFormatted - @activity.EndTimeFormatted</h4>
+                                    <h3>@activity.Day.ToUpper() - @activity.ActivityName</h3>
+                                    <p>@activity.Desc</p>
+                                </div>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <p>No morning activities scheduled.</p>
+                        }
                     </div>
                 </div>
+
+                <div id="afternoonItinerary" class="tour-plan mt-30" style="display:none;">
+                    <div class="tour-content-box">
+                        @if (Model?.AfternoonCheckInItinerary != null && Model.AfternoonCheckInItinerary.Any())
+                        {
+                            int index = 1;
+                            foreach (var activity in Model.AfternoonCheckInItinerary)
+                            {
+                                <div class="tour-single-box @(index == Model.AfternoonCheckInItinerary.Count() ? "pb-0" : "")">
+                                    <span>@index.ToString("00")</span>
+                                    <h4>@activity.StartTimeFormatted - @activity.EndTimeFormatted</h4>
+                                    <h3>@activity.Day.ToUpper() - @activity.ActivityName</h3>
+                                    <p>@activity.Desc</p>
+                                </div>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <p>No afternoon activities scheduled.</p>
+                        }
+                    </div>
+                </div>
+
+                <div id="eveningItinerary" class="tour-plan mt-30" style="display:none;">
+                    <div class="tour-content-box">
+                        @if (Model?.EveningCheckInItinerary != null && Model.EveningCheckInItinerary.Any())
+                        {
+                            int index = 1;
+                            foreach (var activity in Model.EveningCheckInItinerary)
+                            {
+                                <div class="tour-single-box @(index == Model.EveningCheckInItinerary.Count() ? "pb-0" : "")">
+                                    <span>@index.ToString("00")</span>
+                                    <h4>@activity.StartTimeFormatted - @activity.EndTimeFormatted</h4>
+                                    <h3>@activity.Day.ToUpper() - @activity.ActivityName</h3>
+                                    <p>@activity.Desc</p>
+                                </div>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <p>No evening activities scheduled.</p>
+                        }
+                    </div>
+                </div>
+
+
+
+                @*  <div class="tour-plan mt-30">
+                <h3>Tour Plan</h3>
+                <p class="mt-10">
+                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
+                voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
+                occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
+                mollitia animi, id est laborum et dolorum fuga.
+                </p>
+
+                <div class="tour-content-box">
+                <div class="tour-single-box">
+                <span>01</span>
+                <h4>09:00AM - 12:00PM</h4>
+                <h3>DAY 01 - Norway City Visit</h3>
+                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                <ul>
+                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
+                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
+                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
+                </ul>
+                </div>
+                <div class="tour-single-box">
+                <span>02</span>
+                <h4>09:00AM - 12:00PM</h4>
+                <h3>DAY 02 - Norway City Visit</h3>
+                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                <ul>
+                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
+                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
+                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
+                </ul>
+                </div>
+                <div class="tour-single-box pb-0">
+                <span>03</span>
+                <h4>09:00AM - 12:00PM</h4>
+                <h3>DAY 03 - Norway City Visit</h3>
+                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
+                <ul>
+                <li><i class="far fa-check"></i>Sed Perspiciatis</li>
+                <li><i class="far fa-check"></i>Totam Rem Aperiam</li>
+                <li><i class="far fa-check"></i>Quasi Architecto Beatae</li>
+                </ul>
+                </div>
+                </div>
+                </div> *@
+
+
 
 
                 @* <div class="destination-single-gallery">
@@ -463,3 +551,70 @@
     </div>
 </div>
 <!-- tour-details end -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Checkboxes
+        const chkMorning = document.getElementById("chkMorning");
+        const chkAfternoon = document.getElementById("chkAfternoon");
+        const chkEvening = document.getElementById("chkEvening");
+
+        // Itinerary sections
+        const morningItinerary = document.getElementById("morningItinerary");
+        const afternoonItinerary = document.getElementById("afternoonItinerary");
+        const eveningItinerary = document.getElementById("eveningItinerary");
+
+        // Included sections
+        const morningIncluded = document.getElementById("morningIncluded");
+        const afternoonIncluded = document.getElementById("afternoonIncluded");
+        const eveningIncluded = document.getElementById("eveningIncluded");
+
+        // Helper function: show one section at a time
+        function showOnly(selected) {
+            // Itinerary visibility
+            morningItinerary.style.display = selected === "morning" ? "block" : "none";
+            afternoonItinerary.style.display = selected === "afternoon" ? "block" : "none";
+            eveningItinerary.style.display = selected === "evening" ? "block" : "none";
+
+            // Included list visibility
+            morningIncluded.style.display = selected === "morning" ? "block" : "none";
+            afternoonIncluded.style.display = selected === "afternoon" ? "block" : "none";
+            eveningIncluded.style.display = selected === "evening" ? "block" : "none";
+        }
+
+        // Checkbox change handlers
+        chkMorning.addEventListener("change", function () {
+            if (this.checked) {
+                chkAfternoon.checked = false;
+                chkEvening.checked = false;
+                showOnly("morning");
+            } else {
+                this.checked = true; // keep at least one active
+            }
+        });
+
+        chkAfternoon.addEventListener("change", function () {
+            if (this.checked) {
+                chkMorning.checked = false;
+                chkEvening.checked = false;
+                showOnly("afternoon");
+            } else {
+                this.checked = true;
+            }
+        });
+
+        chkEvening.addEventListener("change", function () {
+            if (this.checked) {
+                chkMorning.checked = false;
+                chkAfternoon.checked = false;
+                showOnly("evening");
+            } else {
+                this.checked = true;
+            }
+        });
+
+        // Default: Morning visible
+        showOnly("morning");
+    });
+</script>
+
+

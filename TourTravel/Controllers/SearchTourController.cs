@@ -84,6 +84,7 @@ namespace TourTravel.Controllers
     public string Latitude { get; set; }
     public string Longitude { get; set; }
     public int Duration { get; set; }
+
     public int CityId { get; set; }
     public string PackageImage { get; set; }
     public string Desc { get; set; }
@@ -120,6 +121,11 @@ namespace TourTravel.Controllers
     public int Id { get; set; }
     public string ActivityName { get; set; }
     public bool IsIncluded { get; set; }
+    public string Day { get; set; }
+    public string StartTimeFormatted { get; set; }
+    public string EndTimeFormatted { get; set; }
+    public string Desc { get; set; }
+    public string ActivityTypeIcon { get; set; }
   }
 
 
