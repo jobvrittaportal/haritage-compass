@@ -62,22 +62,23 @@
                         <button class="btn btn-sm btn-danger btn-delete" data-id="@item.Id">
                             <i class="fa fa-trash"></i>
                         </button>
-                        <!-- Delete Confirmation Modal (Only ONE modal on page) -->
-                        <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header ">
-                                        <h5 class="modal-title">Confirm Delete</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">Are you sure you want to delete this slider?</div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title w-100 text-center">Confirm Delete</h5>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            Are you sure you want to delete?
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @Html.AntiForgeryToken()
                     </td>
                 </tr>
@@ -98,7 +99,14 @@
     </nav>
 </div>
 
+
 @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ✅ CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+  
     <script>
          let deleteId = 0;
 
@@ -121,7 +129,7 @@
                         showToast(res.message);
                          setTimeout(() => {
                         window.location.href = '/admin/HeroSlider';
-                    }, 1500);
+                    }, 3000);
                     } else {
                         showToast(res.message);
                     }

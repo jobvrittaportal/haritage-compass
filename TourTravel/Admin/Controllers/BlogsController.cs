@@ -30,6 +30,12 @@ namespace TourTravel.Admin.Controllers
             {
                 query = query.Where(b => b.Title.Contains(search) || b.Author.Contains(search));
             }
+            var result = query.ToList();
+
+            if (result.Count == 0)
+            {
+                ViewBag.Message = "No records found.";
+            }
 
             int totalItems = await query.CountAsync();
             var blogs = await query
