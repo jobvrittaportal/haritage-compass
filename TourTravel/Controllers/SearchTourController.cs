@@ -91,7 +91,12 @@ namespace TourTravel.Controllers
     public int? MaxPerson { get; set; }
 
     public List<SpotDto> Spots { get; set; } = new();
+    public List<ActivityDto> MorningCheckInItinerary { get; set; } = new(); 
+    public List<ActivityDto> AfternoonCheckInItinerary { get; set; } = new();
+    public List<ActivityDto> EveningCheckInItinerary { get; set; } = new();
   }
+
+
   public class SpotDto
   {
     public int Id { get; set; }
@@ -110,7 +115,12 @@ namespace TourTravel.Controllers
     public int? OrderIndex { get; set; }
     public string ImageUrl { get; set; }
   }
-
+  public class ActivityDto
+  {
+    public int Id { get; set; }
+    public string ActivityName { get; set; }
+    public bool IsIncluded { get; set; }
+  }
 
 
 }

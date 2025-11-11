@@ -44,7 +44,7 @@
                     @Html.Raw(Model.Desc)
                 </p>
 
-                <div class="destination-country-info">
+                @* <div class="destination-country-info">
                     <h3>Included And Excluded</h3>
                     <p class="mt-10">
                         At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
@@ -67,6 +67,35 @@
 
                     </ul>
                 </div>
+ *@
+
+                <div class="destination-country-info">
+                    <h3>Included And Excluded</h3>
+                    <p class="mt-10">
+                        Below is the list of activities and services included or excluded in this package.
+                    </p>
+
+                    <ul class="country-info-list clearfix">
+                        @if (Model?.MorningCheckInItinerary != null && Model.MorningCheckInItinerary.Any())
+                        {
+                            foreach (var activity in Model.MorningCheckInItinerary)
+                            {
+                               
+                                    <li>
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <span>@activity.ActivityName</span>Yes
+                                    </li>
+                              
+                            }
+                        }
+                        else
+                        {
+                            <li><span>No activities available for this package.</span></li>
+                        }
+                    </ul>
+                </div>
+
+
 
 
                 <div class="tour-plan mt-30">
