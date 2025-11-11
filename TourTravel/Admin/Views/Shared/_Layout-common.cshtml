@@ -466,7 +466,7 @@
             toast.addEventListener("mouseleave", () => {
                 if (isPaused) {
                     isPaused = false;
-                    toastTimeout = setTimeout(() => startFadeOut(toast), 1000); // resume fade after 1s
+                    toastTimeout = setTimeout(() => startFadeOut(toast), 3000); // resume fade after 1s
                 }
             });
         }
