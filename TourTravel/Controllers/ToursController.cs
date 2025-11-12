@@ -45,7 +45,7 @@ namespace TourTravel.Controllers
         ViewBag.ImageHeight = page.ImgHeight;
         ViewBag.ImageWidth = page.ImgWidth;
       }
-      var apiUrl = $"https://localhost:7154/api/package/getTourPackage";
+      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getTourPackage";
       List<PackagessDto> packages = new List<PackagessDto>();
       try
       {
@@ -162,7 +162,7 @@ namespace TourTravel.Controllers
 
     public async Task<IActionResult> TourPackageDetails(int id)
     {
-      var apiUrl = $"https://localhost:7154/api/package/getPackageDetails?id={id}";
+      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getPackageDetails?id={id}";
       PackageDetailsDto package = null;
 
       try
