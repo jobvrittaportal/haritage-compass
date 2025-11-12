@@ -11,6 +11,7 @@ namespace TourTravel.Models
     public string? YouTube { get; set; }
     public string? Timing { get; set; }
     public string? Address { get; set; }
+    public required int RotationTime { get; set; } =  3;
 
-  }
+    }
 }

@@ -33,7 +33,8 @@ namespace TourTravel.ViewComponents
                     Twitter = "#",
                     LinkedIn = "#",
                     YouTube = "#",
-                    Timing = "Mon–Fri: 10:00 AM – 8:00 PM"
+                    Timing = "Mon–Fri: 10:00 AM – 8:00 PM",
+                    RotationTime = 3
                 };
             }
 

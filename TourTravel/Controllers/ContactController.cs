@@ -36,7 +36,8 @@ namespace TourTravel.Controllers
                     Twitter = "#",
                     LinkedIn = "#",
                     YouTube = "#",
-                    Timing = "Mon–Sat: 9:00 AM – 6:00 PM"
+                    Timing = "Mon–Sat: 9:00 AM – 6:00 PM",
+                    RotationTime  =3
                 };
             }
             return View(companyDetails);

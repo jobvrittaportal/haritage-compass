@@ -36,9 +36,12 @@ namespace TourTravel.Controllers
             }
 
             var heroSliders = _db.HeroSlider.ToList();
+            var website = _db.WebsiteSetting.OrderByDescending(f => f.Id).FirstOrDefault();
+            var RotationTime = website.RotationTime;
             var viewModel = new HomeViewModel
             {
-                HeroSliders = heroSliders
+                HeroSliders = heroSliders,
+                RotationTime = RotationTime
             };
             return View(viewModel);
         }

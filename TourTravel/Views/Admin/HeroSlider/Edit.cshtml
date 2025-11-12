@@ -34,7 +34,7 @@
                         <textarea asp-for="Description" id="Description" class="form-control"></textarea>
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    @* <div class="col-md-6 mb-3">
                         <label class="form-label">Rotation Time (seconds) <span class="text-danger">*</span></label>
                         <select asp-for="RotationTime" id="RotationTime" class="form-control" required>
                             <option value="">-- Select Rotation Time --</option>
@@ -43,7 +43,7 @@
                             <option value="3">3 seconds</option>
                         </select>
                         <span asp-validation-for="RotationTime" class="text-danger"></span>
-                    </div>
+                    </div> *@
 
 
                     <div class="col-md-6 mb-3">
@@ -104,7 +104,6 @@
             // Clear input fields
             $('#Title').val('');
             $('#SubTitle').val('');
-            $('#RotationTime').val('');
             $('#ImageFile').val('');        
             if (editor) {
                 editor.setData('');
@@ -130,14 +129,11 @@
             const desc = $('#Description').val().trim();
             const rotation = $('#RotationTime').val().trim();
 
-            if (!title || !subtitle || !desc || !rotation) {
+            if (!title || !subtitle || !desc ) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-             if(rotation>3 ||rotation<1 ){
-                showToast('Rotation Time Is Between 1 to 3.', 'bg-warning');
-                return;
-            }
+            
             const imageFile = $('#ImageFile')[0].files[0];
             if (imageFile) {
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];

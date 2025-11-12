@@ -54,7 +54,7 @@ namespace TourTravel.Controllers
         var client = _clientFactory.CreateClient();
 
         // Set base address of your API
-        client.BaseAddress = new Uri("https://localhost:7154/api/");
+        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
 
         // Call the API that returns an array of city objects
         var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
@@ -190,7 +190,7 @@ namespace TourTravel.Controllers
       try
       {
         var client = _clientFactory.CreateClient();
-        client.BaseAddress = new Uri("https://localhost:7154/api/");
+        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
 
         var response = await client.GetFromJsonAsync<DestinationDetailsViewModel>(
             $"Destination/getDestinationDetails?id={id}");
@@ -222,7 +222,7 @@ namespace TourTravel.Controllers
       ViewBag.Page = "Spot Detail";
 
       var client = _clientFactory.CreateClient();
-      var apiUrl = $"https://localhost:7154/api/Destination/getSpotsDetails?id={id}";
+      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/Destination/getSpotsDetails?id={id}";
 
       List<SpotDetailsViewModel>? spots = null;
 

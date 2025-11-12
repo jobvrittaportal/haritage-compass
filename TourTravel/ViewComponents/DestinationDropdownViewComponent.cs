@@ -20,7 +20,7 @@ namespace TourTravel.ViewComponents
       try
       {
         var client = _clientFactory.CreateClient();
-        client.BaseAddress = new Uri("https://localhost:7154/api/");
+        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
         var response = await client.GetFromJsonAsync<List<DestinationDropdown>>("Destination/getDestinationSearch");
 
         if (response != null)

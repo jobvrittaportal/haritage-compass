@@ -94,6 +94,7 @@ namespace TourTravel.Admin.Controllers
         existing.YouTube = model.YouTube;
         existing.Timing = model.Timing;
         existing.Address = model.Address;
+        existing.RotationTime = model.RotationTime;
         _db.SaveChanges();
 
         return Json(new { success = true, message = " Updated successfully!" });
