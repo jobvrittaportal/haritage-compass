@@ -30,6 +30,8 @@
             </tr>
         </thead>
         <tbody>
+            @if (Model != null && Model.Any())
+            {
             @foreach (var item in Model)
             {
                 <tr id="pageRow_@item.Id">
@@ -55,6 +57,13 @@
                         </div>
                     </td>
 
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No result found.</td>
                 </tr>
             }
         </tbody>
