@@ -1,7 +1,7 @@
-﻿<!-- hero slider -->
-@model TourTravel.ViewModel.HomeViewModel
-<div class="hero-section hero-slider owl-carousel owl-theme">
-    @foreach(var item in Model.HeroSliders)
+﻿@model TourTravel.ViewModel.HomeViewModel
+<!-- hero slider -->
+<div class="hero-section hero-slider owl-carousel owl-theme" id="hero-slider" data-rotation="@Model.RotationTime">
+    @foreach (var item in Model.HeroSliders)
     {
         <div class="hero-single" style="background-image: url('@item.Image')">
             <div class="container">
@@ -10,29 +10,33 @@
                         <div class="hero-content">
                             <h6 class="hero-sub-title wow animate__animated animate__fadeInUp"
                                 data-wow-duration="1s" data-wow-delay=".25s">
-                             @item.SubTitle
+                                @item.SubTitle
                             </h6>
-                            <h1 class="hero-title wow animate__animated animate__fadeInUp" data-wow-duration="1s"
-                                data-wow-delay=".50s">
+                            <h1 class="hero-title wow animate__animated animate__fadeInUp"
+                                data-wow-duration="1s" data-wow-delay=".50s">
                                 @item.Title
                             </h1>
-                            <p class="wow animate__animated animate__fadeInUp" data-wow-duration="1s"
-                               data-wow-delay=".75s">
+                            <p class="wow animate__animated animate__fadeInUp"
+                               data-wow-duration="1s" data-wow-delay=".75s">
                                 @Html.Raw(item.Description)
                             </p>
-                            <div class="hero-btn wow animate__animated animate__fadeInUp" data-wow-duration="1s"
-                                 data-wow-delay="1s">
-                                <a asp-controller="Contact" asp-action="Index" class="theme-btn">Contact Us <i class="far fa-arrow-right"></i></a>
-                                <a asp-controller="Pages" asp-action="AboutUs" class="theme-btn border-btn">About Us <i class="far fa-arrow-right"></i></a>
+                            <div class="hero-btn wow animate__animated animate__fadeInUp"
+                                 data-wow-duration="1s" data-wow-delay="1s">
+                                <a asp-controller="Contact" asp-action="Index" class="theme-btn">
+                                    Contact Us <i class="far fa-arrow-right"></i>
+                                </a>
+                                <a asp-controller="Pages" asp-action="AboutUs" class="theme-btn border-btn">
+                                    About Us <i class="far fa-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    }</div>
+    }
+</div>
 <!-- hero slider end -->
-
 <!-- Search bar start -->
 @await Component.InvokeAsync("Search")
 <!-- Search bar end -->
@@ -95,7 +99,7 @@
 @await Component.InvokeAsync("TourCards", new { showHeading = true, take = 3 })
 <!-- Tour Area ends-->
 
-<!-- Counter area-->
+@* <!-- Counter area-->
 <div class="counter-area pt-50 pb-50">
     <div class="container">
         <div class="row">
@@ -130,7 +134,7 @@
         </div>
     </div>
 </div>
-<!-- Counter area end-->
+<!-- Counter area end--> *@
 
 <!-- video area -->
 <div class="video-area pt-120">
@@ -165,7 +169,7 @@
 @await Component.InvokeAsync("TourGuides", new { showHeading = true, take = 4 })
 <!-- guide-area ends -->
 
-<!-- cta area -->
+@* <!-- cta area -->
 <div class="cta-area">
     <div class="container">
         <div class="cta-content">
@@ -175,7 +179,7 @@
         </div>
     </div>
 </div>
-<!-- cta area end -->
+<!-- cta area end --> *@
 
 <!--Testimonials start-->
 @await Component.InvokeAsync("Testimonials", new { showheading = true, take = 4 })
@@ -212,3 +216,4 @@
 @await Component.InvokeAsync("Blog", new { showHeading = true, take = 3 })
 
 <!-- Blog ends -->
+
