@@ -25,7 +25,7 @@ namespace TourTravel.ViewComponents
 
       try
       {
-        string apiUrl = "https://localhost:7154/api/package/getTourPackage";
+        string apiUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getTourPackage";
         var response = await _httpClient.GetAsync(apiUrl);
 
         if (response.IsSuccessStatusCode)
