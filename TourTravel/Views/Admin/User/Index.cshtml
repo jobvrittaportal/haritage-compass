@@ -167,7 +167,7 @@
 
                             if (res.success) {
                                 showToast('User deleted successfully!', 'bg-success');
-                                setTimeout(() => location.reload(), 1000);
+                                setTimeout(() => location.reload(), 3000);
                             } else {
                                 showToast(res.message || 'Failed to delete user.', 'bg-danger');
                             }

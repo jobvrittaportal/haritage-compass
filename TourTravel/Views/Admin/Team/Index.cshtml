@@ -39,6 +39,8 @@
             </tr>
         </thead>
         <tbody>
+             @if (Model != null && Model.Any())
+              {
             @foreach (var item in Model)
             {
                 <tr id="guideRow_@item.Id">
@@ -105,6 +107,13 @@
                         </div>
                         @Html.AntiForgeryToken()
                     </td>
+                </tr>
+            }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No result found.</td>
                 </tr>
             }
         </tbody>
