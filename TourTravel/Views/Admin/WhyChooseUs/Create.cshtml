@@ -1,0 +1,128 @@
+﻿@model TourTravel.Models.WhyChooseUs
+@{
+    ViewData["Title"] = "Add Why Choose Us";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header text-black d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa-solid  me-2"></i>Add Why Choose Us</h5>
+            <a href="@Url.Action("Index", "WhyChooseUs")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form id="whyChooseForm" asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+                        <input asp-for="Title" class="form-control" placeholder="Enter title" required />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Upload Image <span class="text-danger">*</span></label>
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" required />
+
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div id="previewContainer" class="mb-3 "></div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="toastContainer"></div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+               // ✅ Image Preview
+        $('#ImageFile').on('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewContainer').html(`
+                        <img src="${e.target.result}" style="max-width: 100px; max-height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #ccc; padding: 4px;" />
+                    `);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('#previewContainer').empty();
+            }
+        });
+
+        // ✅ Form Submit via AJAX
+        $('#whyChooseForm').submit(function (e) {
+            e.preventDefault();
+
+            const title = $('#Title').val().trim();
+            const desc = $('#Description').val().trim();
+            const imageFile = $('#ImageFile')[0].files[0];
+
+            if (!title || !desc || !imageFile) {
+                showToast('Please fill all required fields.', 'bg-danger');
+                return;
+            }
+
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+            const maxSize = 3 * 1024 * 1024;
+
+            if (!allowedTypes.includes(imageFile.type)) {
+                showToast('Only PNG, JPG, JPEG, or SVG files are allowed.', 'bg-danger');
+                return;
+            }
+
+            if (imageFile.size > maxSize) {
+                showToast('Image size must be less than 3MB.', 'bg-danger');
+                return;
+            }
+
+            const formData = new FormData($('#whyChooseForm')[0]);
+
+            $.ajax({
+                url: '@Url.Action("Create", "WhyChooseUs")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.success) {
+                        showToast(res.message, 'bg-success');
+                        setTimeout(() => window.location.href = '/admin/WhyChooseUs', 3000);
+                    } else {
+                        showToast(res.message, 'bg-danger');
+                    }
+                },
+                error: function () {
+                    showToast('Something went wrong. Please try again.', 'bg-danger');
+                }
+            });
+        });
+
+    </script>
+}
