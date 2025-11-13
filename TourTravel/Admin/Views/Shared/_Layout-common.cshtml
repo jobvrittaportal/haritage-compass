@@ -134,7 +134,8 @@
                     </li>
                   
 
-                    <li class="menu-item @(currentPath.Contains("/admin/blogs") || currentPath.Contains("/admin/faq") || currentPath.Contains("/admin/gallery") || currentPath.Contains("/admin/testimonial") || currentPath.Contains("/admin/tourguide") || currentPath.Contains("/admin/team") || currentPath.Contains("/admin/heroslider") ? "open " : "")">
+                    <li class="menu-item @(currentPath.Contains("/admin/blogs") || currentPath.Contains("/admin/faq") || currentPath.Contains("/admin/gallery") || currentPath.Contains("/admin/testimonial") || currentPath.Contains("/admin/tourguide")
+                         || currentPath.Contains("/admin/team") || currentPath.Contains("/admin/heroslider") || currentPath.Contains("/admin/introvideo") || currentPath.Contains("/admin/whychooseus") ? "open " : "")">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="Account Settings">Master</div>
@@ -175,11 +176,17 @@
                                     <div data-i18n="Connections">Home Page Slider</div>
                                 </a>
                             </li>
-                            <li class="menu-item @(currentPath.Contains("/admin/WhyChooseUs"))">
-                                <a href="/admin/WhyChooseUs" class="menu-link">
+                            <li class="menu-item @(currentPath.Contains("/admin/introvideo"))">
+                                <a href="/admin/introVideo" class="menu-link">
+                                    <div data-i18n="Connections">Intro Video</div>
+                                </a>
+                            </li>
+                            <li class="menu-item @(currentPath.Contains("/admin/whychooseus"))">
+                                <a href="/admin/whychooseus" class="menu-link">
                                     <div data-i18n="Connections">Why Choose Us</div>
                                 </a>
                             </li>
+                           
                         </ul>
                     </li>
 
