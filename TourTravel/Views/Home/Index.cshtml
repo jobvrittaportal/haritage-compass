@@ -45,45 +45,41 @@
 <div class="feature-area pt-120">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <span class="feature-count">01</span>
-                    <div class="feature-icon"><i class="fal fa-users-class"></i></div>
-                    <div class="feature-info">
-                        <h3 class="feature-title">5000+ Our Local Guides</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, contur selisica do mod tempor incidunt ut labet aliqua at
-                            quis sit ipsum suspensse dolor.
-                        </p>
+            @if (Model.WhyChooseUs != null && Model.WhyChooseUs.Any())
+            {
+                var count = 1;
+                foreach (var item in Model.WhyChooseUs)
+
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="feature-item">
+                            <span class="feature-count">@count.ToString("00")</span>
+
+                            <div class="feature-icon text-center">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <!-- ✅ show image if available -->
+                                    <img src="@item.ImageUrl"
+                                         alt="@item.Title"
+                                         style="width:80px;height:80px;object-fit:contain;">
+                                }                               
+                                else
+                                {
+                                    <!-- ✅ default placeholder -->
+                                    <i class="fal fa-image"></i>
+                                }
+                            </div>
+
+                            <div class="feature-info">
+                                <h3 class="feature-title">@item.Title</h3>
+                                <p>@item.Description</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <span class="feature-count">02</span>
-                    <div class="feature-icon"><i class="fal fa-badge-check"></i></div>
-                    <div class="feature-info">
-                        <h3 class="feature-title">100% Trusted Agency</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, contur selisica do mod tempor incidunt ut labet aliqua at
-                            quis sit ipsum suspensse dolor.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <span class="feature-count">03</span>
-                    <div class="feature-icon"><i class="fal fa-hands-heart"></i></div>
-                    <div class="feature-info">
-                        <h3 class="feature-title">28+ Years of Experience</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, contur selisica do mod tempor incidunt ut labet aliqua at
-                            quis sit ipsum suspensse dolor.
-                        </p>
-                    </div>
-                </div>
-            </div>
+                    count++;
+                }
+            }
+  
         </div>
     </div>
 </div>
@@ -185,7 +181,7 @@
 @await Component.InvokeAsync("Testimonials", new { showheading = true, take = 4 })
 <!--Testimonials ends-->
 
-<!-- partner area -->
+@* <!-- partner area -->
 <div class="partner-area">
     <div class="container">
         <div class="partner-wrapper partner-slider owl-carousel owl-theme">
@@ -210,7 +206,7 @@
         </div>
     </div>
 </div>
-<!-- partner area end -->
+<!-- partner area end --> *@
 
 <!-- Blog start -->
 @await Component.InvokeAsync("Blog", new { showHeading = true, take = 3 })
