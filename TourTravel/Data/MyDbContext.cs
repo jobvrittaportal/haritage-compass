@@ -30,6 +30,6 @@ public class MyDbContext : IdentityDbContext<ApplicationUser, IdentityRole, stri
     public DbSet<NewsletterSubscribers> NewsletterSubscribers { get; set; }
     public DbSet<Team> Team { get; set; }
     public DbSet<WhyChooseUs> WhyChooseUs { get; set; }
-
+    public DbSet<IntroVideo> IntroVideo { get; set; }
 
 }
