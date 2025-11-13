@@ -47,12 +47,12 @@
 
 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Current Image</label><br />
+                        <label class="form-label">Current Image<span class="text-danger">*</span></label><br />
                         @if (!string.IsNullOrEmpty(Model.Image))
                         {
                             <img src="@Model.Image" alt="Current Image" style="max-width: 200px; max-height: 150px; object-fit: cover;" class="rounded mb-2 border" />
                         }
-                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" />
+                        <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" <span class="text-danger">*</span>
                     </div>
                 </div>
 
@@ -112,7 +112,7 @@
             $('#previewContainer').empty();
 
             // Reset validation messages
-            $('.text-danger').text('');
+          
 
             // Optional toast
             showToast('Form cleared successfully.', 'bg-info');
@@ -127,7 +127,7 @@
             const title = $('#Title').val().trim();
             const subtitle = $('#SubTitle').val().trim();
             const desc = $('#Description').val().trim();
-            const rotation = $('#RotationTime').val().trim();
+           
 
             if (!title || !subtitle || !desc ) {
                 showToast('Please fill all required fields.', 'bg-danger');

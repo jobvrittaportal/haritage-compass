@@ -34,14 +34,15 @@ namespace TourTravel.Controllers
                 ViewBag.ImageWidth = page.ImgWidth;
                 //ViewBag.ImageType = page.ImageType;
             }
-
+            var whyChooseUs = _db.WhyChooseUs.ToList();
             var heroSliders = _db.HeroSlider.ToList();
             var website = _db.WebsiteSetting.OrderByDescending(f => f.Id).FirstOrDefault();
             var RotationTime = website.RotationTime;
             var viewModel = new HomeViewModel
             {
                 HeroSliders = heroSliders,
-                RotationTime = RotationTime
+                RotationTime = RotationTime,
+                WhyChooseUs = whyChooseUs
             };
             return View(viewModel);
         }
