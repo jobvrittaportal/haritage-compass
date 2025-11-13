@@ -149,7 +149,7 @@ namespace TourTravel.Controllers
 
             return View(fAQ);
         }
-        public IActionResult Gallery(int currentpage = 1, int pageSize = 6)
+        public IActionResult Gallery(int currentpage = 1, int pageSize = 12)
         {
             
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Gallery");
