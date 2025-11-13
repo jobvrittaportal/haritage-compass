@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using TourTravel.Controllers; // for PackagessDto
+using TourTravel.Controllers;
 using TourTravel.Models;
 
 namespace TourTravel.ViewComponents
@@ -16,7 +16,18 @@ namespace TourTravel.ViewComponents
       _httpClient = new HttpClient();
     }
 
-    public async Task<IViewComponentResult> InvokeAsync(bool ShowHeading = true, int take = 6, string columnClass = "col-md-6 col-lg-4")
+    public async Task<IViewComponentResult> InvokeAsync(
+        bool ShowHeading = true,
+        int take = 6,
+        string columnClass = "col-md-6 col-lg-4",
+        int? DestinationId = null,
+        string? checkInDate = null,
+        string? checkOutDate = null,
+        int? maxPerson = null,
+        decimal? minPrice = null,
+        decimal? maxPrice = null,
+        int? minDuration = null,
+        int? maxDuration = null)
     {
       ViewData["ShowHeading"] = ShowHeading;
       ViewData["ColumnClass"] = columnClass;
@@ -25,13 +36,86 @@ namespace TourTravel.ViewComponents
 
       try
       {
-        string apiUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getTourPackage";
+        string apiUrl;
+
+        //  CASE 1: If DestinationId + Dates exist → use getPackageList
+        if (DestinationId.HasValue &&
+            !string.IsNullOrEmpty(checkInDate) &&
+            !string.IsNullOrEmpty(checkOutDate))
+        {
+          var baseUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?";
+          var parameters = new List<string>
+                {
+                    $"cityId={DestinationId}",
+                    $"checkInDate={checkInDate}",
+                    $"checkOutDate={checkOutDate}"
+                };
+
+          if (maxPerson.HasValue)
+            parameters.Add($"MaxPerson={maxPerson}");
+
+          if (minPrice.HasValue)
+            parameters.Add($"minPrice={minPrice}");
+
+          if (maxPrice.HasValue)
+            parameters.Add($"maxPrice={maxPrice}");
+
+          if (minDuration.HasValue)
+            parameters.Add($"minDuration={minDuration}");
+
+          if (maxDuration.HasValue)
+            parameters.Add($"maxDuration={maxDuration}");
+
+          apiUrl = baseUrl + string.Join("&", parameters);
+        }
+        else
+        {
+          //  CASE 2: Otherwise → use getfilterPackageList (all optional)
+          var baseUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getfilterPackageList?";
+          var parameters = new List<string>();
+
+          if (DestinationId.HasValue)
+            parameters.Add($"cityId={DestinationId}");
+
+          if (!string.IsNullOrEmpty(checkInDate))
+            parameters.Add($"checkInDate={checkInDate}");
+
+          if (!string.IsNullOrEmpty(checkOutDate))
+            parameters.Add($"checkOutDate={checkOutDate}");
+
+          if (maxPerson.HasValue)
+            parameters.Add($"MaxPerson={maxPerson}");
+
+          if (minPrice.HasValue)
+            parameters.Add($"minPrice={minPrice}");
+
+          if (maxPrice.HasValue)
+            parameters.Add($"maxPrice={maxPrice}");
+
+          if (minDuration.HasValue)
+            parameters.Add($"minDuration={minDuration}");
+
+          if (maxDuration.HasValue)
+            parameters.Add($"maxDuration={maxDuration}");
+
+          apiUrl = baseUrl + string.Join("&", parameters);
+        }
+
+        //  If no parameters, call default endpoint
+        if (string.IsNullOrWhiteSpace(apiUrl))
+          apiUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getTourPackage";
+
+        //  Fetch data
         var response = await _httpClient.GetAsync(apiUrl);
 
         if (response.IsSuccessStatusCode)
         {
           var json = await response.Content.ReadAsStringAsync();
           tours = JsonConvert.DeserializeObject<List<PackagessDto>>(json) ?? new List<PackagessDto>();
+        }
+        else
+        {
+          Console.WriteLine($"API returned status: {response.StatusCode}");
         }
       }
       catch (Exception ex)
@@ -40,8 +124,10 @@ namespace TourTravel.ViewComponents
       }
 
       var limitedTours = tours.Take(take).ToList();
-
       return View(limitedTours);
     }
+
+
+
   }
 }
