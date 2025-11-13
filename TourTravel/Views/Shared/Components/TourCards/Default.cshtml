@@ -23,54 +23,62 @@
         </div>
 
         <div class="row align-items-center">
-            @foreach (var tour in Model)
+            @if (Model == null || !Model.Any())
             {
-                <div class="@columnClass">
-                    <div class="tour-item">
-                        <div class="tour-img">
-                            @if (tour.BasePrice < 15000)
-                            {
-                                <span class="tour-sale">Sale</span>
-                            }
+                <div class="col-12 text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486761.png"
+                         alt="No Results" width="120" class="mb-3 opacity-75" />
+                    <h4 class="text-muted">No packages found by this search</h4>
+                </div>
+            }
+            else
+            {
 
-                            <img src="@(tour.PackageImage)" alt="@tour.Name">
-                            <a href="#" class="tour-wish"><i class="far fa-heart"></i></a>
-                        </div>
+                @foreach (var tour in Model)
+                {
+                    <div class="@columnClass">
+                        <div class="tour-item">
+                            <div class="tour-img">
 
-                        <div class="tour-meta">
-                            <ul>
-                                <li><i class="far fa-clock"></i> @tour.Duration</li>
-                                <li><i class="far fa-user-friends"></i> @tour.MaxPerson Person</li>
-                                <li><i class="far fa-map-marker-alt"></i> @tour.CityName</li>
-                            </ul>
-                        </div>
 
-                        <div class="tour-info">
-                            <a asp-controller="Tours" asp-action="TourPackageDetails" asp-route-id="@tour.Id">
-                                <h5>@tour.Name</h5>
-                            </a>
-                            <div class="tour-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-
-                        <div class="tour-footer">
-                            <div class="tour-price">
-                                ₹@tour.BasePrice.ToString("0") <small>/per person</small>
+                                <img src="@(tour.PackageImage)" alt="@tour.Name">
                             </div>
 
-                            <button type="button" class="tour-btn book-now-btn"
-                                    data-package-id="@tour.Id"
-                                    data-bs-toggle="modal" data-bs-target="#contactModal">
-                                Book Now <i class="far fa-arrow-right"></i>
-                            </button>
+                            <div class="tour-meta">
+                                <ul>
+                                    <li><i class="far fa-clock"></i> @tour.Duration</li>
+                                    <li><i class="far fa-user-friends"></i> @tour.MaxPerson Person</li>
+                                    <li><i class="far fa-map-marker-alt"></i> @tour.CityName</li>
+                                </ul>
+                            </div>
+
+                            <div class="tour-info">
+                                <a asp-controller="Tours" asp-action="TourPackageDetails" asp-route-id="@tour.Id">
+                                    <h5>@tour.Name</h5>
+                                </a>
+                                <div class="tour-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+
+                            <div class="tour-footer">
+                                <div class="tour-price">
+                                    ₹@tour.BasePrice.ToString("0") <small>/per person</small>
+                                </div>
+
+                                <button type="button" class="tour-btn book-now-btn"
+                                        data-package-id="@tour.Id"
+                                        data-bs-toggle="modal" data-bs-target="#contactModal">
+                                    Book Now <i class="far fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             }
         </div>
     </div>
@@ -110,7 +118,7 @@
 
                     </div>
                     <!-- Google reCAPTCHA -->
-                    <div class="g-recaptcha mt-4 mb-3" data-sitekey="6LdyVAQsAAAAAOv8DkGgtnjpuDt0FEdNmPnsgz3F"></div>
+                    <div class="g-recaptcha mt-4 mb-3" data-sitekey="6LdYQgssAAAAAGWX8bBIb8_qUetYKL5__NcBPXFD"></div>
 
 
                     <div class="text-end mt-4">

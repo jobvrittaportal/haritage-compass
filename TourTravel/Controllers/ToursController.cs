@@ -62,6 +62,42 @@ namespace TourTravel.Controllers
       return View(packages);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetFilteredPackages(
+      int? DestinationId,
+      string? checkInDate,
+      string? checkOutDate,
+      decimal? minPrice,
+      decimal? maxPrice,
+      int? minDuration,
+      int? maxDuration)
+    {
+      try
+      {
+        return ViewComponent("TourCards", new
+        {
+          DestinationId,
+          checkInDate,
+          checkOutDate,
+          minPrice,
+          maxPrice,
+          minDuration,
+          maxDuration,
+          ShowHeading = false,
+          take = 8,
+          columnClass = "col-md-6 col-lg-6"
+        });
+      }
+      catch (Exception ex)
+      {
+        return Content($"<p>Error loading packages: {ex.Message}</p>", "text/html");
+      }
+    }
+
+
+
+
+
 
     public IActionResult TourPackageOffer()
     {
