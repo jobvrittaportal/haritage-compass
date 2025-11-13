@@ -25,11 +25,11 @@ namespace TourTravel.Controllers
             return View();
         }
 
-        public IActionResult Team()
+        public IActionResult Team(int currentpage = 1)
         {
             
             var page = db.SitePages.FirstOrDefault(f => f.Page == "Team");
-            ViewBag.CurrentPage = 1;
+            ViewBag.CurrentPage = currentpage;
             if (page != null)
             {
                 ViewBag.Title = page.Title;

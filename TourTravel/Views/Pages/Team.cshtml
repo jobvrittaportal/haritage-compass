@@ -4,4 +4,4 @@
     var currentPage = ViewBag.CurrentPage ?? 1;
 
 }
-@await Component.InvokeAsync("Team", new { take = 2, currentPage = currentPage })
+@await Component.InvokeAsync("Team", new { take = 20, currentPage = currentPage })
