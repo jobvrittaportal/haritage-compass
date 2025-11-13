@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="col-6 mb-3">
-                        <label class="form-label fw-semibold">Upload Image (420×420)</label>
+                        <label class="form-label fw-semibold">Upload Image (60×60)</label>
                         <input type="file" id="ImageFile" name="newImage" class="form-control" accept="image/*" />
                         <small class="text-muted">Leave blank to keep current image.</small>
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
@@ -122,7 +122,7 @@
                 img.src = URL.createObjectURL(imageFile);
                 img.onload = function () {
                     if (img.width !== 60 || img.height !== 60) {
-                        showToast('Image dimensions must be exactly 420x420 pixels.', 'bg-danger');
+                        showToast('Image dimensions must be exactly 60x60 pixels.', 'bg-danger');
                         return;
                     }
                     submitEditForm(); 

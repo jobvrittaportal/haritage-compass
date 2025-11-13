@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header text-black d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fa-solid  me-2"></i>Add Why Choose Us</h5>
+            <h5 class="mb-0"><i class="fa-solid fa-thumbs-up me-2"></i>Add Why Choose Us</h5>
             <a href="@Url.Action("Index", "WhyChooseUs")" class="btn btn-light btn-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Upload Image <span class="text-danger">*</span></label>
+                        <label class="form-label fw-semibold">Upload Image(60*60) <span class="text-danger">*</span></label>
                         <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" required />
 
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
@@ -49,39 +49,49 @@
     </div>
 </div>
 
-<!-- Toast -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
-    <div id="toastContainer"></div>
-</div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
 
     <script>
-               // ✅ Image Preview
+         let editor;
+        ClassicEditor
+            .create(document.querySelector('#Description'))
+            .then(newEditor => { editor = newEditor; })
+            .catch(console.error);
+
+        // ✅ Image Preview
         $('#ImageFile').on('change', function () {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     $('#previewContainer').html(`
-                        <img src="${e.target.result}" style="max-width: 100px; max-height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #ccc; padding: 4px;" />
+                        <img src="${e.target.result}"
+                             style="max-width: 100px; max-height: 100px; object-fit: contain;
+                                    border-radius: 8px; border: 1px solid #ccc; padding: 4px;" />
                     `);
                 };
                 reader.readAsDataURL(file);
-            } else {
-                $('#previewContainer').empty();
             }
+        });
+
+            $('#clearBtn').click(function () {
+            $('#whyChooseForm')[0].reset();
+
+            showToast('Form cleared successfully.', 'bg-info');
         });
 
         // ✅ Form Submit via AJAX
         $('#whyChooseForm').submit(function (e) {
             e.preventDefault();
 
-            const title = $('#Title').val().trim();
-            const desc = $('#Description').val().trim();
+            const title = $('#Title').val()?.trim();
+            const desc = $('#Description').val()?.trim();
             const imageFile = $('#ImageFile')[0].files[0];
 
             if (!title || !desc || !imageFile) {
@@ -102,27 +112,41 @@
                 return;
             }
 
-            const formData = new FormData($('#whyChooseForm')[0]);
+            const img = new Image();
+            img.src = URL.createObjectURL(imageFile);
 
-            $.ajax({
-                url: '@Url.Action("Create", "WhyChooseUs")',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    if (res.success) {
-                        showToast(res.message, 'bg-success');
-                        setTimeout(() => window.location.href = '/admin/WhyChooseUs', 3000);
-                    } else {
-                        showToast(res.message, 'bg-danger');
-                    }
-                },
-                error: function () {
-                    showToast('Something went wrong. Please try again.', 'bg-danger');
+            img.onload = function () {
+               
+                if (img.width !== 60 || img.height !== 60) {
+                    showToast('Image dimensions must be exactly 60x60 pixels.', 'bg-danger');
+                    return;
                 }
-            });
-        });
 
+                const formData = new FormData($('#whyChooseForm')[0]);
+
+                $.ajax({
+                    url: '@Url.Action("Create", "WhyChooseUs")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        if (res.success) {
+                            showToast(res.message, 'bg-success');
+                            setTimeout(() => window.location.href = '/admin/WhyChooseUs', 3000);
+                        } else {
+                            showToast(res.message, 'bg-danger');
+                        }
+                    },
+                    error: function () {
+                        showToast('Something went wrong. Please try again.', 'bg-danger');
+                    }
+                });
+            };
+
+            img.onerror = function () {
+                showToast('Invalid image file.', 'bg-danger');
+            };
+        });
     </script>
 }
