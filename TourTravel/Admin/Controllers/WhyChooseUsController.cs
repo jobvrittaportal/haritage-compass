@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TourTravel.Models;
 
 namespace TourTravel.Admin.Controllers
@@ -113,8 +114,33 @@ namespace TourTravel.Admin.Controllers
                 item.Title = model.Title;
                 item.Description = model.Description;
 
-                
+
+                // ✅ Handle new image upload (optional)
                 if (newImage != null && newImage.Length > 0)
+                {
+                    string folderPath = Path.Combine(_env.WebRootPath, "uploads", "WhyChooseUs");
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    string fileName = $"{Guid.NewGuid()}{Path.GetExtension(newImage.FileName)}";
+                    string filePath = Path.Combine(folderPath, fileName);
+
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await newImage.CopyToAsync(stream);
+                    }
+
+                    // Delete old image if exists
+                    if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        string oldPath = Path.Combine(_env.WebRootPath, item.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
+                    }
+
+                    item.ImageUrl = "/uploads/WhyChooseUs/" + fileName;
+                }
 
                 _db.WhyChooseUs.Update(item);
                 await _db.SaveChangesAsync();
@@ -136,6 +162,17 @@ namespace TourTravel.Admin.Controllers
             var image = _db.WhyChooseUs.Find(id);
             if (image == null)
                 return Json(new { success = false, message = "not found!" });
+
+            if (!string.IsNullOrEmpty(image.ImageUrl))
+            {
+
+                var filePath = Path.Combine(_env.WebRootPath, image.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
 
             _db.WhyChooseUs.Remove(image);
             _db.SaveChanges();

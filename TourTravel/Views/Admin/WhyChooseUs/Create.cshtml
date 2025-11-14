@@ -26,9 +26,19 @@
 
                     <div class="col-12 mb-3">
                         <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
-                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+
+                        <textarea asp-for="Description" id="Description" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+
+                        <small id="descCounter" class="text-muted">0 / 325 characters</small>
+
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
+
+                    @* <div class="col-12 mb-3">
+                        <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div> *@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Upload Image(60*60) <span class="text-danger">*</span></label>
@@ -58,13 +68,34 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
 
     <script>
-         let editor;
+        let editor;
         ClassicEditor
             .create(document.querySelector('#Description'))
-            .then(newEditor => { editor = newEditor; })
+            .then(newEditor => {
+                editor = newEditor;
+
+                const descCounter = document.getElementById("descCounter");
+                const maxChars = 325;
+
+                editor.model.document.on('change:data', () => {
+
+                  
+                    let text = editor.getData().replace(/<[^>]*>/g, '').trim();
+                    let len = text.length;
+
+                    // Update counter
+                    descCounter.textContent = `${len} / ${maxChars} characters`;
+
+                   
+                    if (len > maxChars) {
+                        let trimmed = text.substring(0, maxChars);
+                        editor.setData(trimmed);
+                        descCounter.textContent = `${maxChars} / ${maxChars} characters (limit reached)`;
+                    }
+                });
+            })
             .catch(console.error);
 
-        // ✅ Image Preview
         $('#ImageFile').on('change', function () {
             const file = this.files[0];
             if (file) {
@@ -80,18 +111,19 @@
             }
         });
 
-            $('#clearBtn').click(function () {
+        $('#clearBtn').click(function () {
             $('#whyChooseForm')[0].reset();
-
+            editor.setData('');
+            $('#previewContainer').html('');
+            $('#descCounter').text('0 / 325 characters');
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-        // ✅ Form Submit via AJAX
         $('#whyChooseForm').submit(function (e) {
             e.preventDefault();
 
             const title = $('#Title').val()?.trim();
-            const desc = $('#Description').val()?.trim();
+            const desc = editor.getData().trim(); // IMPORTANT!
             const imageFile = $('#ImageFile')[0].files[0];
 
             if (!title || !desc || !imageFile) {
@@ -99,6 +131,7 @@
                 return;
             }
 
+            // Allowed image types
             const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
             const maxSize = 3 * 1024 * 1024;
 
@@ -112,11 +145,12 @@
                 return;
             }
 
+            // Image dimension check
             const img = new Image();
             img.src = URL.createObjectURL(imageFile);
 
             img.onload = function () {
-               
+
                 if (img.width !== 60 || img.height !== 60) {
                     showToast('Image dimensions must be exactly 60x60 pixels.', 'bg-danger');
                     return;
@@ -148,5 +182,7 @@
                 showToast('Invalid image file.', 'bg-danger');
             };
         });
+
     </script>
 }
+

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TourTravel.Models;
 
 namespace TourTravel.Controllers.Admin
@@ -208,6 +209,17 @@ namespace TourTravel.Controllers.Admin
             var guide = await _db.Team.FindAsync(id);
             if (guide == null)
                 return Json(new { success = false, message = "Team not found" });
+
+            if (!string.IsNullOrEmpty(guide.ImageUrl))
+            {
+
+                var filePath = Path.Combine(_env.WebRootPath, guide.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
 
             _db.Team.Remove(guide);
             await _db.SaveChangesAsync();

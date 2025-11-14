@@ -113,7 +113,7 @@ namespace TourTravel.Admin.Controllers
                 if (item == null)
                     return Json(new { success = false, message = "Record not found." });
 
-                // ✅ Update text fields
+                
                 item.Title = model.Title;
                 item.Description = model.Description;
                 item.VideoUrl = model.VideoUrl;
@@ -156,18 +156,31 @@ namespace TourTravel.Admin.Controllers
             }
 
         }
+
         [HttpPost("delete/{id}")]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            var image = _db.IntroVideo.Find(id);
-            if (image == null)
-                return Json(new { success = false, message = "not found!" });
+            var video = _db.IntroVideo.Find(id);
+            if (video == null)
+                return Json(new { success = false, message = "Video not found!" });
 
-            _db.IntroVideo.Remove(image);
+            // ✅ Delete file from wwwroot if exists
+            if (!string.IsNullOrEmpty(video.ImageUrl))
+            {
+                var filePath = Path.Combine(_env.WebRootPath, video.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            _db.IntroVideo.Remove(video);
             _db.SaveChanges();
 
-            return Json(new { success = true, message = " deleted successfully!" });
+            return Json(new { success = true, message = "deleted successfully!" });
         }
+
     }
 }
