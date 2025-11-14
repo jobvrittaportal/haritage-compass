@@ -1,8 +1,11 @@
-@model TourTravel.Models.Gallery
+﻿@model TourTravel.Models.Gallery
 @{
     ViewData["Title"] = "Edit Image";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 <div class="container mt-4">
     <div class="card shadow border-0">
@@ -26,7 +29,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Upload Image (420�420)<span class="text-danger">*</span></label>
+                        <label class="form-label fw-semibold">Upload Image (420×420)</label>
                         <input type="file" id="ImageFile" name="newImage" class="form-control" accept="image/*" />
                         <small class="text-muted">Leave blank to keep the current image.</small>
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
@@ -36,7 +39,7 @@
                 <div id="previewContainer" class="mb-3">
                     @if (!string.IsNullOrEmpty(Model.ImageUrl))
                     {
-                        <img src="@Model.ImageUrl" style="max-width: 200px; max-height: 150px; object-fit: cover;" />
+                        <img src="@Model.ImageUrl" style="max-width:200px; max-height:150px; object-fit:cover;" />
                     }
                 </div>
 
@@ -50,85 +53,180 @@
 </div>
 
 <!-- Toast -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+<div class="position-fixed top-0 end-0 p-3" style="z-index:99999;">
     <div id="toastContainer"></div>
 </div>
 
+<!-- ⭐ Cropper Modal -->
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:850px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image (420×420)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height:600px; display:flex; justify-content:center; align-items:center;">
+                <img id="cropImage" style="max-width:100%; max-height:100%; display:block;" />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cropBtn" class="btn btn-primary">Crop & Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    #cropperModal .modal-body {
+        height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding: 10px;
+    }
+</style>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <script>
-        // === Preview New Image ===
-        $('#ImageFile').on('change', function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    $('#previewContainer').html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: cover;" />`);
-                };
-                reader.readAsDataURL(file);
+        let cropper, croppedBlob;
+
+        // ⭐ OPEN CROP MODAL (REFERENCE STYLE)
+        $('#ImageFile').on('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Only PNG, JPG, JPEG allowed.', 'bg-danger');
+                return;
             }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+
+                // destroy old cropper if exists
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+
+                $('#cropImage').attr('src', event.target.result);
+
+                const modalEl = $('#cropperModal');
+                const modal = new bootstrap.Modal(document.getElementById('cropperModal'));
+                modal.show();
+
+                // IMPORTANT: remove duplicate previous event bindings
+                modalEl.off('shown.bs.modal');
+                modalEl.off('hidden.bs.modal');
+
+                // ⭐ SAME INITIALIZATION AS BLOG REFERENCE
+                modalEl.on('shown.bs.modal', function () {
+                    cropper = new Cropper(document.getElementById('cropImage'), {
+                        aspectRatio: 1,
+                        viewMode: 0,
+                        autoCropArea: 1,
+                        responsive: true,
+                        zoomable: true,
+                        scalable: false,
+                        movable: true,
+                        cropBoxMovable: true,
+                        cropBoxResizable: false,
+                        dragMode: 'move',
+                        background: false,
+                        guides: false,
+                        center: true
+                    });
+                });
+
+                // ⭐ destroy cropper on modal close
+                modalEl.on('hidden.bs.modal', function () {
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                });
+
+            };
+
+            reader.readAsDataURL(file);
         });
 
-        // === Clear Form ===
+
+
+        // ⭐ CROP BUTTON (reference behavior)
+        $('#cropBtn').click(function () {
+            if (!cropper) return;
+
+            cropper.getCroppedCanvas({
+                width: 420,
+                height: 420
+            }).toBlob(function (blob) {
+
+                croppedBlob = blob;
+
+                const previewUrl = URL.createObjectURL(blob);
+
+                $('#previewContainer').html(
+                    `<img src="${previewUrl}" style="max-width:200px; border-radius:10px; border:1px solid #ddd;" />`
+                );
+
+                $('#cropperModal').modal('hide');
+            });
+        });
+
+
+
+        // ⭐ CLEAR BUTTON (unchanged)
         $('#clearBtn').click(function () {
             $('#Title').val('');
             $('#ImageFile').val('');
-           
+            croppedBlob = null;
+            $('#previewContainer').html('');
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-        // === Submit Edit Form (AJAX) ===
+
+
+        // ⭐ SUBMIT FORM (Reference behavior kept EXACTLY)
         $('#galleryEditForm').submit(function (e) {
             e.preventDefault();
 
             const title = $('#Title').val().trim();
-            const imageFile = $('#ImageFile')[0].files[0];
+            const selectedImage = $('#ImageFile')[0].files[0];
 
             if (!title) {
                 showToast('Title is required.', 'bg-danger');
                 return;
             }
 
-            if (imageFile) {
-                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-                const maxSize = 5 * 1024 * 1024; // 5MB
-
-                if (!allowedTypes.includes(imageFile.type)) {
-                    showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
-                    return;
-                }
-
-                if (imageFile.size > maxSize) {
-                    showToast('Image size must be less than 5MB.', 'bg-danger');
-                    return;
-                }
-
-                const img = new Image();
-                img.src = URL.createObjectURL(imageFile);
-                img.onload = function () {
-                    if (img.width !== 420 || img.height !== 420) {
-                        showToast('Image dimensions must be exactly 420x420 pixels.', 'bg-danger');
-                        return;
-                    }
-                    submitEditForm(); // proceed if valid
-                };
-                img.onerror = function () {
-                    showToast('Invalid image file.', 'bg-danger');
-                };
-            } else {
-                submitEditForm(); // No image selected
-            }
-        });
-
-        // === AJAX Submit Function ===
-        function submitEditForm() {
             const formData = new FormData($('#galleryEditForm')[0]);
 
+            // ⭐ If NEW image is selected → MUST BE CROPPED
+            if (selectedImage) {
+
+                if (!croppedBlob) {
+                    showToast('Please crop the new image before submitting.', 'bg-danger');
+                    return;
+                }
+
+                formData.delete("newImage");
+                formData.append("newImage", croppedBlob, "cropped-image.jpg");
+            }
+
             $.ajax({
-                url: $('#galleryEditForm').attr('action'), // uses asp-route-id correctly
+                url: $('#galleryEditForm').attr('action'),
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -136,7 +234,7 @@
                 success: function (res) {
                     if (res.success) {
                         showToast(res.message, 'bg-success');
-                        setTimeout(() => window.location.href = '/admin/gallery', 3000);
+                        setTimeout(() => window.location.href = '/admin/gallery', 2000);
                     } else {
                         showToast(res.message, 'bg-danger');
                     }
@@ -145,7 +243,8 @@
                     showToast('Something went wrong. Please try again.', 'bg-danger');
                 }
             });
-        }
+
+        });
 
     </script>
 }

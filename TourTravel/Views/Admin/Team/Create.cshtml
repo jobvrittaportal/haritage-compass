@@ -5,6 +5,9 @@
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -19,83 +22,71 @@
                 @Html.AntiForgeryToken()
 
                 <div class="row">
-                    <!-- Name -->
+
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
                         <input asp-for="Name" class="form-control" id="Name" required />
                     </div>
 
-                    <!-- Role -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Role <span class="text-danger">*</span></label>
                         <input asp-for="Role" class="form-control" id="Role" required />
                     </div>
 
-                    <!-- Email -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
                         <input asp-for="Email" class="form-control" id="Email" type="email" required />
                     </div>
 
-                    <!-- Phone -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Phone <span class="text-danger">*</span></label>
                         <input asp-for="Phone" class="form-control" id="Phone" required />
                     </div>
 
-                    <!-- Facebook -->
+
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Facebook</label>
                         <input asp-for="Facebook" class="form-control" id="Facebook" />
                     </div>
 
-                    <!-- Twitter -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Twitter</label>
                         <input asp-for="Twitter" class="form-control" id="Twitter" />
                     </div>
 
-                    <!-- Instagram -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Instagram</label>
                         <input asp-for="Instagram" class="form-control" id="Instagram" />
                     </div>
 
-                    <!-- LinkedIn -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">LinkedIn</label>
                         <input asp-for="LinkedIn" class="form-control" id="LinkedIn" />
                     </div>
 
-                    <!-- YouTube -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">YouTube</label>
                         <input asp-for="YouTube" class="form-control" id="YouTube" />
                     </div>
 
-                    <!-- Upload Profile Image -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Upload Profile Image (800*600)<span class="text-danger">*</span></label>
                         <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
                     </div>
 
-                    <!-- Preview -->
                     <div id="previewContainer" class="mb-3 text-center"></div>
 
-                    <!-- Introduction -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label fw-semibold">Introduction<span class="text-danger">*</span></label>
                         <textarea asp-for="Introduction" id="Introduction" class="form-control"></textarea>
                     </div>
 
-                    <!-- Biography -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label fw-semibold">Biography<span class="text-danger">*</span></label>
                         <textarea asp-for="Biography" id="Biography" class="form-control"></textarea>
                     </div>
                 </div>
 
-                <!-- Buttons -->
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <button type="submit" class="btn btn-success">Save</button>
                     <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
@@ -105,19 +96,46 @@
     </div>
 </div>
 
+<!-- ⭐ CROP MODAL -->
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:850px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image (800×600)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height:600px; display:flex; justify-content:center; align-items:center;">
+                <img id="cropImage" style="max-width:100%; max-height:100%; display:block;" />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cropBtn" class="btn btn-primary">Crop & Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <!-- Toast container -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
     <div id="toastContainer"></div>
 </div>
 
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
+
         let introEditor, bioEditor;
+        let cropper, croppedBlob;
 
         ClassicEditor.create(document.querySelector('#Introduction'))
             .then(editor => introEditor = editor)
@@ -127,38 +145,117 @@
             .then(editor => bioEditor = editor)
             .catch(console.error);
 
-        // ✅ Image Preview
+        // ⭐ FILE CHANGE → OPEN CROP MODAL
+               // ⭐ FILE CHANGE → OPEN CROP MODAL (Blog Pattern)
         $('#ImageFile').on('change', function (e) {
+
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    $('#previewContainer').html(
-                        `<img src="${event.target.result}" class="img-thumbnail shadow-sm" style="max-width:150px; border-radius:10px;" />`
-                    );
-                };
-                reader.readAsDataURL(file);
-            } else {
-                $('#previewContainer').empty();
+            if (!file) return;
+
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Only PNG, JPG, or JPEG allowed.', 'bg-danger');
+                return;
             }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image size must be less than 5MB.', 'bg-danger');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+
+                $('#cropImage').attr('src', event.target.result);
+
+                const modalEl = $('#cropperModal');
+                const modal = new bootstrap.Modal(document.getElementById('cropperModal'));
+                modal.show();
+
+                // ⭐ remove old modal events to prevent duplicate bindings
+                modalEl.off('shown.bs.modal');
+                modalEl.off('hidden.bs.modal');
+
+                modalEl.on('shown.bs.modal', function () {
+
+                    cropper = new Cropper(document.getElementById('cropImage'), {
+                        aspectRatio: 4 / 3,    // 800 × 600
+                        viewMode: 0,
+                        autoCropArea: 1,
+                        responsive: true,
+                        movable: true,
+                        zoomable: true,
+                        scalable: false,
+                        dragMode: 'move',
+                        cropBoxMovable: true,
+                        cropBoxResizable: false,
+                        background: false,
+                        guides: false,
+                        center: true
+                    });
+
+                });
+
+                modalEl.on('hidden.bs.modal', function () {
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                });
+
+            };
+
+            reader.readAsDataURL(file);
         });
 
-        // ✅ Clear Form
+
+        // ⭐ CROP SAVE → PREVIEW
+        $('#cropBtn').click(function () {
+
+            if (!cropper) return;
+
+            cropper.getCroppedCanvas({
+                width: 800,
+                height: 600
+            }).toBlob(function (blob) {
+
+                croppedBlob = blob;
+
+                const previewUrl = URL.createObjectURL(blob);
+
+                // ⭐ Overwrite preview container
+                $('#previewContainer').html(`
+                    <img src="${previewUrl}"
+                         class="img-thumbnail shadow-sm mt-2"
+                         style="max-width:150px; border-radius:10px;" />
+                `);
+
+                $('#cropperModal').modal('hide');
+            });
+
+        });
+
+
+        // ⭐ CLEAR — unchanged
         $('#clearBtn').click(() => {
             $('#teamForm')[0].reset();
             $('#previewContainer').empty();
             if (introEditor) introEditor.setData('');
             if (bioEditor) bioEditor.setData('');
+            croppedBlob = null;
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-
-          //  Validation regex patterns
+        // ⛔ YOUR EXISTING VALIDATION — NO CHANGES  
         const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
         const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{10,15}$/;
 
-
-        // ✅ Form Submit with Validation
+        // ⭐ SUBMIT → ONLY adding croppedBlob handling
         $('#teamForm').submit(function (e) {
             e.preventDefault();
 
@@ -166,82 +263,60 @@
             const role = $('#Role').val().trim();
             const email = $('#Email').val().trim();
             const phone = $('#Phone').val().trim();
-              const intro = introEditor ? introEditor.getData().trim() : '';
+            const intro = introEditor ? introEditor.getData().trim() : '';
             const bio = bioEditor ? bioEditor.getData().trim() : '';
 
-            if (!name || !role || !email || !phone|| !intro || !bio) {
+            if (!name || !role || !email || !phone || !intro || !bio) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-              //  Empty field check
+
             if (!emailRegex.test(email)) {
-                showToast('Please enter a valid email address (e.g., name@example.com).', 'bg-danger');
+                showToast('Please enter a valid email address.', 'bg-danger');
                 return;
             }
 
-            if (!phoneRegex.test(phone)) {
-                showToast('Please enter a valid phone number with 10–15 digits.', 'bg-danger');
-                return;
-            }
-            //  Phone validation
             if (!phoneRegex.test(phone)) {
                 showToast('Please enter a valid phone number.', 'bg-danger');
                 return;
             }
+
             const file = $('#ImageFile')[0].files[0];
             if (!file) {
                 showToast('Profile image is required.', 'bg-danger');
                 return;
             }
 
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-            const maxSize = 5 * 1024 * 1024; // 5MB
-
-            if (!allowedTypes.includes(file.type)) {
-                showToast('Only JPG or PNG images are allowed.', 'bg-danger');
+            if (!croppedBlob) {
+                showToast('Please crop the image before submitting.', 'bg-danger');
                 return;
             }
 
-            if (file.size > maxSize) {
-                showToast('Image size must be less than 5MB.', 'bg-danger');
-                return;
-            }
+            const formData = new FormData($('#teamForm')[0]);
+            formData.delete('ImageFile');
+            formData.append('ImageFile', croppedBlob, "cropped-image.jpg");
+            formData.set('Introduction', intro);
+            formData.set('Biography', bio);
 
-            // ✅ Image dimension validation (800x600)
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-            img.onload = function () {
-                if (img.width !== 800 || img.height !== 600) {
-                    showToast('Image dimensions must be 800x600.', 'bg-danger');
-                    return;
-                }
-
-                const intro = introEditor ? introEditor.getData().trim() : '';
-                const bio = bioEditor ? bioEditor.getData().trim() : '';
-
-                const formData = new FormData($('#teamForm')[0]);
-                formData.set('Introduction', intro);
-                formData.set('Biography', bio);
-
-                $.ajax({
-                    url: '/admin/Team/Create',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res) {
-                        if (res.success) {
-                            showToast(res.message, 'bg-success');
-                            setTimeout(() => window.location.href = '/admin/Team', 3000);
-                        } else {
-                            showToast(res.message || 'Validation failed.', 'bg-danger');
-                        }
-                    },
-                    error: function () {
-                        showToast('An error occurred while saving.', 'bg-danger');
+            $.ajax({
+                url: '/admin/Team/Create',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.success) {
+                        showToast(res.message, 'bg-success');
+                        setTimeout(() => window.location.href = '/admin/Team', 3000);
+                    } else {
+                        showToast(res.message || 'Validation failed.', 'bg-danger');
                     }
-                });
-            };
+                },
+                error: function () {
+                    showToast('An error occurred while saving.', 'bg-danger');
+                }
+            });
+
         });
 
     </script>

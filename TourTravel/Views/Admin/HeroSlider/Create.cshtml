@@ -4,6 +4,9 @@
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -66,6 +69,30 @@
     <div id="toastContainer"></div>
 </div>
 
+<!-- ⭐ Cropper Modal -->
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:900px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image (1200×600)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height:600px; display:flex; justify-content:center; align-items:center;">
+                <img id="cropImage" style="max-width:100%; max-height:100%; display:block;">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cropBtn" class="btn btn-primary">Crop & Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -74,35 +101,98 @@
 
     <script>
         let editor;
+        let cropper = null;
+        let croppedBlob = null;
+
         ClassicEditor
             .create(document.querySelector('#Description'))
             .then(newEditor => { editor = newEditor; })
             .catch(console.error);
 
-     
-        
-
-        // ✅ Image preview
+        // ⭐ FILE CHANGE → OPEN CROP MODAL
         $('#ImageFile').on('change', function () {
+
             const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    $('#previewContainer').html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: cover;" />`);
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Only PNG, JPG, JPEG are allowed.', 'bg-danger');
+                return;
             }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+
+                $('#cropImage').attr('src', e.target.result);
+
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+
+                const modalEl = $('#cropperModal');
+                const modal = new bootstrap.Modal(document.getElementById('cropperModal'));
+                modal.show();
+
+                modalEl.off('shown.bs.modal').on('shown.bs.modal', function () {
+                    cropper = new Cropper(document.getElementById('cropImage'), {
+                        aspectRatio: 2 / 1, // 1200×600
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        responsive: true,
+                        movable: true,
+                        zoomable: true,
+                        dragMode: 'move',
+                        cropBoxResizable: false,
+                        background: false,
+                        guides: false
+                    });
+                });
+
+                modalEl.off('hidden.bs.modal').on('hidden.bs.modal', function () {
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                });
+
+            };
+            reader.readAsDataURL(file);
         });
 
-        // ✅ Clear Form
+        // ⭐ CROP BUTTON
+        $('#cropBtn').click(function () {
+
+            if (!cropper) return;
+
+            cropper.getCroppedCanvas({
+                width: 1200,
+                height: 600
+            }).toBlob(function (blob) {
+
+                croppedBlob = blob;
+
+                const previewUrl = URL.createObjectURL(blob);
+
+                $('#previewContainer').html(`
+                    <img src="${previewUrl}" class="img-thumbnail shadow-sm mt-2" style="max-width:250px; border-radius:10px;" />
+                `);
+
+                $('#cropperModal').modal('hide');
+            });
+        });
+
+        // ⭐ CLEAR FORM
         $('#clearBtn').click(function () {
             $('#heroSliderForm')[0].reset();
             $('#previewContainer').empty();
+            croppedBlob = null;
             if (editor) editor.setData('');
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-        // ✅ AJAX Submit
+        // ⭐ SUBMIT WITH CROPPED IMAGE
         $('#heroSliderForm').submit(function (e) {
             e.preventDefault();
 
@@ -111,67 +201,43 @@
             const title = $('#Title').val().trim();
             const subtitle = $('#SubTitle').val().trim();
             const desc = $('#Description').val().trim();
-            const imageFile = $('#ImageFile')[0].files[0];
+            const file = $('#ImageFile')[0].files[0];
 
-            if (!title || !subtitle || !desc  || !imageFile) {
+            if (!title || !subtitle || !desc || (!file && !croppedBlob)) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
-            
-            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-            const maxSize = 5 * 1024 * 1024;
 
-            if (!allowedTypes.includes(imageFile.type)) {
-                showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
+            if (file && !croppedBlob) {
+                showToast('Please crop the image before submitting.', 'bg-danger');
                 return;
             }
 
-            if (imageFile.size > maxSize) {
-                showToast('Image size must be less than 5MB.', 'bg-danger');
-                return;
+            const formData = new FormData($('#heroSliderForm')[0]);
+
+            if (croppedBlob) {
+                formData.delete("ImageFile");
+                formData.append("ImageFile", croppedBlob, "cropped-image.jpg");
             }
 
-            // 🟨 Future use: uncomment below to re-enable image dimension check
-            /*
-            const img = new Image();
-            img.src = URL.createObjectURL(imageFile);
-            img.onload = function () {
-                if (img.width < 1200 || img.height < 600) {
-                    showToast('Image dimensions should be at least 1200x600 pixels.', 'bg-warning');
-                    return;
-                }
-                uploadHeroSlider();
-            };
-            img.onerror = function () {
-                showToast('Invalid image file.', 'bg-danger');
-            };
-            return;
-            */
-
-            // ✅ Proceed without checking dimensions
-            uploadHeroSlider();
-
-            function uploadHeroSlider() {
-                const formData = new FormData($('#heroSliderForm')[0]);
-                $.ajax({
-                    url: '@Url.Action("Create", "HeroSlider")',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        if (response.success) {
-                            showToast(response.message, 'bg-success');
-                            setTimeout(() => window.location.href = '/admin/heroslider', 3000);
-                        } else {
-                            showToast(response.message || 'Something went wrong.', 'bg-danger');
-                        }
-                    },
-                    error: function () {
-                        showToast('Server error. Please try again.', 'bg-danger');
+            $.ajax({
+                url: '@Url.Action("Create", "HeroSlider")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        showToast(response.message, 'bg-success');
+                        setTimeout(() => window.location.href = '/admin/heroslider', 3000);
+                    } else {
+                        showToast(response.message || 'Something went wrong.', 'bg-danger');
                     }
-                });
-            }
+                },
+                error: function () {
+                    showToast('Server error. Please try again.', 'bg-danger');
+                }
+            });
         });
     </script>
 }
