@@ -16,68 +16,67 @@ namespace TourTravel.Controllers
 
       _clientFactory = clientFactory;
     }
-    //public IActionResult Index()
-    //{
-    //  ViewBag.Page = "Destinations";
-    //  var page = db.SitePages.FirstOrDefault(f => f.Page == "Destinations");
-    //  if (page != null)
-    //  {
-    //    ViewBag.Title = page.Title;
-    //    ViewBag.Description = page.Description;
-    //    ViewBag.Keywords = page.KeyWords;
-    //    ViewBag.Image = page.Image;
-    //    ViewBag.ImageHeight = page.ImgHeight;
-    //    ViewBag.ImageWidth = page.ImgWidth;
-    //  }
-    //  return View();
-    //}
-
-
-    public async Task<IActionResult> Index()
+    
+    public async Task<IActionResult> Index(int currentPage = 1)
     {
-      List<DestinationViewModel> destinations = new();
+            //List<DestinationViewModel> destinations = new();
 
-      try
-      {
-        ViewBag.Page = "Destinations";
-        var page = db.SitePages.FirstOrDefault(f => f.Page == "Destinations");
-        if (page != null)
-        {
-          ViewBag.Title = page.Title;
-          ViewBag.Description = page.Description;
-          ViewBag.Keywords = page.KeyWords;
-          ViewBag.Image = page.Image;
-          ViewBag.ImageHeight = page.ImgHeight;
-          ViewBag.ImageWidth = page.ImgWidth;
+            //try
+            //{
+            //  ViewBag.Page = "Destinations";
+            //  var page = db.SitePages.FirstOrDefault(f => f.Page == "Destinations");
+            //          ViewBag.CurrentPage = currentpage;
+            //          if (page != null)
+            //  {
+            //    ViewBag.Title = page.Title;
+            //    ViewBag.Description = page.Description;
+            //    ViewBag.Keywords = page.KeyWords;
+            //    ViewBag.Image = page.Image;
+            //    ViewBag.ImageHeight = page.ImgHeight;
+            //    ViewBag.ImageWidth = page.ImgWidth;
+            //  }
+            //  // Create HTTP client
+            //  var client = _clientFactory.CreateClient();
+
+            //  // Set base address of your API
+            //  client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
+
+            //  // Call the API that returns an array of city objects
+            //  var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
+
+            //  if (response != null)
+            //  {
+            //    destinations = response.Select(c => new DestinationViewModel
+            //    {
+            //      Id = c.Id,
+            //      DestinationName = c.Name,
+            //      DestinationImgUrl = c.ImageUrl ?? "/img/bg/cta.jpg",
+            //      StartingPrice = c.BasePrice,
+            //    }).ToList();
+            //  }
+            //}
+            //catch (Exception ex)
+            //{
+            //  // You can log or display an error message here
+            //  Console.WriteLine($"Error fetching destinations: {ex.Message}");
+            //}
+
+            //return View(destinations);
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Destinations");
+            ViewBag.CurrentPage = currentPage;
+
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
         }
-        // Create HTTP client
-        var client = _clientFactory.CreateClient();
-
-        // Set base address of your API
-        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
-
-        // Call the API that returns an array of city objects
-        var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
-
-        if (response != null)
-        {
-          destinations = response.Select(c => new DestinationViewModel
-          {
-            Id = c.Id,
-            DestinationName = c.Name,
-            DestinationImgUrl = c.ImageUrl ?? "/img/bg/cta.jpg",
-            StartingPrice = c.BasePrice,
-          }).ToList();
-        }
-      }
-      catch (Exception ex)
-      {
-        // You can log or display an error message here
-        Console.WriteLine($"Error fetching destinations: {ex.Message}");
-      }
-
-      return View(destinations);
-    }
 
 
 
