@@ -1,4 +1,4 @@
-﻿    <!-- header area -->
+    <!-- header area -->
 @model TourTravel.Models.WebsiteSetting
 <header class="header">
 
@@ -130,12 +130,29 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Contact" asp-action="Index">Contact</a></li>
                     </ul>
-                    @* <div class="header-btn">
-                        <a href="#" class="theme-btn">BOOK NOW <i class="far fa-arrow-right"></i></a>
-                    </div> *@
+                    <div class="header-btn">
+                        <a asp-controller="BookNow" asp-action="Index" class="theme-btn">BOOK NOW <i class="far fa-arrow-right"></i></a>
+                    </div>
+                    
                 </div>
             </div>
         </nav>
     </div>
+    
+
 </header>
+
+@* <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const bookNowButtons = document.querySelectorAll(".book-now-btn");
+
+        bookNowButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const searchModalEl = document.getElementById("searchModal");
+                const searchModal = new bootstrap.Modal(searchModalEl);
+                searchModal.show();
+            });
+        });
+    });
+</script> *@
 <!-- header area end -->

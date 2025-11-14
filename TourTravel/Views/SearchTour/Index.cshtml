@@ -115,8 +115,27 @@
                         </div>
                       
                     </div>
-                    <!-- Google reCAPTCHA -->
-                    <div class="g-recaptcha mt-4 mb-3" data-sitekey="6LdyVAQsAAAAAOv8DkGgtnjpuDt0FEdNmPnsgz3F"></div>
+                    <!-- IRCTC Style Captcha -->
+                    <div class="mt-4">
+                        <label class="form-label fw-semibold">Enter CAPTCHA</label>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <img id="captchaImage"
+                                 src="/Captcha/GenerateCaptcha"
+                                 alt="Captcha"
+                                 style="height:60px; border:1px solid #ccc;" />
+
+                            <button type="button" id="refreshCaptcha" class="btn btn-outline-secondary">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+
+                        <input type="text"
+                               id="captchaInput"
+                               class="form-control mt-2"
+                               placeholder="Enter the characters shown above"
+                               required />
+                    </div>
 
 
                     <div class="text-end mt-4">
@@ -135,27 +154,58 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script>
+        let captchaToken = "";
         let selectedPackageId = null;
 
-
         document.addEventListener("DOMContentLoaded", () => {
+
             const form = document.getElementById("contact-form");
             const bookNowButtons = document.querySelectorAll(".book-now-btn");
 
-            // Capture clicked package
+            // ⭐ Load Captcha (Image + Text)
+            async function refreshCaptcha() {
+                try {
+                    const res = await fetch("/Captcha/GenerateCaptcha", {
+                        method: "GET",
+                        cache: "no-store"
+                    });
+
+                    const data = await res.json();
+
+                    // Show Captcha Image
+                    document.getElementById("captchaImage").src = data.captchaImage;
+
+                    // Store Captcha Text Token
+                    captchaToken = data.captchaText;
+
+                    console.log("Captcha from server:", captchaToken);
+
+                } catch (error) {
+                    console.error("Captcha loading failed:", error);
+                }
+            }
+
+            // Refresh Captcha when clicking refresh button
+            document.getElementById("refreshCaptcha").addEventListener("click", refreshCaptcha);
+
+            // Load captcha when modal opens
+            const modal = document.getElementById("contactModal");
+            modal.addEventListener("shown.bs.modal", refreshCaptcha);
+
+            // Capture package id clicked
             bookNowButtons.forEach(btn => {
                 btn.addEventListener("click", (e) => {
                     selectedPackageId = e.currentTarget.getAttribute("data-package-id");
                 });
             });
 
+            // ⭐ Submit Form + Validate Captcha
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
 
-                // Verify CAPTCHA first
-                const captchaResponse = grecaptcha.getResponse();
-                if (!captchaResponse) {
-                    alert("⚠️ Please verify that you're not a robot.");
+                const userCaptchaInput = document.getElementById("captchaInput").value.trim();
+                if (!userCaptchaInput) {
+                    alert("⚠️ Please enter the CAPTCHA.");
                     return;
                 }
 
@@ -163,11 +213,14 @@
                     name: form.name.value.trim(),
                     email: form.email.value.trim(),
                     phoneNumber: form.PhoneNumber.value.trim(),
-                    captchaToken: captchaResponse
+
+                    // Captcha
+                    CaptchaInput: userCaptchaInput,
+                    CaptchaToken: captchaToken
                 };
 
                 try {
-                    const response = await fetch("https://stg-jungleave-back.jobvritta.com/api/contact/addEnquiry", {
+                    const response = await fetch("https://localhost:7154/api/contact/addEnquiry", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -178,13 +231,17 @@
                     const result = await response.json();
 
                     if (response.ok) {
+
                         alert("✅ Enquiry sent successfully!");
+
+                        // Reset form
                         form.reset();
-                        grecaptcha.reset(); // reset CAPTCHA
+                        refreshCaptcha();
 
-                        const modal = bootstrap.Modal.getInstance(document.getElementById("contactModal"));
-                        modal.hide();
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById("contactModal"));
+                        modalInstance.hide();
 
+                        // Redirect to details page
                         if (selectedPackageId) {
                             window.location.href = `/SearchTour/SearchTourDetails/${selectedPackageId}`;
                         }
@@ -192,6 +249,7 @@
                     } else {
                         alert("❌ " + (result.message || "Failed to send enquiry."));
                     }
+
                 } catch (error) {
                     console.error("Error submitting enquiry:", error);
                     alert("⚠️ Something went wrong. Please try again later.");
@@ -199,6 +257,7 @@
             });
         });
     </script>
+
 }
 <style>
     .tour-item {

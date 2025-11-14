@@ -62,6 +62,39 @@ namespace TourTravel.Controllers
       return View(packages);
     }
 
+    //[HttpGet]
+    //public async Task<IActionResult> GetFilteredPackages(
+    //  int? DestinationId,
+    //  string? checkInDate,
+    //  string? checkOutDate,
+    //  decimal? minPrice,
+    //  decimal? maxPrice,
+    //  int? minDuration,
+    //  int? maxDuration)
+    //{
+    //  try
+    //  {
+    //    return ViewComponent("TourCards", new
+    //    {
+    //      DestinationId,
+    //      checkInDate,
+    //      checkOutDate,
+    //      minPrice,
+    //      maxPrice,
+    //      minDuration,
+    //      maxDuration,
+    //      ShowHeading = false,
+    //      take = 8,
+    //      columnClass = "col-md-6 col-lg-6"
+    //    });
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    return Content($"<p>Error loading packages: {ex.Message}</p>", "text/html");
+    //  }
+    //}
+
+
     [HttpGet]
     public async Task<IActionResult> GetFilteredPackages(
       int? DestinationId,
@@ -74,7 +107,7 @@ namespace TourTravel.Controllers
     {
       try
       {
-        return ViewComponent("TourCards", new
+        string html = await this.RenderViewComponentToStringAsync("TourCards", new
         {
           DestinationId,
           checkInDate,
@@ -87,12 +120,16 @@ namespace TourTravel.Controllers
           take = 8,
           columnClass = "col-md-6 col-lg-6"
         });
+
+        return Content(html, "text/html");
       }
       catch (Exception ex)
       {
         return Content($"<p>Error loading packages: {ex.Message}</p>", "text/html");
       }
     }
+
+
 
 
 

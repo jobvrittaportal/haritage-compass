@@ -1,47 +1,57 @@
+@await Component.InvokeAsync("HeroSection")
+<!-- Search Modal -->
 <!-- search area -->
 <div class="search-area py-4">
     <div class="container">
         <div class="search-form-wrapper bg-white p-4 rounded-3 shadow-sm">
             <form id="searchForm">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-3 col-lg-3">
+
+                    <!-- Destination -->
+                    <div class="col-md-3">
                         <label class="form-label fw-semibold">Destination</label>
                         @await Component.InvokeAsync("DestinationDropdown")
                     </div>
 
-                    <div class="col-md-2 col-lg-2">
-                        <label class="form-label fw-semibold">Check In</label>
-                        <input type="date" id="checkIn" class="form-control" />
+                    <!-- Check In & Check Out (side by side) -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold d-block">Check In / Check Out</label>
+                        <div class="d-flex gap-2">
+                            <input type="date" id="checkIn" class="form-control" />
+                            <input type="date" id="checkOut" class="form-control" />
+                        </div>
                     </div>
 
-                    <div class="col-md-2 col-lg-2">
-                        <label class="form-label fw-semibold">Check Out</label>
-                        <input type="date" id="checkOut" class="form-control" />
-                    </div>
-
-                    <div class="col-md-2 col-lg-2">
+                    <!-- Tour Type -->
+                    <div class="col-md-2">
                         <label class="form-label fw-semibold">Tour Type</label>
                         @await Component.InvokeAsync("TourTypeDropdown")
                     </div>
 
-                    <div class="col-md-1 col-lg-1">
+                    <!-- Persons -->
+                    <div class="col-md-1">
                         <label class="form-label fw-semibold">Persons</label>
-                        <input type="number" id="maxPerson" class="form-control text-center">
+                        <input type="number" id="maxPerson" class="form-control text-center" min="1" value="1" />
                     </div>
 
-                    <div class="col-md-2 col-lg-2 d-flex align-items-end">
+                    <!-- Find Button -->
+                    <div class="col-md-2 d-flex align-items-end">
                         <button type="button" id="findNow" class="btn btn-warning w-100 fw-semibold">
                             <i class="far fa-search me-2"></i> Find Now
                         </button>
                     </div>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
 <!-- right below your form -->
 <script>
     const findNowButton = document.getElementById("findNow");
+
     if (findNowButton) {
         findNowButton.addEventListener("click", function () {
             const cityId = document.getElementById("DestinationId")?.value;
@@ -55,12 +65,10 @@
             }
 
             const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}&checkInDate=${encodeURIComponent(checkInDate)}&checkOutDate=${encodeURIComponent(checkOutDate)}&maxPerson=${encodeURIComponent(maxPerson)}`;
+            console.log("Redirecting to:", url);
             window.location.href = url;
         });
     } else {
         console.warn("Button not found");
     }
 </script>
-
-}
-

@@ -1,22 +1,22 @@
 @await Component.InvokeAsync("HeroSection")
-
 <!-- tour area -->
+
+
 <div class="tour-area py-120">
     <div class="container">
         <div class="row">
-
-            <!-- Sidebar -->
             <div class="col-lg-4">
                 <div class="tour-sidebar">
                     <!-- search area -->
                     <div class="search-area">
                         <div class="search-form-wrapper">
                             <h4>Search Tours</h4>
-                            <form id="searchForm" method="get">
+                            <form method="get">
                                 <div class="row align-items-end">
                                     <div class="col-12 search-input">
                                         <div class="form-group">
                                             <label>Destination</label>
+
                                             @await Component.InvokeAsync("DestinationDropdown")
                                         </div>
                                     </div>
@@ -38,161 +38,260 @@
                                     </div>
 
                                     <div class="col-12 mt-10">
-                                        <button type="button" id="filterBtn" class="search-btn">
+                                        <button type="submit" class="search-btn">
                                             <i class="far fa-search"></i> Find Now
                                         </button>
                                     </div>
                                 </div>
                             </form>
+
+
                         </div>
                     </div>
                     <!-- search area end -->
-                    <!-- Price Range -->
-                    <div class="tour-widget">
+                    <!-- tour-category -->
+                    @* <div class="tour-widget">
+                    <h4>Category</h4>
+                    <ul>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cat1">
+                    <label class="form-check-label" for="cat1"> Adventure Tours</label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" checked type="checkbox" id="cat2">
+                    <label class="form-check-label" for="cat2"> Business Tours</label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cat3">
+                    <label class="form-check-label" for="cat3"> Group Tours</label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" checked type="checkbox" id="cat4">
+                    <label class="form-check-label" for="cat4"> Couple Tours</label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cat5">
+                    <label class="form-check-label" for="cat5"> City Tours</label>
+                    </div>
+                    </li>
+                    </ul>
+                    </div> *@
+                    <!-- tour-category end -->
+                    <!-- tour-price -->
+                  @*   <div class="tour-widget">
                         <h4>Price Range</h4>
                         <div class="price-range-box">
                             <div class="price-range-input">
                                 <input type="text" readonly id="price-amount">
                             </div>
+
                             <div class="price-range"></div>
                         </div>
-                    </div>
-                    <!-- Price Range end -->
-                    <!-- Duration Filter -->
-                    <div class="tour-widget">
+                    </div> *@
+                    <!-- tour-price end -->
+                    <!-- tour-durations -->
+
+                  @*   <div class="tour-widget">
                         <h4>Durations</h4>
                         <ul>
                             <li>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="duration" id="dur1">
-                                    <label class="form-check-label" for="dur1">0 - 24 Hours</label>
+                                    <input class="form-check-input" checked type="checkbox" id="dur1">
+                                    <label class="form-check-label" for="dur1"> 0 - 24 Hours</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="duration" id="dur2">
-                                    <label class="form-check-label" for="dur2">1 - 3 Days</label>
+                                    <input class="form-check-input" type="checkbox" id="dur2">
+                                    <label class="form-check-label" for="dur2"> 1 - 3 Days</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="duration" id="dur3">
-                                    <label class="form-check-label" for="dur3">3 - 6 Days</label>
+                                    <input class="form-check-input" type="checkbox" id="dur3">
+                                    <label class="form-check-label" for="dur3"> 3 - 6 Days</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="duration" id="dur4">
-                                    <label class="form-check-label" for="dur4">6 - 9 Days</label>
+                                    <input class="form-check-input" type="checkbox" id="dur4">
+                                    <label class="form-check-label" for="dur4"> 6 - 9 Days</label>
                                 </div>
                             </li>
                             <li>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="duration" id="dur5">
-                                    <label class="form-check-label" for="dur5">9 - 10 Days</label>
+                                    <input class="form-check-input" checked type="checkbox" id="dur5">
+                                    <label class="form-check-label" for="dur5"> 9 - 10 Days</label>
                                 </div>
                             </li>
                         </ul>
+                    </div> *@
+                    <!-- tour-durations end -->
+                    <!-- tour-rating -->
+                    @*   <div class="tour-widget">
+                    <h4>Rating</h4>
+                    <ul>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rat1">
+                    <label class="form-check-label" for="rat1">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    </label>
                     </div>
-                    <!-- Duration end -->
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" checked type="checkbox" id="rat2">
+                    <label class="form-check-label" for="rat2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    </label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rat3">
+                    <label class="form-check-label" for="rat3">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    </label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rat4">
+                    <label class="form-check-label" for="rat4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    </label>
+                    </div>
+                    </li>
+                    <li>
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rat5">
+                    <label class="form-check-label" for="rat5">
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    </label>
+                    </div>
+                    </li>
+                    </ul>
+                    </div> *@
+                    <!-- tour-rating end -->
+                    <!-- tour banner -->
+                    @*   <div class="widget-banner mt-30 mb-50">
+                    <img src="assets/img/widget/banner.jpg" alt="">
+                    <div class="banner-content">
+                    <h2>Get <span>35% Off</span> On Norway Lake Tour</h2>
+                    </div>
+                    </div> *@
+                    <!-- tour banner end -->
 
                 </div>
             </div>
-
-            <!-- Main Content -->
             <div class="col-lg-8">
-                <div class="row align-items-center" id="tourCardsContainer">
-                    <p>Loading tours...</p>
+
+                @*   <div class="col-md-12">
+                <div class="tour-sort">
+                <!-- <h5>Showing 1-10 of 50 Results</h5> -->
+                <div class="tour-sort-box">
+                <select class="select">
+                <option value="1">Sort By Default</option>
+                <option value="5">Sort By Featured</option>
+                <option value="2">Sort By Latest</option>
+                <option value="3">Sort By Low Price</option>
+                <option value="4">Sort By High Price</option>
+                </select>
                 </div>
+                </div>
+                </div> *@
+
+                @*   <div class="row align-items-center">
+
+                @await Component.InvokeAsync("TourCards", new { ShowHeading = false, take = 8, columnClass = "col-md-6 col-lg-6" })
+                </div> *@
+
+                @{
+
+                    var destinationId = Context.Request.Query["DestinationId"].ToString();
+
+                    var checkInDate = Context.Request.Query["checkInDate"].ToString();
+
+                    var checkOutDate = Context.Request.Query["checkOutDate"].ToString();
+
+                }
+
+
+                <div class="row align-items-center">
+
+                    @await Component.InvokeAsync("TourCards", new
+
+                        {
+
+                            ShowHeading = false,
+
+                            take = 8,
+
+                            columnClass = "col-md-6 col-lg-6",
+
+                            DestinationId = string.IsNullOrEmpty(destinationId) ? (int?)null : int.Parse(destinationId),
+
+                            checkInDate = checkInDate,
+
+                            checkOutDate = checkOutDate
+
+                        })
+                </div>
+
+
+                <!-- pagination -->
+                @* <div class="pagination-area">
+                <div aria-label="Page navigation example">
+                <ul class="pagination justify-content-end">
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true"><i class="far fa-arrow-left"></i></span>
+                </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true"><i class="far fa-arrow-right"></i></span>
+                </a>
+                </li>
+                </ul>
+                </div>
+                </div> *@
             </div>
+
         </div>
     </div>
 </div>
 <!-- tour area end -->
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-
-            // Initialize price range
-            $(".price-range").slider({
-                range: true,
-                min: 100,
-                max: 80000,
-                values: [500, 80000],
-                slide: function (event, ui) {
-                    $("#price-amount").val("₹" + ui.values[0] + " - ₹" + ui.values[1]);
-                },
-                change: function (event, ui) {
-                    // When price range changes → apply all filters
-                    applyFilters(true);
-                }
-            });
-
-            $("#price-amount").val("₹" + $(".price-range").slider("values", 0) +
-                " - ₹" + $(".price-range").slider("values", 1));
-
-            // Duration radio button change → apply all filters
-            $("input[name='duration']").on("change", function () {
-                applyFilters(true);
-            });
-
-            // "Find Now" click → only apply destination + dates (ignore price/duration)
-            $("#filterBtn").on("click", function () {
-                applyFilters(false);
-            });
-
-            // Load tours on first page load
-            applyFilters(false);
-
-
-            // 🟢 Core Function - Fetch Filtered Tours
-            function applyFilters(includePriceAndDuration) {
-                const cityId = $("select[name='DestinationId']").val();
-                const checkIn = $("#checkInDate").val();
-                const checkOut = $("#checkOutDate").val();
-
-                let minDuration = null;
-                let maxDuration = null;
-                let minPrice = null;
-                let maxPrice = null;
-
-                // Only include these filters if explicitly triggered
-                if (includePriceAndDuration) {
-                    if ($("#dur1").is(":checked")) { minDuration = 0; maxDuration = 24; }
-                    else if ($("#dur2").is(":checked")) { minDuration = 24; maxDuration = 72; }
-                    else if ($("#dur3").is(":checked")) { minDuration = 72; maxDuration = 144; }
-                    else if ($("#dur4").is(":checked")) { minDuration = 144; maxDuration = 216; }
-                    else if ($("#dur5").is(":checked")) { minDuration = 216; maxDuration = 240; }
-
-                    minPrice = $(".price-range").slider("values", 0);
-                    maxPrice = $(".price-range").slider("values", 1);
-                }
-
-                $.ajax({
-                    url: '/Tours/GetFilteredPackages',
-                    method: 'GET',
-                    data: {
-                        DestinationId: cityId,
-                        checkInDate: checkIn,
-                        checkOutDate: checkOut,
-                        minPrice: minPrice,
-                        maxPrice: maxPrice,
-                        minDuration: minDuration,
-                        maxDuration: maxDuration
-                    },
-                    beforeSend: function () {
-                        $("#tourCardsContainer").html("<p>Loading tours...</p>");
-                    },
-                    success: function (html) {
-                        $("#tourCardsContainer").html(html);
-                    },
-                    error: function (xhr) {
-                        $("#tourCardsContainer").html("<p>Error: " + xhr.statusText + "</p>");
-                    }
-                });
-            }
-
-        });
-    </script>
-}
-
