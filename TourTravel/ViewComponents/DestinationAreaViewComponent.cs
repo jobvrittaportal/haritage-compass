@@ -18,6 +18,7 @@ namespace TourTravel.ViewComponents
   //}
 
   using Microsoft.AspNetCore.Mvc;
+    using System.Drawing.Printing;
 
   namespace TourTravel.ViewComponents
   {
@@ -34,61 +35,71 @@ namespace TourTravel.ViewComponents
 
       }
 
-      //public IViewComponentResult Invoke(bool showHeading, int take)
-      //{
-      //  // Fetch top destinations (you can apply any filters like IsTouristDestination == true if needed)
-      //  var destinations = _db.Destinations
-      //      .OrderByDescending(t => t.Id)
-      //      .Take(take)
-      //      .Select(c => new DestinationViewModel
-      //      {
-      //        DestinationName = c.DestinationName,
-      //        DestinationImgUrl = c.DestinationImgUrl ?? "/images/default.jpg",
-      //        StartingPrice = c.StartingPrice,
+            //public IViewComponentResult Invoke(bool showHeading, int take)
+            //{
+            //  // Fetch top destinations (you can apply any filters like IsTouristDestination == true if needed)
+            //  var destinations = _db.Destinations
+            //      .OrderByDescending(t => t.Id)
+            //      .Take(take)
+            //      .Select(c => new DestinationViewModel
+            //      {
+            //        DestinationName = c.DestinationName,
+            //        DestinationImgUrl = c.DestinationImgUrl ?? "/images/default.jpg",
+            //        StartingPrice = c.StartingPrice,
 
-      //      })
-      //      .ToList();
+            //      })
+            //      .ToList();
 
-      //  ViewData["ShowHeading"] = showHeading;
+            //  ViewData["ShowHeading"] = showHeading;
 
-      //  return View(destinations);
-      //}
-      public async Task<IViewComponentResult> InvokeAsync(bool showHeading)
-      {
-        List<DestinationViewModel> destinations = new();
-
-        try
-        {
-          // Create HTTP client
-          var client = _clientFactory.CreateClient();
-
-          // Set base address of your API
-          client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
-
-          // Call the API that returns an array of city objects
-          var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
-
-          if (response != null)
-          {
-            destinations = response.Select(c => new DestinationViewModel
+            //  return View(destinations);
+            //}
+            public async Task<IViewComponentResult> InvokeAsync(bool showheading, int take, string? search, int currentPage = 1)
             {
-              Id = c.Id,
-              DestinationName = c.Name,
-              DestinationImgUrl = c.ImageUrl ?? "/img/bg/cta.jpg",
-              StartingPrice = c.BasePrice
-            }).ToList();
-          }
-        }
-        catch (Exception ex)
-        {
-          // You can log or display an error message here
-          Console.WriteLine($"Error fetching destinations: {ex.Message}");
-        }
-        ViewData["ShowHeading"] = showHeading;
+                List<DestinationViewModel> destinations = new();
+                int pageSize = take;
+                try
+                {
+                    var client = _clientFactory.CreateClient();
+                    client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
 
-        return View(destinations);
-      }
+                    var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
+
+                    if (response != null)
+                    {
+                        // Convert DTOs to ViewModels
+                        destinations = response.Select(c => new DestinationViewModel
+                        {
+                            Id = c.Id,
+                            DestinationName = c.Name,
+                            DestinationImgUrl = c.ImageUrl ?? "/img/bg/cta.jpg",
+                            StartingPrice = c.BasePrice
+                        }).ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error fetching destinations: {ex.Message}");
+                }
+
+                // Calculate pagination
+                int totalItems = destinations.Count;
+                int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+                // Get only the data for the current page
+                var paginatedDestinations = destinations
+                    .Skip((currentPage - 1) * pageSize)
+                    .Take(take)
+                    .ToList();
+
+                ViewBag.ShowHeading = showheading;
+                ViewBag.Currentpage = currentPage;
+                ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+                return View(paginatedDestinations);
+            }
+
+        }
     }
-  }
 
 }
