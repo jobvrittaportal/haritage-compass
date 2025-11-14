@@ -1,4 +1,4 @@
-/* =====================================================
+﻿/* =====================================================
 Template Name   : Travelox
 Description     : Travel & Tour HTML5 Template
 Author          : Themesland
@@ -2058,6 +2058,7 @@ tour css
 
 .tour-widget {
   margin-top: 30px;
+  margin-bottom:10px;
   background: #fff;
   border-radius: 10px;
   padding: 30px;
@@ -2853,13 +2854,25 @@ testimonial css
 }
 
 .testimonial-single {
-  background: #fff;
-  padding: 30px;
-  border-radius: 15px;
-  margin: 12px;
-  position: relative;
-  margin-bottom: 25px;
-  box-shadow: 0 2px 14px rgb(0 0 0 / 8%);
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    margin: 12px;
+    position: relative;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 14px rgb(0 0 0 / 8%);
+    height: 350px; /* ⭐ FIXED HEIGHT */
+    min-height: 350px; /* ⭐ FIXED MIN-HEIGHT */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Content inside should not expand box */
+.testimonial-quote p {
+    max-height: 152px; /* ⭐ Content visible area */
+    overflow: hidden; /* ⭐ Extra content hidden */
+    margin-bottom: 0;
 }
 
 .testimonial-quote-icon {
@@ -2878,7 +2891,7 @@ testimonial css
   display: flex;
   justify-content: start;
   align-items: center;
-  margin-top: 30px;
+/*  margin-top: 30px;*/
 }
 
 .testimonial-author-img {
@@ -2979,8 +2992,15 @@ counter css
 blog css 
 ====================== */
 
+
+
 .blog-item {
-  margin-bottom: 25px;
+    background: #fff;
+    border-radius: 15px;
+    position: relative;
+    padding:15px;
+    box-shadow: 0 3px 24px rgb(0 0 0 / 10%);
+    margin-bottom:16px;
 }
 
 .blog-item-thumb img {
@@ -3714,12 +3734,21 @@ feature css
 }
 
 .feature-item {
-  background: #fff;
-  padding: 20px 30px;
-  border-radius: 10px;
-  margin-bottom: 25px;
-  position: relative;
-  box-shadow: 0 0 40px 5px rgb(0 0 0 / 5%);
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    position: relative;
+    box-shadow: 0 0 40px 5px rgb(0 0 0 / 5%);
+    height: 420px; /* ⭐ FIXED HEIGHT */
+    min-height: 420px; /* ⭐ FIXED MIN-HEIGHT */
+}
+
+/* Description area fixed (extra content hidden) */
+.feature-info p {
+    max-height: 250px; /* ⭐ Adjust visible paragraph height */
+    overflow: hidden; /* ⭐ Extra description hidden */
+    margin-bottom: 0;
 }
 
 .feature-count {
