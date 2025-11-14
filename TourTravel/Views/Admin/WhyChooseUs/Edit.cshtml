@@ -21,7 +21,6 @@
                 <input type="hidden" asp-for="Id" />
 
                 <div class="row">
-                   
                     <div class="col-md-12 mb-3">
                         <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
                         <input asp-for="Title" id="Title" class="form-control" required />
@@ -30,7 +29,9 @@
 
                     <div class="col-12 mb-3">
                         <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
-                        <textarea asp-for="Description" id="Description" class="form-control" rows="3" required></textarea>
+                        <textarea asp-for="Description" id="Description" class="form-control" rows="4" required></textarea>
+
+                        <small id="descCounter" class="text-muted">0 / 325 characters</small>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
@@ -45,7 +46,7 @@
                 <div id="previewContainer" class="mb-3">
                     @if (!string.IsNullOrEmpty(Model.ImageUrl))
                     {
-                        <img src="@Model.ImageUrl" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ccc; padding: 3px;" />
+                        <img src="@Model.ImageUrl" style="max-width:200px;max-height:150px;object-fit:cover;border:1px solid #ccc;border-radius:8px;padding:3px;" />
                     }
                 </div>
 
@@ -63,81 +64,121 @@
     <div id="toastContainer"></div>
 </div>
 
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
 
     <script>
-        // ✅ Image Preview
+        let editor;
+
+        ClassicEditor
+            .create(document.querySelector('#Description'))
+            .then(newEditor => {
+                editor = newEditor;
+
+                setTimeout(() => {
+                    const initialText = editor.getData().replace(/<\/?[^>]+>/gi, "").trim();
+                    $("#descCounter").text(`${initialText.length} / 325 characters`);
+                }, 300);
+
+              
+                editor.model.document.on('change:data', () => {
+                    const text = editor.getData().replace(/<\/?[^>]+>/gi, "").trim();
+                    const length = text.length;
+
+                    $("#descCounter").text(`${length} / 325 characters`);
+
+                    if (length > 325) {
+                        showToast("Description must be 325 characters or less.", "bg-danger");
+                        editor.setData(text.substring(0, 325));
+                        $("#descCounter").text(`325 / 325 characters`);
+                    }
+                });
+            })
+            .catch(console.error);
+
+       
         $('#ImageFile').on('change', function () {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = e => {
-                    $('#previewContainer').html(`<img src="${e.target.result}" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ccc; padding: 3px;" />`);
+                    $('#previewContainer').html(`
+                        <img src="${e.target.result}"
+                             style="max-width:200px;max-height:150px;object-fit:cover;border-radius:8px;border:1px solid #ccc;padding:3px;" />
+                    `);
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // ✅ Clear Form
+        // ---------- CLEAR FORM ----------
         $('#clearBtn').click(function () {
             $('#Title').val('');
-            $('#Description').val('');
+            editor.setData('');
             $('#ImageFile').val('');
             $('#previewContainer').html('');
+            $("#descCounter").text("0 / 325 characters");
+
             showToast('Form cleared successfully.', 'bg-info');
         });
 
-        // ✅ Submit Edit Form (AJAX)
+        // ---------- FORM SUBMIT ----------
         $('#whyChooseEditForm').submit(function (e) {
             e.preventDefault();
 
             const title = $('#Title').val().trim();
-            const desc = $('#Description').val().trim();
-            const imageFile = $('#ImageFile')[0].files[0];
+            const htmlDesc = editor.getData();
+            const plainText = htmlDesc.replace(/<\/?[^>]+>/gi, "").trim();
 
-            if (!title || !desc) {
+            if (!title || plainText.length === 0) {
                 showToast('Please fill all required fields.', 'bg-danger');
                 return;
             }
 
-            // Optional: Validate image
-            if (imageFile) {
-                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-                const maxSize = 5 * 1024 * 1024; // 5MB limit
+            if (plainText.length > 325) {
+                showToast("Description must be 325 characters or less.", 'bg-danger');
+                return;
+            }
 
-                if (!allowedTypes.includes(imageFile.type)) {
-                    showToast('Only PNG, JPG, or JPEG images are allowed.', 'bg-danger');
+            const imgFile = $('#ImageFile')[0].files[0];
+
+            // -------- IMAGE VALIDATION IF UPLOADING NEW IMAGE --------
+            if (imgFile) {
+                const allowed = ['image/png', 'image/jpeg', 'image/jpg'];
+                const maxSize = 5 * 1024 * 1024;
+
+                if (!allowed.includes(imgFile.type)) {
+                    showToast('Only PNG, JPG, JPEG allowed.', 'bg-danger');
                     return;
                 }
-                if (imageFile.size > maxSize) {
+                if (imgFile.size > maxSize) {
                     showToast('Image size must be less than 5MB.', 'bg-danger');
                     return;
                 }
 
-               
                 const img = new Image();
-                img.src = URL.createObjectURL(imageFile);
+                img.src = URL.createObjectURL(imgFile);
                 img.onload = function () {
                     if (img.width !== 60 || img.height !== 60) {
-                        showToast('Image dimensions must be exactly 60x60 pixels.', 'bg-danger');
+                        showToast('Image must be exactly 60×60 pixels.', 'bg-danger');
                         return;
                     }
-                    submitEditForm(); 
+                    submitEditForm();
                 };
-                img.onerror = function () {
-                    showToast('Invalid image file.', 'bg-danger');
-                };
-            } else {
-                submitEditForm(); 
+                return;
             }
+
+            submitEditForm();
         });
 
-        // ✅ AJAX Function
+        // ---------- AJAX SUBMIT FUNCTION ----------
         function submitEditForm() {
             const formData = new FormData($('#whyChooseEditForm')[0]);
+            formData.set("Description", editor.getData());
 
             $.ajax({
                 url: '@Url.Action("Edit", "WhyChooseUs")',
@@ -148,13 +189,16 @@
                 success: function (res) {
                     if (res.success) {
                         showToast(res.message, 'bg-success');
-                        setTimeout(() => window.location.href = '/admin/WhyChooseUs', 3000);
+
+                        setTimeout(() => {
+                            window.location.href = '/admin/WhyChooseUs';
+                        }, 1800);
                     } else {
                         showToast(res.message, 'bg-danger');
                     }
                 },
                 error: function () {
-                    showToast('Something went wrong. Please try again.', 'bg-danger');
+                    showToast('Something went wrong! Try again.', 'bg-danger');
                 }
             });
         }

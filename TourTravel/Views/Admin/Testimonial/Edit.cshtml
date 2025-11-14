@@ -43,9 +43,16 @@
                     </select>
                 </div>
 
+                @* <div class="mb-3">
+                    <label class="form-label fw-semibold">Quote</label><span class="text-danger">*</span>
+                    <textarea asp-for="Quote" id="Quote" class="form-control" rows="5" placeholder="Enter Quote" required></textarea>
+                    <span asp-validation-for="Quote" class="text-danger"></span>
+                </div> *@
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Quote *</label>
-                    <textarea asp-for="Quote" id="Quote" class="form-control" rows="5" required></textarea>
+                    <label class="form-label fw-semibold">Quote <span class="text-danger">*</span></label>
+                    <textarea asp-for="Quote" id="Quote" class="form-control" rows="5" placeholder="Enter Quote" required></textarea>
+                    <small id="quoteCounter" class="text-muted">0 / 150 characters</small>
+                    <span asp-validation-for="Quote" class="text-danger"></span>
                 </div>
 
                 <!-- ⭐ IMAGE INPUT -->
@@ -121,9 +128,34 @@
         let editor, cropper, croppedBlob;
 
         // CKEditor
-        ClassicEditor.create(document.querySelector('#Quote'))
-            .then(newEditor => editor = newEditor)
-            .catch(err => console.error(err));
+        ClassicEditor
+            .create(document.querySelector('#Quote'))
+            .then(newEditor => {
+                editor = newEditor;
+
+                setTimeout(() => {
+                    const initialText = editor.getData().replace(/<\/?[^>]+>/gi, "").trim();
+                    $("#quoteCounter").text(`${initialText.length} / 150 characters`);
+                }, 300);
+
+
+                editor.model.document.on('change:data', () => {
+                    const text = editor.getData().replace(/<\/?[^>]+>/gi, "").trim();
+                    const length = text.length;
+
+                    $("#quoteCounter").text(`${length} / 150 characters`);
+
+                    if (length > 150) {
+                        showToast("Quote must be 150 characters or less.", "bg-danger");
+                        editor.setData(text.substring(0, 150));
+                        $("#quoteCounter").text(`150 / 150 characters`);
+                    }
+                });
+            })
+            .catch(console.error);
+        // ClassicEditor.create(document.querySelector('#Quote'))
+        //     .then(newEditor => editor = newEditor)
+        //     .catch(err => console.error(err));
 
 
         // ⭐ OPEN CROP MODAL — REFERENCE BLOG STYLE

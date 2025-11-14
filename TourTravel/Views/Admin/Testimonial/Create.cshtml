@@ -44,12 +44,20 @@
                     </select>
                     <span asp-validation-for="Rating" class="text-danger"></span>
                 </div>
-
+                      
                 <div class="mb-3">
+                    <label class="form-label fw-semibold">Quote <span class="text-danger">*</span></label>
+                    <textarea asp-for="Quote" id="Quote" class="form-control" rows="5" placeholder="Enter Quote" required></textarea>
+
+                    <small id="quoteCounter" class="text-muted">0 / 150 characters</small>
+                    <span asp-validation-for="Quote" class="text-danger"></span>
+                </div>
+
+                @* <div class="mb-3">
                     <label class="form-label fw-semibold">Quote</label><span class="text-danger">*</span>
                     <textarea asp-for="Quote" id="Quote" class="form-control" rows="5" placeholder="Enter Quote" required></textarea>
                     <span asp-validation-for="Quote" class="text-danger"></span>
-                </div>
+                </div> *@
 
                 <!-- ⭐ IMAGE INPUT -->
                 <div class="mb-3">
@@ -118,9 +126,33 @@
     <script>
         let editor, cropper, croppedBlob;
 
-        // ⭐ CKEditor
+        // ⭐ CKEditor WITH CHARACTER LIMIT (150)
         ClassicEditor.create(document.querySelector('#Quote'))
-            .then(newEditor => { editor = newEditor; })
+            .then(newEditor => {
+                editor = newEditor;
+
+              
+                const initialText = editor.getData().replace(/<\/?[^>]+>/gi, "").trim();
+                $("#quoteCounter").text(`${initialText.length} / 150 characters`);
+
+                // Character limit + counter
+                editor.model.document.on('change:data', () => {
+                    const plainText = editor.getData().replace(/<\/?[^>]+>/gi, "").trim();
+                    const length = plainText.length;
+
+                    $("#quoteCounter").text(`${length} / 150 characters`);
+
+                    if (length > 150) {
+                        showToast("Quote must be 150 characters or less.", "bg-danger");
+
+                       
+                        const trimmed = plainText.substring(0, 150);
+                        editor.setData(trimmed);
+
+                        $("#quoteCounter").text(`150 / 150 characters`);
+                    }
+                });
+            })
             .catch(error => console.error(error));
 
 
