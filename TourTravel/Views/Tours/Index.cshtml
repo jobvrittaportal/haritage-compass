@@ -1,4 +1,4 @@
-@await Component.InvokeAsync("HeroSection")
+﻿@await Component.InvokeAsync("HeroSection")
 <!-- tour area -->
 
 
@@ -295,3 +295,54 @@
     </div>
 </div>
 <!-- tour area end -->
+<script>
+    $(document).ready(function () {
+
+        $("form").on("submit", function (e) {
+
+            let destination = $("#DestinationId").val();
+            let checkIn = $("#checkInDate").val();
+            let checkOut = $("#checkOutDate").val();
+
+            let today = new Date().toISOString().split("T")[0];
+
+            // 1️⃣ Destination validation
+            if (!destination || destination === "") {
+                e.preventDefault();
+                showToast("Please select a destination!", "error");
+                return false;
+            }
+
+            // 2️⃣ Check-in required
+            if (!checkIn) {
+                e.preventDefault();
+                showToast("Please select a Check-In date!", "error");
+                return false;
+            }
+
+            // 3️⃣ Check-in should be today or later
+            if (checkIn < today) {
+                e.preventDefault();
+                showToast("Check-In date cannot be before today!", "error");
+                return false;
+            }
+
+            // 4️⃣ Check-out required
+            if (!checkOut) {
+                e.preventDefault();
+                showToast("Please select a Check-Out date!", "error");
+                return false;
+            }
+
+            // 5️⃣ Check-out > Check-in
+            if (checkOut <= checkIn) {
+                e.preventDefault();
+                showToast("Check-Out must be later than Check-In!", "error");
+                return false;
+            }
+
+            return true;
+        });
+
+    });
+</script>
