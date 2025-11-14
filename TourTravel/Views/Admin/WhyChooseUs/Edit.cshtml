@@ -1,4 +1,4 @@
-﻿@model TourTravel.Models.WhyChooseUs
+@model TourTravel.Models.WhyChooseUs
 @{
     ViewData["Title"] = "Edit Why Choose Us";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
@@ -36,7 +36,9 @@
                     </div>
 
                     <div class="col-6 mb-3">
-                        <label class="form-label fw-semibold">Upload Image (60×60)</label>
+                        <label class="form-label fw-semibold">
+                            Upload Image (60×60)<span class="text-danger">*</span>
+                        </label>
                         <input type="file" id="ImageFile" name="newImage" class="form-control" accept="image/*" />
                         <small class="text-muted">Leave blank to keep current image.</small>
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
