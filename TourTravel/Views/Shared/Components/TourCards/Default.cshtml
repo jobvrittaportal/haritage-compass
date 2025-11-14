@@ -89,64 +89,84 @@
 <!-- Contact Form Modal -->
 <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content p-4">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-semibold" id="contactModalLabel">
-                    <i class="far fa-envelope me-2 text-warning"></i> Enquiry Form
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content enquiry-card">
+
+            <!-- Header -->
+            <div class="modal-header border-0 pb-0">
+                <h4 class="modal-title fw-bold" id="contactModalLabel">
+                    <i class="far fa-paper-plane me-2 text-warning"></i> Send Us An Enquiry
+                </h4>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
             </div>
 
+            <!-- Body -->
             <div class="modal-body">
                 <form method="post" action="" id="contact-form">
 
-                    <div class="row g-3">
+                    <div class="row g-4">
+
+                        <!-- Name -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" id="name" class="form-control" name="name" placeholder="Your Name" required>
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <div class="input-group custom-input-group">
+                                <span class="input-group-text"><i class="far fa-user"></i></span>
+                                <input type="text" id="name" name="name" class="form-control custom-input" placeholder="Enter your name" required>
                             </div>
                         </div>
+
+                        <!-- Email -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="email" id="email" class="form-control" name="email" placeholder="Your Email" required>
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <div class="input-group custom-input-group">
+                                <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                <input type="email" id="email" name="email" class="form-control custom-input" placeholder="Enter your email" required>
                             </div>
                         </div>
+
+                        <!-- Phone -->
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" id="phoneNumber" class="form-control" name="PhoneNumber" placeholder="Your Phone Number" required>
+                            <label class="form-label fw-semibold">Phone Number</label>
+                            <div class="input-group custom-input-group">
+                                <span class="input-group-text"><i class="far fa-phone"></i></span>
+                                <input type="text" id="phoneNumber" name="PhoneNumber" class="form-control custom-input" placeholder="Enter your phone number" required>
                             </div>
                         </div>
 
                     </div>
-                    <!-- Google reCAPTCHA -->
-                    <!-- IRCTC Style Captcha -->
-                    <div class="mt-4">
-                        <label class="form-label fw-semibold">Enter CAPTCHA</label>
 
+                    <!-- CAPTCHA -->
+                    <div class="mt-4">
+                        <label class="form-label fw-semibold">Enter Captcha</label>
                         <div class="d-flex align-items-center gap-3">
+
                             <img id="captchaImage"
                                  src="/Captcha/GenerateCaptcha"
-                                 alt="Captcha"
-                                 style="height:60px; border:1px solid #ccc;" />
+                                 class="captcha-img" />
 
-                            <button type="button" id="refreshCaptcha" class="btn btn-outline-secondary">
+                            <button type="button"
+                                    class="btn btn-light border rounded-circle refresh-btn"
+                                    id="refreshCaptcha">
                                 <i class="fas fa-sync"></i>
                             </button>
                         </div>
 
                         <input type="text"
                                id="captchaInput"
-                               class="form-control mt-2"
-                               placeholder="Enter the characters shown above"
-                               required />
+                               class="form-control custom-input mt-3"
+                               placeholder="Type the characters shown above"
+                               required>
                     </div>
+
+                    <!-- Submit -->
                     <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-warning px-4">
-                            Save
+                        <button type="submit" class="btn submit-btn px-5 py-2 fw-semibold">
+                            Submit
                         </button>
                     </div>
+
                 </form>
             </div>
+
         </div>
     </div>
 </div>
