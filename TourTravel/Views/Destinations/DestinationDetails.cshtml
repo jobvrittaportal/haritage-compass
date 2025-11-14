@@ -63,10 +63,11 @@
             </div>
 
             <div class="col-lg-4">
-                @*           @await Component.InvokeAsync("PackageCategories") *@
+                       @*    @await Component.InvokeAsync("PackageCategories")  *@
                 @await Component.InvokeAsync("PackageCategories", new { id = @Model.Id })
 
-                @await Component.InvokeAsync("FeaturedTours")
+             @await Component.InvokeAsync("FeaturedTours")
+                @*
                 <div class="widget">
                     <h4 class="widget-title">Download</h4>
                     <div class="widget-download">
@@ -79,7 +80,7 @@
                     <div class="banner-content">
                         <h2>Get <span>35% Off</span> On Norway Lake Tour</h2>
                     </div>
-                </div>
+                </div> *@
             </div>
         </div>
     </div>

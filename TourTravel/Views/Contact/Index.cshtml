@@ -101,20 +101,28 @@
         document.getElementById("contact-form").addEventListener("submit", async function (e) {
             e.preventDefault();
 
+            const phoneNumber = this.PhoneNumber.value.trim();  // ✅ FIXED
+
             const formData = {
                 name: this.name.value,
                 email: this.email.value,
-                phoneNumber: this.PhoneNumber.value,
+                phoneNumber: phoneNumber,
                 subject: this.subject.value,
                 message: this.message.value
             };
+
+            const phoneRegex = /^[6-9]\d{9}$/;   // ✅ Indian 10-digit mobile numbers
+
+            if (!phoneRegex.test(phoneNumber)) {
+                return showToast("Enter a valid 10-digit mobile number starting with 6–9.", "text-danger");
+            }
 
             try {
                 const response = await fetch('https://stg-jungleave-back.jobvritta.com/api/contact/addContactEnquiry', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjMiLCJuYmYiOjE3NjA2MjAzMjksImV4cCI6MTc2MDY1NjMyOSwiaWF0IjoxNzYwNjIwMzI5fQ.JkvwSIaX8ff-fpmisuEXrQhMPC-452gsL5oG-FbaDkU'
+                        'Authorization': 'Bearer eyJhbGciOi...'
                     },
                     body: JSON.stringify(formData)
                 });
@@ -132,6 +140,7 @@
                 showToast('An error occurred while sending the message.', 'text-danger');
             }
         });
+
     </script>
 }
 

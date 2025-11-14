@@ -1,4 +1,4 @@
-﻿@await Component.InvokeAsync("HeroSection")
+@await Component.InvokeAsync("HeroSection")
 <!-- tour area -->
 
 
@@ -11,7 +11,7 @@
                     <div class="search-area">
                         <div class="search-form-wrapper">
                             <h4>Search Tours</h4>
-                            <form method="get">
+                            <form id="searchForm" method="get">
                                 <div class="row align-items-end">
                                     <div class="col-12 search-input">
                                         <div class="form-group">
@@ -298,7 +298,7 @@
 <script>
     $(document).ready(function () {
 
-        $("form").on("submit", function (e) {
+        $("#searchForm").on("submit", function (e) {
 
             let destination = $("#DestinationId").val();
             let checkIn = $("#checkInDate").val();
@@ -307,7 +307,7 @@
             let today = new Date().toISOString().split("T")[0];
 
             // 1️⃣ Destination validation
-            if (!destination || destination === "") {
+            if (!destination) {
                 e.preventDefault();
                 showToast("Please select a destination!", "error");
                 return false;
@@ -345,4 +345,5 @@
         });
 
     });
+
 </script>
