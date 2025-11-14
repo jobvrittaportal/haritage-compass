@@ -205,8 +205,8 @@
 
             const userCaptchaInput = document.getElementById("captchaInput").value.trim();
             if (!userCaptchaInput) {
-                alert("Please enter the CAPTCHA.");
-                return;
+                 return showToast("Please enter the CAPTCHA.","info");
+                
             }
 
             const formData = {
@@ -230,7 +230,7 @@
 
                 if (response.ok) {
 
-                    alert("Enquiry sent successfully!");
+                      showToast("Enquiry sent successfully!","success");
 
                     // Close modal
                     const modalInstance =
@@ -243,16 +243,18 @@
 
                     // Redirect to tour page
                     if (selectedPackageId) {
-                        window.location.href = `/Tours/TourPackageDetails/${selectedPackageId}`;
+                       setTimeout(() => {
+            window.location.href = `/Tours/TourPackageDetails/${selectedPackageId}`;
+        }, 3000); 
                     }
 
                 } else {
-                    alert(result.message || "Failed to send enquiry.");
+                     return showToast(result.message || "Failed to send enquiry.","error");
                 }
 
             } catch (error) {
                 console.error("Error:", error);
-                alert("Something went wrong.");
+                 return showToast("Something went wrong.","error");
             }
         });
     });

@@ -167,5 +167,35 @@
             });
         </script>
     }
+    <script>
+        function showToast(message, type = "success") {
+
+            let bgClass = "bg-success";
+
+            if (type === "error") bgClass = "bg-danger";
+            else if (type === "warning") bgClass = "bg-warning";
+            else if (type === "info") bgClass = "bg-info";
+
+            let toastEl = $('#toastMessage');
+
+            // Remove old BG classes only
+            toastEl.removeClass("bg-success bg-danger bg-warning bg-info");
+
+            // Always white text
+            toastEl.addClass(bgClass + " text-white");
+
+            // Set message
+            toastEl.find(".toast-body").html(message);
+
+            // Initialize & Show Toast
+            let bsToast = new bootstrap.Toast(toastEl[0], {
+                delay: 3000
+            });
+
+            bsToast.show();
+        }
+    </script>
+
+
 </body>
 </html>

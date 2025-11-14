@@ -1,9 +1,11 @@
-<!-- search area -->
+﻿<!-- search area -->
+
 <div class="search-area py-4">
     <div class="container">
         <div class="search-form-wrapper bg-white p-4 rounded-3 shadow-sm">
             <form id="searchForm">
                 <div class="row g-3 align-items-end">
+
                     <div class="col-md-3 col-lg-3">
                         <label class="form-label fw-semibold">Destination</label>
                         @await Component.InvokeAsync("DestinationDropdown")
@@ -26,7 +28,7 @@
 
                     <div class="col-md-1 col-lg-1">
                         <label class="form-label fw-semibold">Persons</label>
-                        <input type="number" id="maxPerson" class="form-control text-center">
+                        <input type="number" id="maxPerson" min="1" class="form-control text-center">
                     </div>
 
                     <div class="col-md-2 col-lg-2 d-flex align-items-end">
@@ -34,33 +36,81 @@
                             <i class="far fa-search me-2"></i> Find Now
                         </button>
                     </div>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- right below your form -->
+
 <script>
-    const findNowButton = document.getElementById("findNow");
-    if (findNowButton) {
-        findNowButton.addEventListener("click", function () {
-            const cityId = document.getElementById("DestinationId")?.value;
-            const checkInDate = document.getElementById("checkIn")?.value;
-            const checkOutDate = document.getElementById("checkOut")?.value;
-            const maxPerson = document.getElementById("maxPerson")?.value;
+    // ---------------- SET DEFAULT MIN DATES ----------------
+    document.addEventListener("DOMContentLoaded", function () {
 
-            if (!cityId || !checkInDate || !checkOutDate || !maxPerson) {
-                alert("Please select destination and both dates.");
-                return;
+        // Format today as yyyy-mm-dd
+        let today = new Date();
+        let yyyy = today.getFullYear();
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let dd = String(today.getDate()).padStart(2, '0');
+        let todayStr = `${yyyy}-${mm}-${dd}`;
+
+        // Set check-in min = today
+        document.getElementById("checkIn").setAttribute("min", todayStr);
+
+        // When check-in changes → set check-out min = check-in
+        document.getElementById("checkIn").addEventListener("change", function () {
+            let checkInValue = this.value;
+
+            if (checkInValue) {
+                document.getElementById("checkOut").setAttribute("min", checkInValue);
+
+                // reset check-out if invalid
+                if (document.getElementById("checkOut").value < checkInValue) {
+                    document.getElementById("checkOut").value = "";
+                }
             }
-
-            const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}&checkInDate=${encodeURIComponent(checkInDate)}&checkOutDate=${encodeURIComponent(checkOutDate)}&maxPerson=${encodeURIComponent(maxPerson)}`;
-            window.location.href = url;
         });
-    } else {
-        console.warn("Button not found");
-    }
+    });
+
+    // ---------------- VALIDATION ON CLICK ----------------
+    document.getElementById("findNow").addEventListener("click", function () {
+
+        const cityId = document.getElementById("DestinationId")?.value;
+        const checkIn = document.getElementById("checkIn")?.value;
+        const checkOut = document.getElementById("checkOut")?.value;
+        const tourType = document.getElementById("TourTypeId")?.value;
+        const maxPerson = document.getElementById("maxPerson")?.value;
+
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        let checkInDate = checkIn ? new Date(checkIn) : null;
+        let checkOutDate = checkOut ? new Date(checkOut) : null;
+
+        // ------------ VALIDATION ------------
+
+        if (!cityId) return showToast("Please select a destination.", "error");
+        if (!checkIn) return showToast("Please select check-in date.", "error");
+
+        if (checkInDate < today)
+            return showToast("Check-in date cannot be earlier than today.", "error");
+
+        if (!checkOut) return showToast("Please select check-out date.", "error");
+
+        if (checkOutDate <= checkInDate)
+            return showToast("Check-out date must be after check-in date.", "error");
+
+        if (!tourType) return showToast("Please select a tour type.", "error");
+        if (!maxPerson || maxPerson <= 0)
+            return showToast("Please enter number of persons Greater Than 0.", "error");
+
+        // ------------ REDIRECT ------------
+        const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}
+                    &checkInDate=${encodeURIComponent(checkIn)}
+                    &checkOutDate=${encodeURIComponent(checkOut)}
+                    &tourType=${encodeURIComponent(tourType)}
+                    &maxPerson=${encodeURIComponent(maxPerson)}`;
+
+        window.location.href = url;
+    });
 </script>
-
-}
-
