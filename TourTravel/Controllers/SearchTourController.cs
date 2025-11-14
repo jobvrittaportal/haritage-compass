@@ -87,6 +87,7 @@ namespace TourTravel.Controllers
 
     public int CityId { get; set; }
     public string PackageImage { get; set; }
+    public string? CoverPackageImage { get; set; }
     public string Desc { get; set; }
     public decimal BasePrice { get; set; }
     public int? MaxPerson { get; set; }
