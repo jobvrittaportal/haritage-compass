@@ -5,6 +5,9 @@
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -98,6 +101,28 @@
     </div>
 </div>
 
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:850px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image (800×600)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height:600px; display:flex; justify-content:center; align-items:center;">
+                <img id="cropImage" style="max-width:100%; max-height:100%; display:block;" />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cropBtn" class="btn btn-primary">Crop & Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -107,9 +132,14 @@
 
     <script>
         $(document).ready(function () {
+
             let introEditor, bioEditor;
 
-            // Initialize CKEditors
+            
+            let cropper, croppedBlob;
+
+
+           
             ClassicEditor.create(document.querySelector('#Introduction'))
                 .then(editor => introEditor = editor)
                 .catch(console.error);
@@ -118,41 +148,105 @@
                 .then(editor => bioEditor = editor)
                 .catch(console.error);
 
-            
-                    // ✅ Clear form
-                  $('#clearBtn').on('click', function () {
-            // Reset all form inputs
-            $('#guideForm')[0].reset();
 
-            // Clear CKEditor contents
-            if (introEditor) introEditor.setData('');
-            if (bioEditor) bioEditor.setData('');
 
-            // Clear all validation messages and error styles
-            $('span[data-valmsg-for]').text('');
-            $('.is-invalid').removeClass('is-invalid');
+                   // ⭐ OPEN CROP MODAL — Blog Reference Pattern
+        $('#ImageFile').on('change', function (e) {
 
-            // Clear image preview (set default placeholder)
-            const imgEl = $('img[alt="Guide Image"]');
-            if (imgEl.length) {
-                imgEl.attr('src', '/images/no-image.png').attr('width', '100').attr('height', '60');
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Only PNG, JPG, JPEG images are allowed.', 'bg-danger');
+                return;
             }
 
-            // Clear all text inputs (for social links and others)
-            $('#Name, #Role, #Email, #Phone, #Facebook, #Twitter, #Instagram, #LinkedIn, #YouTube').val('');
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Image size must be less than 5MB.', 'bg-danger');
+                return;
+            }
 
-            // Clear file input manually
-            $('#ImageFile').val('');
+            const reader = new FileReader();
+            reader.onload = function (event) {
 
-            showToast('Form cleared successfully.', 'bg-info');
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+
+                $('#cropImage').attr('src', event.target.result);
+
+                const modalEl = $('#cropperModal');
+                const modal = new bootstrap.Modal(document.getElementById('cropperModal'));
+                modal.show();
+
+                // remove old events
+                modalEl.off('shown.bs.modal');
+                modalEl.off('hidden.bs.modal');
+
+                modalEl.on('shown.bs.modal', function () {
+                    cropper = new Cropper(document.getElementById('cropImage'), {
+                        aspectRatio: 4 / 3,
+                        viewMode: 0,
+                        autoCropArea: 1,
+                        responsive: true,
+                        movable: true,
+                        zoomable: true,
+                        scalable: false,
+                        cropBoxMovable: true,
+                        cropBoxResizable: false,
+                        dragMode: 'move',
+                        background: false,
+                        guides: false,
+                        center: true
+                    });
+                });
+
+                modalEl.on('hidden.bs.modal', function () {
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+                });
+
+            };
+
+            reader.readAsDataURL(file);
         });
 
 
-            //  Validation regex patterns
+        // ⭐ CROP BUTTON — Blog Reference
+        $('#cropBtn').click(function () {
+            if (!cropper) return;
+
+            cropper.getCroppedCanvas({
+                width: 800,
+                height: 600
+            }).toBlob(function (blob) {
+
+                croppedBlob = blob;
+                const previewUrl = URL.createObjectURL(blob);
+
+                // Remove old preview
+                $('#ImageFile').closest('.col-md-6').find('img').remove();
+
+                // Insert new preview
+                $('#ImageFile').closest('.col-md-6')
+                    .append(`<img src="${previewUrl}" class="mt-2 rounded" width="100" height="60" />`);
+
+                $('#cropperModal').modal('hide');
+            });
+        });
+
+
+
+            
             const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
             const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{10,15}$/;
 
-            //  Submit handler
+
+            
             $('#guideForm').submit(function (e) {
                 e.preventDefault();
 
@@ -160,67 +254,45 @@
                 const role = $('#Role').val().trim();
                 const email = $('#Email').val().trim();
                 const phone = $('#Phone').val().trim();
-                  const intro = introEditor ? introEditor.getData().trim() : '';
-            const bio = bioEditor ? bioEditor.getData().trim() : '';
+                const intro = introEditor ? introEditor.getData().trim() : '';
+                const bio = bioEditor ? bioEditor.getData().trim() : '';
 
-                if (!name || !role || !email || !phone|| !intro || !bio) {
+                if (!name || !role || !email || !phone || !intro || !bio) {
                     showToast('Please fill all required fields.', 'bg-danger');
                     return;
                 }
 
-                //  Empty field check
                 if (!emailRegex.test(email)) {
-                    showToast('Please enter a valid email address (e.g., name@example.com).', 'bg-danger');
+                    showToast('Please enter a valid email address.', 'bg-danger');
                     return;
                 }
 
-                if (!phoneRegex.test(phone)) {
-                    showToast('Please enter a valid phone number with 10–15 digits.', 'bg-danger');
-                    return;
-                }
-                //  Phone validation
                 if (!phoneRegex.test(phone)) {
                     showToast('Please enter a valid phone number.', 'bg-danger');
                     return;
                 }
 
+
                 const file = $('#ImageFile')[0].files[0];
                 const hasOldImage = '@Model.ImageUrl' !== '';
 
-                if (!hasOldImage && !file) {
-                    showToast('Please upload an image.', 'bg-danger');
+                
+                if (file && !croppedBlob) {
+                    showToast('Please crop the image before submitting.', 'bg-danger');
                     return;
                 }
 
-                if (file) {
-                    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-                    const maxSize = 5 * 1024 * 1024;
-                    if (!allowedTypes.includes(file.type)) {
-                        showToast('Only JPG or PNG images are allowed.', 'bg-danger');
-                        return;
-                    }
-                    if (file.size > maxSize) {
-                        showToast('Image size must be less than 5MB.', 'bg-danger');
-                        return;
-                    }
 
-                    const img = new Image();
-                    img.src = URL.createObjectURL(file);
-                    img.onload = function () {
-                        if (img.width !== 800 || img.height !== 600) {
-                            showToast('Image dimensions must be 800x600.', 'bg-danger');
-                            return;
-                        }
-                        submitForm();
-                    };
-                    img.onerror = () => showToast('Invalid image file.', 'bg-danger');
-                } else {
+                 else {
                     submitForm();
                 }
             });
 
-            //  Submit form via AJAX
+
+
+            
             function submitForm() {
+
                 const intro = introEditor ? introEditor.getData().trim() : '';
                 const bio = bioEditor ? bioEditor.getData().trim() : '';
 
@@ -228,9 +300,14 @@
                 formData.set('Introduction', intro);
                 formData.set('Biography', bio);
 
-                $.ajax({
-                   url: `/admin/TourGuide/Edit/${$('#Id').val()}`,
+                
+                if (croppedBlob) {
+                    formData.delete("ImageFile");
+                    formData.append("ImageFile", croppedBlob, "cropped-image.jpg");
+                }
 
+                $.ajax({
+                    url: `/admin/TourGuide/Edit/${$('#Id').val()}`,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -249,7 +326,9 @@
                 });
             }
 
-          
+
         });
     </script>
 }
+
+
