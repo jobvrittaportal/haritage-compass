@@ -5,12 +5,12 @@ using TourTravel.Models;
 
 namespace TourTravel.ViewComponents
 {
-  public class TourCardsViewComponent : ViewComponent
+  public class TourSearchViewComponent : ViewComponent
   {
     private readonly HttpClient _httpClient;
     private readonly MyDbContext _db;
 
-    public TourCardsViewComponent(MyDbContext db)
+    public TourSearchViewComponent(MyDbContext db)
     {
       _db = db;
       _httpClient = new HttpClient();
@@ -71,7 +71,7 @@ namespace TourTravel.ViewComponents
         else
         {
           //  CASE 2: Otherwise → use getfilterPackageList (all optional)
-          var baseUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getfilterPackageList?";
+          var baseUrl = "https://localhost:7154/api/package/getfilterPackageList?";
           var parameters = new List<string>();
 
           if (DestinationId.HasValue)
