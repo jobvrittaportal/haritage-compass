@@ -32,7 +32,6 @@
 
                                 <img src="@(pkg.PackageImage)"
                                      alt="@pkg.Name">
-                                <a href="#" class="tour-wish"><i class="far fa-heart"></i></a>
                             </div>
 
                             <div class="tour-meta">
@@ -191,6 +190,16 @@
             // Load captcha when modal opens
             const modal = document.getElementById("contactModal");
             modal.addEventListener("shown.bs.modal", refreshCaptcha);
+
+            modal.addEventListener("hidden.bs.modal", () => {
+
+                form.reset();
+                captchaToken = "";
+                document.getElementById("captchaInput").value = "";
+                document.getElementById("captchaImage").src =
+                    "/Captcha/GenerateCaptcha?" + new Date().getTime();
+            });
+
 
             // Capture package id clicked
             bookNowButtons.forEach(btn => {
