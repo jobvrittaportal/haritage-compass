@@ -56,6 +56,8 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="/admin/assets/js/config.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
+
 </head>
 
 <body>
@@ -281,22 +283,29 @@
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <div class="avatar avatar-online">
-                                        <img src="/admin/assets/img/avatars/6.png" alt class="w-px-40 h-auto rounded-circle" />
+                                    <div class="avatar avatar-online d-flex justify-content-center align-items-center"
+                                         style="width:40px; height:40px; border-radius:50%; background:#e9ecef;">
+                                        <i class="bi bi-person-fill" style="font-size:20px;"></i>
                                     </div>
+
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
-                                                    <div class="avatar avatar-online">
-                                                        <img src="/admin/assets/img/avatars/6.png" alt class="w-px-40 h-auto rounded-circle" />
+                                                    <div class="avatar avatar-online d-flex justify-content-center align-items-center"
+                                                         style="width:40px; height:40px; border-radius:50%; background:#e9ecef;">
+                                                        <i class="bi bi-person-fill" style="font-size:20px;"></i>
                                                     </div>
+
+
+
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">Shreya</span>
-                                                    <small class="text-muted">Admin</small>
+                                                    <span class="fw-semibold d-block">@User.Identity?.Name</span>
+
+                                                    @* <small class="text-muted">Admin</small> *@
                                                 </div>
                                             </div>
                                         </a>
@@ -304,7 +313,7 @@
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
-                                    <li>
+                                    @* <li>
                                         <a class="dropdown-item" href="#">
                                             <i class="bx bx-user me-2"></i>
                                             <span class="align-middle">My Profile</span>
@@ -317,10 +326,10 @@
                                         </a>
                                     </li>
                                     <li>
-                                    </li>
-                                    <li>
+                                    </li> *@
+                                    @* <li>
                                         <div class="dropdown-divider"></div>
-                                    </li>
+                                    </li> *@
                                     <li>
                                         <a href="#" class="dropdown-item" id="logoutLink">
                                             <i class="bx bx-power-off me-2"></i>
