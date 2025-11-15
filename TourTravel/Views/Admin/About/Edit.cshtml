@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Upload New Image (600×600)</label>
+                    <label class="form-label fw-semibold">Upload Image (600×600)<span class="text-danger">*</span></label>
                     <input type="file" name="image" id="image" class="form-control" accept="image/*" />
 
                     @if (!string.IsNullOrEmpty(Model.Image))
@@ -132,7 +132,7 @@
             .then(newEditor => editor = newEditor);
 
         // ⭐ OPEN CROP MODAL
-                     $('#image').on('change', function () {
+            $('#image').on('change', function () {
 
             // ⭐ HIDE OLD CURRENT IMAGE
             $('#currentImageWrapper').hide();
@@ -166,7 +166,13 @@
                 });
 
                 modalEl.off('hidden.bs.modal').on('hidden.bs.modal', function () {
-                    if (cropper) { cropper.destroy(); cropper = null; }
+                    if (cropper) 
+                    { cropper.destroy();
+                     cropper = null; 
+                    }
+                    if (!croppedBlob) {
+                      $('#image').val("");
+                   }
                 });
             };
 

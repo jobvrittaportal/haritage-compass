@@ -160,6 +160,9 @@
                         cropper.destroy();
                         cropper = null;
                     }
+                    if (!croppedBlob) {
+                     $('#ImageFile').val("");     // remove new file
+                    }
                 });
             };
 
