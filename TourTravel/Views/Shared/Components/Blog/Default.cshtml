@@ -1,12 +1,17 @@
-﻿@model TourTravel.ViewModel.BlogViewModel
+@model TourTravel.ViewModel.BlogViewModel
+
 @{
+
     bool showHeading = ViewData["ShowHeading"] as bool? ?? true;
+
 }
 
 <div class="blog-area py-120">
     <div class="container">
         <div class="row">
+
             @if (Model.ShowHeading)
+
             {
 
                 <div class="col-lg-6 mx-auto">
@@ -21,36 +26,62 @@
             }
         </div>
 
-        <div class="row">
-            @foreach (var item in Model.Blogs)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <div class="blog-item">
-                        <div class="blog-item-thumb">
-                            <img src="@item.ImageUrl" alt="Thumb">
-                        </div>
-                        <div class="blog-item-info">
-                            <div class="blog-item-meta">
-                                <ul>
-                                    <li><i class="far fa-user"></i> @item.Author</li>
-                                    <li><i class="far fa-calendar-alt"></i> @item.CreatedAt.Value.ToString("dd MMM, yyyy")</li>
+        @if (Model.Blogs == null || !Model.Blogs.Any())
 
-                                </ul>
+        {
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076500.png"
+                         width="120" class="opacity-75 mb-3" />
+
+                    <h3 class="text-muted">No Blog Found</h3>
+                    <p class="text-muted">Try adjusting your search or keywords.</p>
+                </div>
+            </div>
+
+        }
+
+        else
+        {
+            <div class="row">
+
+                @foreach (var item in Model.Blogs)
+
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="blog-item">
+                            <div class="blog-item-thumb">
+                                <img src="@item.ImageUrl" alt="Thumb">
                             </div>
-                            <h5>
-                                <a href="#" class="blog-item-title">
-                                    @item.Title
-                                </a>
-                            </h5>
-                            <a class="blog-item-more" asp-controller="Blog" asp-action="SingleBlog" asp-route-id="@item.Id">Read More <i class="far fa-long-arrow-right"></i></a>
+                            <div class="blog-item-info">
+                                <div class="blog-item-meta">
+                                    <ul>
+                                        <li><i class="far fa-user"></i> @item.Author</li>
+                                        <li><i class="far fa-calendar-alt"></i> @item.CreatedAt.Value.ToString("dd MMM, yyyy")</li>
+
+                                    </ul>
+                                </div>
+                                <h5>
+                                    <a href="#" class="blog-item-title">
+
+                                        @item.Title
+                                    </a>
+                                </h5>
+                                <a class="blog-item-more" asp-controller="Blog" asp-action="SingleBlog" asp-route-id="@item.Id">Read More <i class="far fa-long-arrow-right"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+
+                }
+            </div>
+        }
+
         @if (!Model.ShowHeading)
+
         {
+
             @if (ViewBag.TotalPages > 1)
+
             {
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
@@ -60,24 +91,31 @@
                         </li>
 
                         @for (int i = 1; i <= ViewBag.TotalPages; i++)
+
                         {
                             <li class="page-item @(ViewBag.Currentpage == i ? "active" : "")">
                                 <a class="page-link"
                                    href="@Url.Action("Index", "Blog", new { search = ViewBag.Search, currentPage = i })">
+
                                     @i
                                 </a>
                             </li>
+
                         }
 
                         <li class="page-item @(ViewBag.CurrentPage >= ViewBag.TotalPages ? "disabled" : "")">
                             <a class="page-link"
                                href="@Url.Action("Index", "Blog", new { search = ViewBag.Search, currentPage = ViewBag.CurrentPage + 1 })">
+
                                 Next
                             </a>
                         </li>
                     </ul>
                 </nav>
+
             }
+
         }
     </div>
 </div>
+

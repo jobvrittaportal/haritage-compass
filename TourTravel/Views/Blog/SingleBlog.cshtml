@@ -1,4 +1,4 @@
-﻿  <!-- blog single area -->
+  <!-- blog single area -->
 @await Component.InvokeAsync("HeroSection")
 @model TourTravel.ViewModel.SingleBlogViewModel
 
@@ -15,152 +15,152 @@
                             <div class="blog-meta">
                                 <div class="blog-meta-left">
                                     <ul>
-                                        <li><i class="far fa-user"></i><a href="#">@Model.Blog.Author</a></li>
+                                        @* <li><i class="far fa-user"></i><a href="#">@Model.Blog.Author</a></li> *@
                                         @* <li><i class="far fa-comments"></i>5.2k Comments</li>
                                         <li><i class="far fa-thumbs-up"></i>1.6k Like</li> *@
                                     </ul>
                                 </div>
-                                <div class="blog-meta-right">
-                                    <a href="#" class="share-link"><i class="far fa-share-alt"></i>Share</a>
-                                </div>
+                                @* <div class="blog-meta-right">
+                                <a href="#" class="share-link"><i class="far fa-share-alt"></i>Share</a>
+                                </div> *@
                             </div>
                             <div class="blog-details">
                                 <h3 class="blog-details-title mb-20">@Model.Blog.Title</h3>
                                 <p class="mb-10">
                                     @Html.Raw(@Model.Blog.Content)
-                                    
+
                                 </p>
                                 @* <blockquote class="blockqoute">
-                                    On the other hand we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment so blinded.
-                                    <h6 class="blockqoute-author">James J Eck</h6>
+                                On the other hand we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment so blinded.
+                                <h6 class="blockqoute-author">James J Eck</h6>
                                 </blockquote>
                                 <p class="mb-20">
-                                    In a free hour when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection.
+                                In a free hour when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection.
                                 </p> *@
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-20">
-                                        <img src="/assets/img/blog/2.jpg" alt="">
-                                    </div>
-                                    <div class="col-md-6 mb-20">
-                                        <img src="/assets/img/blog/3.jpg" alt="">
-                                    </div>
+                                @* <div class="row">
+                                <div class="col-md-6 mb-20">
+                                <img src="/assets/img/blog/2.jpg" alt="">
                                 </div>
+                                <div class="col-md-6 mb-20">
+                                <img src="/assets/img/blog/3.jpg" alt="">
+                                </div>
+                                </div> *@
                                 @* <p class="mb-20">
-                                    Power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection.
+                                Power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection.
                                 </p> *@
                                 <hr>
-                                <div class="blog-details-tags pb-20">
-                                    <h5>Tags : </h5>
-                                    <ul>
-                                        <li><a href="#">Travel</a></li>
-                                        <li><a href="#">Tour</a></li>
-                                        <li><a href="#">Adventure</a></li>
-                                    </ul>
-                                </div>
+                                @* <div class="blog-details-tags pb-20">
+                                <h5>Tags : </h5>
+                                <ul>
+                                <li><a href="#">Travel</a></li>
+                                <li><a href="#">Tour</a></li>
+                                <li><a href="#">Adventure</a></li>
+                                </ul>
+                                </div> *@
                             </div>
 
-                            <div class="blog-author">
-                                <img src="/assets/img/blog/author.jpg" alt="">
-                                <div class="author-info">
-                                    <h6>Author</h6>
-                                    <h3 class="author-name">Rose T Bennett</h3>
-                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout  that it has a more less.</p>
-                                    <div class="author-social">
-                                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        <a href="#"><i class="fab fa-twitter"></i></a>
-                                        <a href="#"><i class="fab fa-instagram"></i></a>
-                                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                                    </div>
-                                </div>
+                            @* <div class="blog-author">
+                            <img src="/assets/img/blog/author.jpg" alt="">
+                            <div class="author-info">
+                            <h6>Author</h6>
+                            <h3 class="author-name">Rose T Bennett</h3>
+                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout  that it has a more less.</p>
+                            <div class="author-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-whatsapp"></i></a>
                             </div>
+                            </div>
+                            </div> *@
 
                         </div>
 
-                        <div class="blog-comments">
-                            <h4>Comments (20)</h4>
-                            <div class="blog-comments-wrapper">
-                                <div class="blog-comments-single">
-                                    <img src="/assets/img/blog/com-1.jpg" alt="thumb">
-                                    <div class="blog-comments-content">
-                                        <h5>Kristin Alvarado</h5>
-                                        <span><i class="far fa-clock"></i> 09 May, 2024</span>
-                                        <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
-                                        <a href="#"><i class="far fa-reply"></i> Reply</a>
-                                    </div>
-                                </div>
-                                <div class="blog-comments-single blog-comments-reply">
-                                    <img src="/assets/img/blog/com-2.jpg" alt="thumb">
-                                    <div class="blog-comments-content">
-                                        <h5>Dannie Wilcox</h5>
-                                        <span><i class="far fa-clock"></i> 09 May, 2024</span>
-                                        <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
-                                        <a href="#"><i class="far fa-reply"></i> Reply</a>
-                                    </div>
-                                </div>
-                                <div class="blog-comments-single">
-                                    <img src="/assets/img/blog/com-3.jpg" alt="thumb">
-                                    <div class="blog-comments-content">
-                                        <h5>Roxanna Graham</h5>
-                                        <span><i class="far fa-clock"></i> 09 May, 2024</span>
-                                        <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
-                                        <a href="#"><i class="far fa-reply"></i> Reply</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="blog-comments-form">
-                                <h4>Leave A Comment</h4>
-                                <form action="#">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" placeholder="Your Name*">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <input type="email" class="form-control" placeholder="Your Email*">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <textarea class="form-control" rows="5" placeholder="Your Comment*"></textarea>
-                                            </div>
-                                            <button type="submit" class="comment-btn"><i class="far fa-paper-plane"></i> Post Comment</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                        @* <div class="blog-comments">
+                        <h4>Comments (20)</h4>
+                        <div class="blog-comments-wrapper">
+                        <div class="blog-comments-single">
+                        <img src="/assets/img/blog/com-1.jpg" alt="thumb">
+                        <div class="blog-comments-content">
+                        <h5>Kristin Alvarado</h5>
+                        <span><i class="far fa-clock"></i> 09 May, 2024</span>
+                        <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
+                        <a href="#"><i class="far fa-reply"></i> Reply</a>
                         </div>
+                        </div>
+                        <div class="blog-comments-single blog-comments-reply">
+                        <img src="/assets/img/blog/com-2.jpg" alt="thumb">
+                        <div class="blog-comments-content">
+                        <h5>Dannie Wilcox</h5>
+                        <span><i class="far fa-clock"></i> 09 May, 2024</span>
+                        <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
+                        <a href="#"><i class="far fa-reply"></i> Reply</a>
+                        </div>
+                        </div>
+                        <div class="blog-comments-single">
+                        <img src="/assets/img/blog/com-3.jpg" alt="thumb">
+                        <div class="blog-comments-content">
+                        <h5>Roxanna Graham</h5>
+                        <span><i class="far fa-clock"></i> 09 May, 2024</span>
+                        <p>There are many variations of passages the majority have suffered in some injected humour or randomised words which don't look even slightly believable.</p>
+                        <a href="#"><i class="far fa-reply"></i> Reply</a>
+                        </div>
+                        </div>
+                        </div>
+
+                        <div class="blog-comments-form">
+                        <h4>Leave A Comment</h4>
+                        <form action="#">
+                        <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Name*">
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Your Email*">
+                        </div>
+                        </div>
+                        <div class="col-md-12">
+                        <div class="form-group">
+                        <textarea class="form-control" rows="5" placeholder="Your Comment*"></textarea>
+                        </div>
+                        <button type="submit" class="comment-btn"><i class="far fa-paper-plane"></i> Post Comment</button>
+                        </div>
+                        </div>
+                        </form>
+                        </div>
+                        </div> *@
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
                 <aside class="sidebar">
                     <!-- search-->
-                    <div class="widget search">
-                        <h5 class="widget-title">Search</h5>
-                        <form class="search-form">
-                            <input type="text" class="form-control" placeholder="Search Here...">
-                            <button type="submit"><i class="far fa-search"></i></button>
-                        </form>
-                    </div>
-                    <!-- category -->
+                    @* <div class="widget search">
+                    <h5 class="widget-title">Search</h5>
+                    <form class="search-form">
+                    <input type="text" class="form-control" placeholder="Search Here...">
+                    <button type="submit"><i class="far fa-search"></i></button>
+                    </form>
+                    </div> *@
+                    @* <!-- category -->
                     <div class="widget category">
-                        <h5 class="widget-title">Category</h5>
-                        <div class="category-list">
-                            <a href="#"><i class="far fa-angle-double-right"></i>Trip And Tour<span>(10)</span></a>
-                            <a href="#"><i class="far fa-angle-double-right"></i>Travelling<span>(15)</span></a>
-                            <a href="#"><i class="far fa-angle-double-right"></i>Adventure<span>(20)</span></a>
-                            <a href="#"><i class="far fa-angle-double-right"></i>National Parks<span>(25)</span></a>
-                            <a href="#"><i class="far fa-angle-double-right"></i>Beaches And Sea<span>(30)</span></a>
-                        </div>
+                    <h5 class="widget-title">Category</h5>
+                    <div class="category-list">
+                    <a href="#"><i class="far fa-angle-double-right"></i>Trip And Tour<span>(10)</span></a>
+                    <a href="#"><i class="far fa-angle-double-right"></i>Travelling<span>(15)</span></a>
+                    <a href="#"><i class="far fa-angle-double-right"></i>Adventure<span>(20)</span></a>
+                    <a href="#"><i class="far fa-angle-double-right"></i>National Parks<span>(25)</span></a>
+                    <a href="#"><i class="far fa-angle-double-right"></i>Beaches And Sea<span>(30)</span></a>
                     </div>
+                    </div> *@
                     <!-- recent post -->
                     <div class="widget recent-post">
                         <h5 class="widget-title">Recent Post</h5>
-                        @foreach(var post in Model.RecentBlogs)
+                        @foreach (var post in Model.RecentBlogs)
                         {
                             <div class="recent-post-single">
                                 <div class="recent-post-img">
@@ -174,31 +174,31 @@
                         }
 
                         @* <div class="recent-post-single">
-                            <div class="recent-post-img">
-                                <img src="/assets/img/blog/bs-1.jpg" alt="thumb">
-                            </div>
-                            <div class="recent-post-bio">
-                                <h6><a href="#">It is a long established fact that a reader</a></h6>
-                                <span><i class="far fa-clock"></i>09 May, 2024</span>
-                            </div>
+                        <div class="recent-post-img">
+                        <img src="/assets/img/blog/bs-1.jpg" alt="thumb">
+                        </div>
+                        <div class="recent-post-bio">
+                        <h6><a href="#">It is a long established fact that a reader</a></h6>
+                        <span><i class="far fa-clock"></i>09 May, 2024</span>
+                        </div>
                         </div>
                         <div class="recent-post-single">
-                            <div class="recent-post-img">
-                                <img src="/assets/img/blog/bs-2.jpg" alt="thumb">
-                            </div>
-                            <div class="recent-post-bio">
-                                <h6><a href="#">It is a long established fact that a reader</a></h6>
-                                <span><i class="far fa-clock"></i>09 May, 2024</span>
-                            </div>
+                        <div class="recent-post-img">
+                        <img src="/assets/img/blog/bs-2.jpg" alt="thumb">
+                        </div>
+                        <div class="recent-post-bio">
+                        <h6><a href="#">It is a long established fact that a reader</a></h6>
+                        <span><i class="far fa-clock"></i>09 May, 2024</span>
+                        </div>
                         </div>
                         <div class="recent-post-single">
-                            <div class="recent-post-img">
-                                <img src="/assets/img/blog/bs-3.jpg" alt="thumb">
-                            </div>
-                            <div class="recent-post-bio">
-                                <h6><a href="#">It is a long established fact that a reader</a></h6>
-                                <span><i class="far fa-clock"></i>09 May, 2024</span>
-                            </div>
+                        <div class="recent-post-img">
+                        <img src="/assets/img/blog/bs-3.jpg" alt="thumb">
+                        </div>
+                        <div class="recent-post-bio">
+                        <h6><a href="#">It is a long established fact that a reader</a></h6>
+                        <span><i class="far fa-clock"></i>09 May, 2024</span>
+                        </div>
                         </div> *@
                     </div>
 
@@ -228,7 +228,7 @@
                                 </a>
                             }
 
-                           
+
 
                             @if (!string.IsNullOrEmpty(Model.CompanyDetails?.YouTube))
                             {
@@ -243,17 +243,17 @@
 
 
                     <!-- Recent Post -->
-                    <div class="widget sidebar-tag">
-                        <h5 class="widget-title">Popular Tags</h5>
-                        <div class="tag-list">
-                            <a href="#">Tour</a>
-                            <a href="#">Trip</a>
-                            <a href="#">Travel</a>
-                            <a href="#">Adventure</a>
-                            <a href="#">Marketing</a>
-                            <a href="#">Latest</a>
-                        </div>
+                    @* <div class="widget sidebar-tag">
+                    <h5 class="widget-title">Popular Tags</h5>
+                    <div class="tag-list">
+                    <a href="#">Tour</a>
+                    <a href="#">Trip</a>
+                    <a href="#">Travel</a>
+                    <a href="#">Adventure</a>
+                    <a href="#">Marketing</a>
+                    <a href="#">Latest</a>
                     </div>
+                    </div> *@
                 </aside>
             </div>
         </div>
