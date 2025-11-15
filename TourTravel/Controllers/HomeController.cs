@@ -37,12 +37,14 @@ namespace TourTravel.Controllers
             var whyChooseUs = _db.WhyChooseUs.ToList();
             var heroSliders = _db.HeroSlider.ToList();
             var website = _db.WebsiteSetting.OrderByDescending(f => f.Id).FirstOrDefault();
+            var introvideo = _db.IntroVideo.OrderByDescending(f => f.Id).FirstOrDefault();
             var RotationTime = website.RotationTime;
             var viewModel = new HomeViewModel
             {
                 HeroSliders = heroSliders,
                 RotationTime = RotationTime,
-                WhyChooseUs = whyChooseUs
+                WhyChooseUs = whyChooseUs,
+                IntroVideo = introvideo
             };
             return View(viewModel);
         }

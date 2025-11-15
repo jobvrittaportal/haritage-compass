@@ -196,15 +196,31 @@
         });
 
         // ⭐ Clear Form
-        $('#clearBtn').on('click', function () {
-            $('#aboutEditForm')[0].reset();
+               $('#clearBtn').on('click', function () {
+            // Clear text inputs
+            $('#Title, #KeyFeatures, #MetaTitle, #MetaDescription, #SlugUrl').val('');
+
+            // Clear CKEditor
             if (editor) editor.setData('');
 
-            $('#previewContainer').html('');
+            // Reset file input
+            $('#image').val('');
+
+            // Reset cropped blob
             croppedBlob = null;
+
+            // Reset image preview
+            $('#previewContainer').html('');
+
+            // Show original image again if exists
+            const originalImage = '@Model.Image';
+            if (originalImage) {
+                $('#currentImageWrapper').show();
+            }
 
             showToast('Form cleared successfully.', 'bg-info');
         });
+
 
         // ⭐ FORM SUBMIT (no changes except cropper logic)
         $('#aboutEditForm').submit(function (e) {

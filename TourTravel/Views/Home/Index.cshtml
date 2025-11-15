@@ -136,10 +136,9 @@
             <div class="col-lg-6 mx-auto">
                 <div class="site-heading text-center">
                     <span class="site-title-tagline">Intro Video</span>
-                    <h2 class="site-title">Let's Check Our Video</h2>
+                    <h2 class="site-title">@Model.IntroVideo.Title</h2>
                     <p>
-                        It is a long established fact that a reader will be distracted by the readable content
-                        of a page when looking at its layout.
+                        @Html.Raw(@Model.IntroVideo.Description)
                     </p>
                 </div>
             </div>
@@ -147,8 +146,8 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <div class="video-wrapper">
-                    <img src="/assets/img/slider/banner2.jpg" alt="Banner Video">
-                    <a class="play-btn popup-youtube" href="https://www.youtube.com/watch?v=ckHzmP1evNU">
+                    <img src="@Model.IntroVideo.ImageUrl" alt="Banner Video">
+                    <a class="play-btn popup-youtube" href="@Model.IntroVideo.VideoUrl">
                         <i class="icofont-ui-play"></i>
                     </a>
                 </div>

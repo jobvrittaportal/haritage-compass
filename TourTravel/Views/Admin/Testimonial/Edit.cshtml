@@ -22,17 +22,17 @@
                 <input type="hidden" asp-for="Id" />
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Author Name *</label>
+                    <label class="form-label fw-semibold">Author Name <span class="text-danger">*</span></label>
                     <input asp-for="AuthorName" id="AuthorName" class="form-control" required />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Role *</label>
+                    <label class="form-label fw-semibold">Role <span class="text-danger">*</span></label>
                     <input asp-for="Role" id="Role" class="form-control" required />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Rating *</label>
+                    <label class="form-label fw-semibold">Rating <span class="text-danger">*</span></label>
                     <select asp-for="Rating" id="Rating" class="form-control" required>
                         <option value="">-- Select Rating --</option>
                         <option value="1">1 - Very Poor</option>
@@ -57,7 +57,7 @@
 
                 <!-- ⭐ IMAGE INPUT -->
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Upload Image (800×600)</label>
+                    <label class="form-label fw-semibold">Upload Image (800×600)<span class="text-danger">*</span></label>
                     <input type="file" name="image" id="image" class="form-control" accept="image/*" />
                 </div>
 
@@ -256,7 +256,7 @@
             $('#Rating').val('');
             if (editor) editor.setData('');
             croppedBlob = null;
-            $('#previewContainer').html('');
+            // $('#previewContainer').html('');
             showToast('Form cleared successfully.', 'bg-info');
         });
 

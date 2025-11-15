@@ -283,13 +283,32 @@
         });
 
         // CLEAR BUTTON
-        $("#clearBtn").click(() => {
-            $("#blogForm")[0].reset();
+               $("#clearBtn").click(() => {
+
+            // Clear all text inputs and textareas
+            $("#Title, #Author, #MetaTitle, #MetaDescription, #SlugUrl").val("");
+
+            // Clear CKEditor
             if (editor) editor.setData("");
-            $("#previewContainer").html("");
+
+            // Reset file input
+            $("#image").val("");
+
+            // Clear cropped image
             croppedBlob = null;
-            showToast("Form cleared.", "bg-info");
+
+            // Clear preview
+            $("#previewContainer").html("");
+
+            // Show original image again if needed
+            const originalImage = '@Model.ImageUrl';
+            if (originalImage) {
+                $("#previewContainer").html(`<img src="${originalImage}" class="rounded" style="max-width:100%; max-height:150px;" />`);
+            }
+
+            showToast("Form cleared successfully.", "bg-info");
         });
+
     </script>
 
 }
