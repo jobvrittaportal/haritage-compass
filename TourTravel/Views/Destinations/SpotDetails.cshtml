@@ -71,6 +71,8 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 @await Component.InvokeAsync("PackageCategories", new { id = Model.CityId })
+                @await Component.InvokeAsync("FeaturedTours")
+
             </div>
         </div>
     </div>
