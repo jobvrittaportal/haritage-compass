@@ -25,10 +25,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="tour-item">
                             <div class="tour-img">
-                                @if (pkg.BasePrice < 15000)
-                                {
-                                    <span class="tour-sale">Sale</span>
-                                }
+                               
 
                                 <img src="@(pkg.PackageImage)"
                                      alt="@pkg.Name">
@@ -46,15 +43,6 @@
                                 <a href="/Package/Details/@pkg.Id">
                                     <h5>@pkg.Name</h5>
                                 </a>
-                                <div class="tour-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    @*                                     <span>(@pkg.ReviewCount Reviews)</span>
-                            *@
-                                </div>
                             </div>
 
                             <div class="tour-footer">

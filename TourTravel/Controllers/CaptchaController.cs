@@ -43,15 +43,17 @@ public class CaptchaController : Controller
 
   private string GenerateRandomText(int length)
   {
-    const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const string chars = "ABCDEFGHIJKLNOPRTVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var random = new Random();
+
     return new string(Enumerable.Repeat(chars, length)
         .Select(s => s[random.Next(s.Length)]).ToArray());
   }
 
+
   private Bitmap GenerateCaptchaImage(string captchaText)
   {
-    int width = 180, height = 60;
+    int width = 200, height = 60;
     Bitmap bmp = new Bitmap(width, height);
     Graphics g = Graphics.FromImage(bmp);
 
