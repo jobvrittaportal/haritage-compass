@@ -11,7 +11,7 @@ namespace TourTravel.Controllers
         public IActionResult AboutUs()
         {
             
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "About");
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "About Us");
             if(page != null)
             {
                 ViewBag.Title = page.Title;
@@ -133,7 +133,7 @@ namespace TourTravel.Controllers
         public IActionResult Faq()
         {
             
-            var page = db.SitePages.FirstOrDefault(f => f.Page == "FAQ'S");
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "FAQs");
             if (page != null)
             {
                 ViewBag.Title = page.Title;
