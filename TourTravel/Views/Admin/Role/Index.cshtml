@@ -10,9 +10,12 @@
     <div class="d-flex justify-content-between mb-3">
         <h3>Role Management</h3>
         <div>
-            <input type="text" id="searchRole" class="form-control d-inline-block" placeholder="Search by name" style="width: 200px;" />
-            <button class="btn btn-primary" id="btnSearchRole">Search</button>
-            <button class="btn btn-success" id="btnAddRole">Add Role</button>
+            <input type="text" id="searchRole" class="form-control d-inline-block" placeholder="Search by name" style="width: 150px;" />
+            @* <button class="btn btn-primary" id="btnSearchRole">Search</button> *@
+            <button class="btn btn-outline-secondary" id="btnSearchRole">
+                <i class="fa fa-search"></i>
+            </button>
+            <button class="btn btn-primary" id="btnAddRole"> <i class="fa fa-plus"></i> Role</button>
         </div>
     </div>
 
@@ -54,8 +57,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="roleForm">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalTitle">Add Role</h5>
+                <div class="modal-header  text-white">
+                    <h5 class="modal-title"  id="modalTitle">Add Role</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
