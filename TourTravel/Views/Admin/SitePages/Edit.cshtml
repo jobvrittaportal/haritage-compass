@@ -85,14 +85,14 @@
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    @* <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script> *@
 
     <script>
-        let editor;
-        ClassicEditor
-            .create(document.querySelector('#Description'))
-            .then(newEditor => editor = newEditor)
-            .catch(console.error);
+        // let editor;
+        // ClassicEditor
+        //     .create(document.querySelector('#Description'))
+        //     .then(newEditor => editor = newEditor)
+        //     .catch(console.error);
 
         const form = document.getElementById('editSitePageForm');
         const imageInput = document.getElementById('ImageFile');
@@ -118,7 +118,7 @@
             imageError.textContent = '';
 
             const formData = new FormData(form);
-            formData.set("Description", editor.getData());
+            // formData.set("Description", editor.getData());
 
             fetch(form.action, {
                 method: 'POST',
@@ -150,7 +150,7 @@
             form.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
 
             // Clear CKEditor content
-            if (editor) editor.setData('');
+            // if (editor) editor.setData('');
 
             // Clear file input
             imageInput.value = '';

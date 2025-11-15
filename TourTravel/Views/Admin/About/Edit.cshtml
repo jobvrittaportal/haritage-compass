@@ -11,7 +11,7 @@
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header text-black d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Edit About</h5>
+            <h5 class="mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Edit About Us</h5>
             <a href="@Url.Action("Index", "About")" class="btn btn-light btn-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a>
@@ -87,8 +87,31 @@
     </div>
 </div>
 
+
 <!-- ⭐ Cropper Modal -->
-<div class="modal fade" id="cropperModal" tabindex="-1">
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:850px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image (420×420)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height:600px; display:flex; justify-content:center; align-items:center;">
+                <img id="cropImage" style="max-width:100%; max-height:100%; display:block;" />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cropBtn" class="btn btn-primary">Crop & Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* <div class="modal fade" id="cropperModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" style="max-width:850px;">
         <div class="modal-content">
 
@@ -108,8 +131,8 @@
             </div>
 
         </div>
-    </div>
-</div>
+    </div> 
+</div>*@
 
 <!-- Toast Container -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 99999;">
@@ -124,9 +147,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <script>
-        let editor;
-        let cropper = null;
-        let croppedBlob = null;
+        let editor, cropper,  croppedBlob ;
 
         ClassicEditor.create(document.querySelector('#Description'))
             .then(newEditor => editor = newEditor);
@@ -156,12 +177,17 @@
 
                 modalEl.off('shown.bs.modal').on('shown.bs.modal', function () {
                     cropper = new Cropper(document.getElementById('cropImage'), {
-                        aspectRatio: 1,
+                       aspectRatio: 4 / 3,
                         viewMode: 0,
                         autoCropArea: 1,
-                        movable: true,
+                        responsive: true,
                         zoomable: true,
-                        cropBoxResizable: false
+                        movable: true,
+                        cropBoxMovable: true,
+                        cropBoxResizable: false,
+                        dragMode: "move",
+                        guides: false,
+                        background: false
                     });
                 });
 

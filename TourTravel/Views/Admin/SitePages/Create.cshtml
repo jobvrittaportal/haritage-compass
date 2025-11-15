@@ -92,14 +92,14 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    @* <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> *@
 
     <script>
-        let editor;
-        ClassicEditor
-            .create(document.querySelector('#Description'))
-            .then(newEditor => editor = newEditor)
-            .catch(console.error);
+        // let editor;
+        // ClassicEditor
+        //     .create(document.querySelector('#Description'))
+        //     .then(newEditor => editor = newEditor)
+        //     .catch(console.error);
 
         const form = document.getElementById('sitePageForm');
         const imageInput = document.getElementById('ImageFile');
@@ -132,7 +132,7 @@
             e.preventDefault();
             imageError.textContent = '';
             const formData = new FormData(form);
-            formData.set("Description", editor.getData()); // get CKEditor data
+            // formData.set("Description", editor.getData()); 
 
             fetch(form.action, {
                 method: 'POST',
@@ -154,7 +154,7 @@
         //  Clear button logic
         clearBtn.addEventListener('click', () => {
             form.reset();
-            editor.setData('');
+            // editor.setData('');
             imageError.textContent = '';
             previewContainer.style.display = 'none';
             imagePreview.src = '#';
