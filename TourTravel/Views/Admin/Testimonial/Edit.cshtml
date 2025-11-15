@@ -217,6 +217,9 @@
                         cropper.destroy();
                         cropper = null;
                     }
+                     if (!croppedBlob) {
+                      $('#image').val("");   
+                   }
                 });
 
             };

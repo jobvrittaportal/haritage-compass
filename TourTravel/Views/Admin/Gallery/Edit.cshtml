@@ -156,8 +156,10 @@
                         cropper.destroy();
                         cropper = null;
                     }
+                    if (!croppedBlob) {
+                      $('#ImageFile').val("");   // remove selected new image
+                   }
                 });
-
             };
 
             reader.readAsDataURL(file);
