@@ -75,6 +75,7 @@
                         </ul>
                     </div>
 
+
                 </div>
             </div>
 
@@ -87,6 +88,7 @@
 
                 string checkInDate = Context.Request.Query["checkInDate"].ToString();
                 string checkOutDate = Context.Request.Query["checkOutDate"].ToString();
+
             }
 
             <!-- TOUR CARDS -->
@@ -101,7 +103,7 @@
                             checkInDate = checkInDate,
                             checkOutDate = checkOutDate,
                             maxPerson = (int?)null,
-                            minPrice = (decimal?)null,
+                            minPrice = 500,
                             maxPrice = (decimal?)null,
                             minDuration = (int?)null,
                             maxDuration = (int?)null
@@ -116,17 +118,47 @@
 <script>
     $(document).ready(function () {
 
-        $("#priceRange").on("input", function () {
-            $("#priceValue").text($(this).val());
-            refreshTourList();
+        // $("#priceRange").on("input", function () {
+        //     $("#priceValue").text($(this).val());
+        //     refreshTourList();
+        // });
+        document.getElementById("priceRange").addEventListener("input", function () {
+
+            let price = this.value;
+
+            // Read existing filter values
+            let dest = document.getElementById("DestinationId").value;
+            let cin = document.getElementById("checkInDate").value;
+            let cout = document.getElementById("checkOutDate").value;
+
+            // Build new URL exactly like "Find Now"
+            let newUrl = `/Tours?DestinationId=${dest}&checkInDate=${cin}&checkOutDate=${cout}&minPrice=500&maxPrice=${price}`;
+
+            // FULL PAGE RELOAD
+            window.location.href = newUrl;
         });
 
-     
+        // $(".durationFilter").on("change", function () {
+        //     refreshTourList();
+        // });
+        // $(".durationFilter").on("change", function () {
+        //     $(".durationFilter").not(this).prop("checked", false);
+        //     refreshTourList();
+        // });
         $(".durationFilter").on("change", function () {
-            refreshTourList();
+            $(".durationFilter").not(this).prop("checked", false);
+            let selected = $(".durationFilter:checked");
+            let minD = selected.length ? selected.data("min") : "";
+            let maxD = selected.length ? selected.data("max") : "";
+            let dest = $("#DestinationId").val();
+            let cin = $("#checkInDate").val();
+            let cout = $("#checkOutDate").val();
+            let price = $("#priceRange").val();
+            let newUrl = `/Tours?DestinationId=${dest}&checkInDate=${cin}&checkOutDate=${cout}&minPrice=500&maxPrice=${price}&minDuration=${minD}&maxDuration=${maxD}`;
+            window.location.href = newUrl;
         });
 
-    
+
         $("#searchForm").on("submit", function (e) {
             let dest = $("#DestinationId").val();
             let cin = $("#checkInDate").val();
@@ -136,11 +168,11 @@
             if (!cin) return showError(e, "Select Check-In date!");
             if (!cout) return showError(e, "Select Check-Out date!");
             if (cout <= cin) return showError(e, "Check-Out must be later!");
-           
+
 
             let today = new Date().toISOString().split("T")[0];
 
-         
+
             if (cin < today) {
                 e.preventDefault();
                 showToast("Check-In date cannot be before today!", "error");
@@ -162,32 +194,37 @@
             showToast(msg, "error");
         }
 
-     
+
         function refreshTourList() {
             let dest = $("#DestinationId").val();
             let cin = $("#checkInDate").val();
             let cout = $("#checkOutDate").val();
             let price = $("#priceRange").val();
 
-            let minD = null, maxD = null;
+            // ---- SINGLE SELECT DURATION ----
+            let selected = $(".durationFilter:checked");
+            let minD = selected.length ? selected.data("min") : null;
+            let maxD = selected.length ? selected.data("max") : null;
 
-            $(".durationFilter:checked").each(function () {
-                let mn = $(this).data("min");
-                let mx = $(this).data("max");
+            // let minD = null, maxD = null;
 
-                if (minD === null || mn < minD) minD = mn;
-                if (maxD === null || mx > maxD) maxD = mx;
-            });
+            // $(".durationFilter:checked").each(function () {
+            //     let mn = $(this).data("min");
+            //     let mx = $(this).data("max");
 
-            $("#tourCardContainer").load("/Tours/LoadTours", {
-                DestinationId: dest,
-                checkInDate: cin,
-                checkOutDate: cout,
-                minPrice: 500,
-                maxPrice: price,
-                minDuration: minD,
-                maxDuration: maxD
-            });
+            //     if (minD === null || mn < minD) minD = mn;
+            //     if (maxD === null || mx > maxD) maxD = mx;
+            // });
+
+            // $("#tourCardContainer").load("/Tours/LoadTours", {
+            //     DestinationId: dest,
+            //     checkInDate: cin,
+            //     checkOutDate: cout,
+            //     minPrice: 500,
+            //     maxPrice: price,
+            //     minDuration: minD,
+            //     maxDuration: maxD
+            // });
         }
     });
 </script>
