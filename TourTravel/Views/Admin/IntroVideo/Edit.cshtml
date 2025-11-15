@@ -202,15 +202,22 @@
 
 
         // ⭐ CLEAR FORM (unchanged)
+               // ⭐ CLEAR FORM
         $('#clearBtn').click(function () {
             $('#Title').val('');
-            $('#Description').val('');
             $('#VideoUrl').val('');
+
+            // Clear CKEditor content
+            if (editor) editor.setData('');
+
+            // Clear file input and preview
             $('#ImageFile').val('');
             $('#previewContainer').html('');
+
             croppedBlob = null;
             showToast('Form cleared successfully.', 'bg-info');
         });
+
 
 
         // ⭐ SUBMIT WITH CROPPING SUPPORT
@@ -249,7 +256,7 @@
                 success: function (res) {
                     if (res.success) {
                         showToast(res.message, 'bg-success');
-                        setTimeout(() => window.location.href = '/admin/IntroVideo', 2000);
+                        setTimeout(() => window.location.href = '/admin/IntroVideo', 3000);
                     } else {
                         showToast(res.message, 'bg-danger');
                     }
