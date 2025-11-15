@@ -248,13 +248,25 @@
 
 
         // ⭐ CLEAR BUTTON (unchanged)
-        $('#clearBtn').click(() => {
-            $('#teamForm')[0].reset();
-            $('#previewCrop').empty();
+               $('#clearBtn').click(() => {
+            // Clear all text inputs manually
+            $('#Name, #Role, #Email, #Phone, #Facebook, #Twitter, #Instagram, #LinkedIn, #YouTube').val('');
+
+            // Clear CKEditor instances
             if (introEditor) introEditor.setData('');
             if (bioEditor) bioEditor.setData('');
+
+            // Remove image preview
+            $('#previewContainer').empty();
+
+            // Reset file input
+            $('#ImageFile').val('');
+
+            // Reset cropped blob
             croppedBlob = null;
-            showToast('Form cleared successfully.', 'bg-info');
+
+            // Show toast
+            showToast('Form cleared successfully!', 'bg-info');
         });
 
         // ⭐ VALIDATION (unchanged)

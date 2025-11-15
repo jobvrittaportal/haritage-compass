@@ -239,6 +239,34 @@
             });
         });
 
+                $('#clearBtn').click(function () {
+            // Clear text inputs manually
+            $('#Name').val('');
+            $('#Role').val('');
+            $('#Email').val('');
+            $('#Phone').val('');
+            $('#Facebook').val('');
+            $('#Twitter').val('');
+            $('#Instagram').val('');
+            $('#LinkedIn').val('');
+            $('#YouTube').val('');
+
+            // Reset CKEditor instances
+            if (introEditor) introEditor.setData('');
+            if (bioEditor) bioEditor.setData('');
+
+            // Remove image preview
+            $('#ImageFile').closest('.col-md-6').find('img').remove();
+
+            // Reset cropped blob
+            croppedBlob = null;
+
+            // Clear file input
+            $('#ImageFile').val('');
+
+            // Show toast
+            showToast('Form cleared successfully!', 'bg-info');
+        });
 
 
             

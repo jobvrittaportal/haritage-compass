@@ -29,7 +29,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Upload Image (420×420)</label>
+                        <label class="form-label fw-semibold">Upload Image (420×420)<span class="text-danger">*</span></label>
                         <input type="file" id="ImageFile" name="newImage" class="form-control" accept="image/*" />
                         <small class="text-muted">Leave blank to keep the current image.</small>
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
@@ -193,7 +193,7 @@
             $('#Title').val('');
             $('#ImageFile').val('');
             croppedBlob = null;
-            $('#previewContainer').html('');
+            // $('#previewContainer').html('');
             showToast('Form cleared successfully.', 'bg-info');
         });
 

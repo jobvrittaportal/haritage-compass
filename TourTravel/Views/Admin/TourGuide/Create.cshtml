@@ -223,20 +223,37 @@
                 $('#cropperModal').modal('hide');
             });
         });
+                $(document).ready(function() {
 
+            // Clear button
+            $('#clearBtn').on('click', function () {
+                // Reset native form fields
+                $('#tourGuideForm')[0].reset();
 
-        // ⭐ CLEAR FORM — unchanged
-        $('#clearBtn').click(() => {
-            $('#tourGuideForm')[0].reset();
-            $('#previewContainer').empty();
+                // Clear CKEditor content
+                if (introEditor) introEditor.setData('');
+                if (bioEditor) bioEditor.setData('');
 
-            if (introEditor) introEditor.setData('');
-            if (bioEditor) bioEditor.setData('');
+                // Clear file input and revoke preview URL
+                const fileInput = $('#ImageFile')[0];
+                if (fileInput) fileInput.value = '';
 
-            croppedBlob = null;
+                // Clear cropped image preview and revoke blob URL
+                $('#previewContainer img').each(function() {
+                    URL.revokeObjectURL(this.src);
+                });
+                $('#previewContainer').empty();
 
-            showToast('Form cleared successfully.', 'bg-info');
+                // Reset cropped blob
+                croppedBlob = null;
+
+                // Show toast using your custom function
+                showToast('Form cleared successfully.', 'bg-info');
+            });
+
+            // Rest of your code (Cropper, submit) can also go here
         });
+
 
 
         // ⭐ SUBMIT FORM — WITH ALL VALIDATIONS RESTORED
