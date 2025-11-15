@@ -62,7 +62,7 @@
 
                     <div class="col-md-6 mb-3">
 
-                        <label class="form-label mt-2">Upload New Image</label>
+                        <label class="form-label mt-2">Upload Image<span class="text-danger">*</span></label>
                         <input type="file" id="ImageFile" name="ImageFile" class="form-control" accept="image/*" />
                         <div id="imageError" class="text-danger mt-1"></div>
                         <label class="form-label">Current Image</label><br />
@@ -141,11 +141,25 @@
         });
 
         // ✅ Clear form button logic
-        clearBtn.addEventListener('click', () => {
-            form.reset();
-            editor.setData('');
+               // ✅ Clear form button logic
+               clearBtn.addEventListener('click', () => {
+            // Clear all text inputs
+            form.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+
+            // Clear all number inputs
+            form.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+
+            // Clear CKEditor content
+            if (editor) editor.setData('');
+
+            // Clear file input
+            imageInput.value = '';
+
+            // Clear any error messages
             imageError.textContent = '';
-            showToast('Form cleared successfully!', 'bg-success');
+
+            showToast('Form cleared successfully!', 'bg-info');
         });
+
     </script>
 }
