@@ -12,37 +12,54 @@
                 </div>
                 <div class="col-md-6 align-self-center">
                     <div class="contact-form">
-                        <div class="contact-form-header">
-                            <h2>Get In Touch</h2>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
+                        <div class="contact-form-header text-center mb-4">
+                            <h2 class="fw-bold">Get In Touch</h2>
+                            <p class="text-muted">We'd love to hear from you. Please fill out the form below.</p>
                         </div>
                         <form method="post" action="/travelox/assets/php/contact.php" id="contact-form">
-                            <div class="row">
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="name" placeholder="Your Name" required>
+                                    <label class="form-label fw-semibold">Full Name</label>
+                                    <div class="input-group modern-input-group">
+                                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                                        <input type="text" name="name" class="form-control modern-input" placeholder="Your Name" required>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                                    <label class="form-label fw-semibold">Email</label>
+                                    <div class="input-group modern-input-group">
+                                        <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                        <input type="email" name="email" class="form-control modern-input" placeholder="Your Email" required>
                                     </div>
                                 </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="PhoneNumber" placeholder="Your PhoneNumber" required>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Phone Number</label>
+                                    <div class="input-group modern-input-group">
+                                        <span class="input-group-text"><i class="far fa-phone"></i></span>
+                                        <input type="text" name="PhoneNumber" class="form-control modern-input" placeholder="Your Phone Number" required>
                                     </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Subject</label>
+                                    <div class="input-group modern-input-group">
+                                        <span class="input-group-text"><i class="far fa-comment-dots"></i></span>
+                                        <input type="text" name="subject" class="form-control modern-input" placeholder="Your Subject" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Message</label>
+                                    <textarea name="message" class="form-control modern-textarea" rows="5" placeholder="Write your message..." required></textarea>
+                                </div>
                                
                             </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="subject" placeholder="Your Subject" required>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="contact-btn-modern">
+                                    <i class="far fa-paper-plane me-2"></i>Send Message
+                                </button>
                             </div>
-                            <div class="form-group">
-                                <textarea name="message" cols="30" rows="5" class="form-control" placeholder="Write Your Message"></textarea>
-                            </div>
-                            <button type="submit" class="contact-btn"> <i class="far fa-paper-plane"></i> Send Message</button>
-                            <div class="col-md-12 mt-3">
-                                <div class="form-messege text-success"></div>
-                            </div>
+
+                            <div id="form-message" class="mt-3"></div>
                         </form>
 
                     </div>
