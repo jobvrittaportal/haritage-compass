@@ -17,7 +17,7 @@ namespace TourTravel.ViewComponents
     public async Task<IViewComponentResult> InvokeAsync(int id)
     {
       var client = _clientFactory.CreateClient();
-      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/Destination/getAllSpots?id={id}";
+      var apiUrl = $"https://jungleavengers-api.jobvritta.com/api/Destination/getAllSpots?id={id}";
 
       List<SpotViewModel>? allSpots = new();
 

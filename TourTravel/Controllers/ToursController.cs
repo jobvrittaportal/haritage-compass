@@ -88,7 +88,7 @@ namespace TourTravel.Controllers
       if (!string.IsNullOrEmpty(checkOutDate)) queryParams.Add($"checkOutDate={Uri.EscapeDataString(checkOutDate)}");
       if (maxPerson.HasValue) queryParams.Add($"maxPerson={maxPerson}");
 
-      var apiUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?" + string.Join("&", queryParams);
+      var apiUrl = "https://jungleavengers-api.jobvritta.com/api/package/getPackageList?" + string.Join("&", queryParams);
 
       List<PackagessDto> packages = new List<PackagessDto>();
       try
@@ -305,7 +305,7 @@ namespace TourTravel.Controllers
 
     public async Task<IActionResult> TourPackageDetails(int id)
     {
-      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getPackageDetails?id={id}";
+      var apiUrl = $"https://jungleavengers-api.jobvritta.com/api/package/getPackageDetails?id={id}";
       PackageDetailsDto package = null;
 
       try
