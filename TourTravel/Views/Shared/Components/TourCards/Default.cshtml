@@ -284,32 +284,26 @@
 
             const phone = document.getElementById("phoneNumber").value.trim();
 
-                if (!/^[0-9]{6,12}$/.test(phone)) {
-        return showToast("Please enter a valid phone number (6–12 digits).", "error");
-    }
-
+            if (!/^[0-9]{6,12}$/.test(phone)) {
+                return showToast("Please enter a valid phone number (6–12 digits).", "error");
+            }
 
             const userCaptchaInput = document.getElementById("captchaInput").value.trim();
             if (!userCaptchaInput) {
                 return showToast("Please enter the CAPTCHA.", "info");
-
             }
 
             const formData = {
                 name: document.getElementById("name").value.trim(),
                 email: document.getElementById("email").value.trim(),
-                phoneNumber: `${document.getElementById("countryCode").value} ${document.getElementById("phoneNumber").value.trim()}`,
-
-                // Captcha fields
+                phoneNumber: `${document.getElementById("countryCode").value} ${phone}`,
                 CaptchaInput: userCaptchaInput,
-                CaptchaToken: captchaToken
+                CaptchaToken: captchaToken,
+                PackageId: selectedPackageId // <--- yaha add kiya
             };
 
-
-
-
             try {
-                const response = await fetch("https://stg-jungleave-back.jobvritta.com/api/contact/addEnquiry", {
+                const response = await fetch("https://localhost:7154/api/contact/addEnquiry", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
@@ -318,19 +312,14 @@
                 const result = await response.json();
 
                 if (response.ok) {
-
                     showToast("Enquiry sent successfully!", "success");
 
-                    // Close modal
-                    const modalInstance =
-                        bootstrap.Modal.getInstance(document.getElementById("contactModal"));
+                    const modalInstance = bootstrap.Modal.getInstance(document.getElementById("contactModal"));
                     modalInstance.hide();
 
-                    // Reset form & refresh captcha
                     form.reset();
                     refreshCaptcha();
 
-                    // Redirect to tour page
                     if (selectedPackageId) {
                         setTimeout(() => {
                             window.location.href = `/Tours/TourPackageDetails/${selectedPackageId}`;
@@ -346,6 +335,8 @@
                 return showToast("Something went wrong.", "error");
             }
         });
+
+
     });
 </script>
 
