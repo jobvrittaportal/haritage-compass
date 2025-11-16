@@ -31,8 +31,8 @@
                             <li><a asp-controller="Pages" asp-action="AboutUs">About Us</a></li>
                             <li><a asp-controller="Pages" asp-action="Faq">FAQ's</a></li>
                             <li><a asp-controller="Pages" asp-action="TermsOfService">Terms Of Service</a></li>
-                            <li><a asp-controller="Pages" asp-action="PrivacyPolicy">Privacy policy</a></li>
-                            <li><a asp-controller="Pages" asp-action="TermsOfService">Our Services</a></li>
+                            <li><a asp-controller="Pages" asp-action="PrivacyPolicy">Privacy Policy</a></li>
+                            @* <li><a asp-controller="Pages" asp-action="TermsOfService">Our Services</a></li> *@
                         </ul>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col-lg-6 align-self-center">
                     <ul class="footer-menu">
-                        <li><a href="#">Home</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a asp-controller="Pages" asp-action="AboutUs">About</a></li>
                         <li><a asp-controller="Tours" asp-action="Index">Tours</a></li>
                         <li><a asp-controller="Blog" asp-action="Index">Blog</a></li>
