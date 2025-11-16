@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using TourTravel.Models;
 
 namespace TourTravel.Controllers
 {
@@ -32,7 +33,37 @@ namespace TourTravel.Controllers
     //}
 
 
-    public async Task<IActionResult> Index()
+    //public async Task<IActionResult> Index(int? DestinationId = null, string? checkInDate = null, string? checkOutDate = null, int? maxPerson = null, int? minPrice = null, int? maxPrice = null, int? minDuration = null, int? maxDuration = null)
+    //{
+    //  var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package");
+    //  if (page != null)
+    //  {
+    //    ViewBag.Title = page.Title;
+    //    ViewBag.Page = page.Page;
+    //    ViewBag.Description = page.Description;
+    //    ViewBag.Keywords = page.KeyWords;
+    //    ViewBag.Image = page.Image;
+    //    ViewBag.ImageHeight = page.ImgHeight;
+    //    ViewBag.ImageWidth = page.ImgWidth;
+    //  }
+    //  var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?cityId={DestinationId}&checkInDate={checkInDate}&checkOutDate={checkOutDate}&maxPerson={maxPerson}";
+    //  List<PackagessDto> packages = new List<PackagessDto>();
+    //  try
+    //  {
+    //    var response = await _httpClient.GetAsync(apiUrl);
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //      var json = await response.Content.ReadAsStringAsync();
+    //      packages = JsonConvert.DeserializeObject<List<PackagessDto>>(json);
+    //    }
+    //  }
+    //  catch
+    //  {
+    //  }
+    //  return View(packages);
+    //}
+
+    public async Task<IActionResult> Index(int? DestinationId = null, string? checkInDate = null, string? checkOutDate = null, int? maxPerson = null)
     {
       var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package");
       if (page != null)
@@ -45,7 +76,20 @@ namespace TourTravel.Controllers
         ViewBag.ImageHeight = page.ImgHeight;
         ViewBag.ImageWidth = page.ImgWidth;
       }
-      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getTourPackage";
+
+      ViewBag.CityId = DestinationId;
+      ViewBag.CheckInDate = checkInDate;
+      ViewBag.CheckOutDate = checkOutDate;
+      ViewBag.MaxPerson = maxPerson;
+
+      var queryParams = new List<string>();
+      if (DestinationId.HasValue) queryParams.Add($"cityId={DestinationId}");
+      if (!string.IsNullOrEmpty(checkInDate)) queryParams.Add($"checkInDate={Uri.EscapeDataString(checkInDate)}");
+      if (!string.IsNullOrEmpty(checkOutDate)) queryParams.Add($"checkOutDate={Uri.EscapeDataString(checkOutDate)}");
+      if (maxPerson.HasValue) queryParams.Add($"maxPerson={maxPerson}");
+
+      var apiUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?" + string.Join("&", queryParams);
+
       List<PackagessDto> packages = new List<PackagessDto>();
       try
       {
@@ -58,6 +102,7 @@ namespace TourTravel.Controllers
       }
       catch
       {
+        // handle exception/log
       }
       return View(packages);
     }
@@ -265,18 +310,18 @@ namespace TourTravel.Controllers
 
       try
       {
-                var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Details");
-                if (page != null)
-                     {
-                       ViewBag.Title = page.Title;
-                       ViewBag.Page = page.Page;
-                       ViewBag.Description = page.Description;
-                       ViewBag.Keywords = page.KeyWords;
-                       ViewBag.Image = page.Image;
-                       ViewBag.ImageHeight = page.ImgHeight;
-                       ViewBag.ImageWidth = page.ImgWidth;
-                     }
-                    var response = await _httpClient.GetAsync(apiUrl);
+        var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Details");
+        if (page != null)
+        {
+          ViewBag.Title = page.Title;
+          ViewBag.Page = page.Page;
+          ViewBag.Description = page.Description;
+          ViewBag.Keywords = page.KeyWords;
+          ViewBag.Image = page.Image;
+          ViewBag.ImageHeight = page.ImgHeight;
+          ViewBag.ImageWidth = page.ImgWidth;
+        }
+        var response = await _httpClient.GetAsync(apiUrl);
         if (response.IsSuccessStatusCode)
         {
           var json = await response.Content.ReadAsStringAsync();
@@ -304,5 +349,5 @@ namespace TourTravel.Controllers
     public int? MaxPerson { get; set; }
 
   }
-  
+
 }
