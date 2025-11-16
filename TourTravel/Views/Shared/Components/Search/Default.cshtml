@@ -1,4 +1,4 @@
-﻿<!-- search area -->
+<!-- search area -->
 
 <div class="search-area py-4">
     <div class="container">
@@ -37,6 +37,13 @@
                         </button>
                     </div>
 
+                   @*  <div class="col-md-2 col-lg-2 d-flex align-items-end">
+                        <a asp-controller="Tours" asp-action="Index" class="btn btn-warning w-100 fw-semibold d-flex align-items-center justify-content-center" style="text-decoration:none;">
+                            <i class="far fa-search me-2"></i> Find Now
+                        </a>
+                    </div> *@
+
+
                 </div>
             </form>
         </div>
@@ -57,6 +64,8 @@
         // Set check-in min = today
         document.getElementById("checkIn").setAttribute("min", todayStr);
 
+     
+
         // When check-in changes → set check-out min = check-in
         document.getElementById("checkIn").addEventListener("change", function () {
             let checkInValue = this.value;
@@ -71,8 +80,6 @@
             }
         });
     });
-
-    // ---------------- VALIDATION ON CLICK ----------------
     document.getElementById("findNow").addEventListener("click", function () {
 
         const cityId = document.getElementById("DestinationId")?.value;
@@ -90,27 +97,31 @@
         // ------------ VALIDATION ------------
 
         if (!cityId) return showToast("Please select a destination.", "error");
-        if (!checkIn) return showToast("Please select check-in date.", "error");
+        if (checkIn) {
+            if (!checkOut) return showToast("Please select check-out date.", "error");
 
-        if (checkInDate < today)
-            return showToast("Check-in date cannot be earlier than today.", "error");
+            if (checkOutDate < checkInDate)
+                return showToast("Check-out date cannot be earlier than check-in date.", "error");
+        }
+        if (checkOut) {
+            if (!checkIn) return showToast("Please select check-In date.", "error");
 
-        if (!checkOut) return showToast("Please select check-out date.", "error");
-
-        if (checkOutDate <= checkInDate)
-            return showToast("Check-out date must be after check-in date.", "error");
-
-        if (!tourType) return showToast("Please select a tour type.", "error");
-        if (!maxPerson || maxPerson <= 0)
-            return showToast("Please enter number of persons Greater Than 0.", "error");
+         
+        }
 
         // ------------ REDIRECT ------------
-        const url = `/SearchTour/Index?cityId=${encodeURIComponent(cityId)}
-                    &checkInDate=${encodeURIComponent(checkIn)}
-                    &checkOutDate=${encodeURIComponent(checkOut)}
-                    &tourType=${encodeURIComponent(tourType)}
-                    &maxPerson=${encodeURIComponent(maxPerson)}`;
+
+        // Clear form inputs before redirect
+        document.getElementById("DestinationId").value = "";
+        document.getElementById("checkIn").value = "";
+        document.getElementById("checkOut").value = "";
+        document.getElementById("TourTypeId").value = "";
+        document.getElementById("maxPerson").value = "";
+
+
+        const url = `/Tours/Index?DestinationId=${encodeURIComponent(cityId)}&checkInDate=${encodeURIComponent(checkIn)}&checkOutDate=${encodeURIComponent(checkOut)}&tourType=${encodeURIComponent(tourType)}&maxPerson=${encodeURIComponent(maxPerson)}`;
 
         window.location.href = url;
     });
+
 </script>
