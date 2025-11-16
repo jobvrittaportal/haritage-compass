@@ -189,7 +189,7 @@ namespace TourTravel.Controllers
       try
       {
         var client = _clientFactory.CreateClient();
-        client.BaseAddress = new Uri("https://stg-jungleave-back.jobvritta.com/api/");
+        client.BaseAddress = new Uri("https://jungleavengers-api.jobvritta.com/api/");
 
         var response = await client.GetFromJsonAsync<DestinationDetailsViewModel>(
             $"Destination/getDestinationDetails?id={id}");
@@ -221,7 +221,7 @@ namespace TourTravel.Controllers
       ViewBag.Page = "Spot Detail";
 
       var client = _clientFactory.CreateClient();
-      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/Destination/getSpotsDetails?id={id}";
+      var apiUrl = $"https://jungleavengers-api.jobvritta.com/api/Destination/getSpotsDetails?id={id}";
 
       List<SpotDetailsViewModel>? spots = null;
 

@@ -17,7 +17,7 @@ namespace TourTravel.Controllers
 
       public async Task<IActionResult> Index(int cityId, string checkInDate, string checkOutDate, int maxPerson)
       {
-        var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?cityId={cityId}&checkInDate={checkInDate}&checkOutDate={checkOutDate}&maxPerson={maxPerson}";
+        var apiUrl = $"https://jungleavengers-api.jobvritta.com/api/package/getPackageList?cityId={cityId}&checkInDate={checkInDate}&checkOutDate={checkOutDate}&maxPerson={maxPerson}";
 
         List<PackageDto> packages = new List<PackageDto>();
 
@@ -40,7 +40,7 @@ namespace TourTravel.Controllers
 
     public async Task<IActionResult> SearchTourDetails(int id)
     {
-      var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getPackageDetails?id={id}";
+      var apiUrl = $"https://jungleavengers-api.jobvritta.com/api/package/getPackageDetails?id={id}";
       PackageDetailsDto package = null;
 
       try

@@ -19,7 +19,7 @@ namespace TourTravel.ViewComponents
     {
       var client = _clientFactory.CreateClient();
 
-      var response = await client.GetAsync("https://stg-jungleave-back.jobvritta.com/api/package/getIsFeatureList");
+      var response = await client.GetAsync("https://jungleavengers-api.jobvritta.com/api/package/getIsFeatureList");
 
       if (!response.IsSuccessStatusCode)
         return View(new List<FeaturedTourDto>());

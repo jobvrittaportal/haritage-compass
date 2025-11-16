@@ -43,7 +43,7 @@ namespace TourTravel.ViewComponents
             !string.IsNullOrEmpty(checkInDate) &&
             !string.IsNullOrEmpty(checkOutDate))
         {
-          var baseUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?";
+          var baseUrl = "https://jungleavengers-api.jobvritta.com/api/package/getPackageList?";
           var parameters = new List<string>
                 {
                     $"cityId={DestinationId}",
@@ -71,7 +71,7 @@ namespace TourTravel.ViewComponents
         else
         {
           //  CASE 2: Otherwise → use getfilterPackageList (all optional)
-          var baseUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getfilterPackageList?";
+          var baseUrl = "https://jungleavengers-api.jobvritta.com/api/package/getfilterPackageList?";
           var parameters = new List<string>();
 
           if (DestinationId.HasValue)
@@ -103,7 +103,7 @@ namespace TourTravel.ViewComponents
 
         //  If no parameters, call default endpoint
         if (string.IsNullOrWhiteSpace(apiUrl))
-          apiUrl = "https://stg-jungleave-back.jobvritta.com/api/package/getTourPackage";
+          apiUrl = "https://jungleavengers-api.jobvritta.com/api/package/getTourPackage";
 
         //  Fetch data
         var response = await _httpClient.GetAsync(apiUrl);
