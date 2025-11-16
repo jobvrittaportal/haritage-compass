@@ -284,9 +284,10 @@
 
             const phone = document.getElementById("phoneNumber").value.trim();
 
-            if (!/^[0-9]{10}$/.test(phone)) {
-                return showToast("Please enter a valid 10-digit phone number.", "error");
-            }
+                if (!/^[0-9]{6,12}$/.test(phone)) {
+        return showToast("Please enter a valid phone number (6–12 digits).", "error");
+    }
+
 
             const userCaptchaInput = document.getElementById("captchaInput").value.trim();
             if (!userCaptchaInput) {
