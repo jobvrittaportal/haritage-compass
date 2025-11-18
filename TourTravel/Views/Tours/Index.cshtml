@@ -173,8 +173,8 @@
             var checkOutDate = new Date(checkOutVal);
             if (checkInVal) {
                 var checkInDate = new Date(checkInVal);
-                if (checkOutDate <= checkInDate) {
-                    showToast("Check-Out date must be after Check-In date.", "error");
+                if (checkOutDate < checkInDate) {
+                    showToast("Check-Out date must be equal or after Check-In date.", "error");
                     return false;
                 }
             }

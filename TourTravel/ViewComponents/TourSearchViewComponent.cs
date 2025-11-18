@@ -71,7 +71,7 @@ namespace TourTravel.ViewComponents
         else
         {
           //  CASE 2: Otherwise → use getfilterPackageList (all optional)
-          var baseUrl = "https://localhost:7154/api/package/getfilterPackageList?";
+          var baseUrl = "https://jungleavengers-api.jobvritta.com/api/package/getfilterPackageList?";
           var parameters = new List<string>();
 
           if (DestinationId.HasValue)
