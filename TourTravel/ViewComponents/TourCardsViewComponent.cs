@@ -24,8 +24,8 @@ namespace TourTravel.ViewComponents
         string? checkInDate = null,
         string? checkOutDate = null,
         int? maxPerson = null,
-          int? minPrice = null,
-    int? maxPrice = null,
+        int? minPrice = null,
+        int? maxPrice = null,
         int? minDuration = null,
         int? maxDuration = null)
     {

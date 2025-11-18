@@ -13,7 +13,7 @@ namespace TourTravel.ViewComponents
       _clientFactory = clientFactory;
     }
 
-    public async Task<IViewComponentResult> InvokeAsync()
+    public async Task<IViewComponentResult> InvokeAsync(int? SelectedDestinationId)
     {
       List<DestinationDropdown> destinations = new();
 
@@ -36,8 +36,8 @@ namespace TourTravel.ViewComponents
       {
         Console.WriteLine($"Error fetching destinations: {ex.Message}");
       }
-
-      return View(destinations); // Views/Shared/Components/DestinationDropdown/Default.cshtml
+            ViewBag.SelectedDestinationId = SelectedDestinationId;
+            return View(destinations); // Views/Shared/Components/DestinationDropdown/Default.cshtml
     }
   }
 

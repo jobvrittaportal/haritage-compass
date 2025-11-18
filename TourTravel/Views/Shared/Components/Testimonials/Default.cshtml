@@ -21,6 +21,19 @@
                 </div>
             }
         </div>
+        @if (Model.Testimonials == null || !Model.Testimonials.Any())
+        {
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076500.png"
+                         width="120" class="opacity-75 mb-3" />
+
+                    <h3 class="text-muted">No Testimonials Found</h3>
+                    <p class="text-muted">Clients haven’t added feedback yet.</p>
+                </div>
+            </div>
+        }
+        else{
         <div class="testimonial-slider owl-carousel owl-theme">
             @foreach (var item in Model.Testimonials)
             {
@@ -46,7 +59,7 @@
                     </div>
                 </div>
             }
-        </div>
+        </div>}
     </div>
 </div>
 

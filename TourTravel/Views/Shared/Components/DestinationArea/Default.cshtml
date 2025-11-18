@@ -21,7 +21,19 @@
                 </div>
             }
         </div>
+        @if (Model == null || !Model.Any())
+        {
+            <div class="row">
+                <div class="col-12 text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076500.png"
+                         width="120" class="opacity-75 mb-3" />
 
+                    <h3 class="text-muted">No Destination Found</h3>
+                    <p class="text-muted">Please try again later.</p>
+                </div>
+            </div>
+        }
+        else{
         <div class="row align-items-center">
             @foreach (var dest in Model)
             {
@@ -72,6 +84,6 @@
                 </nav>
             }
         }
-
+}
     </div>
 </div>

@@ -76,7 +76,7 @@ namespace TourTravel.Controllers
         ViewBag.ImageHeight = page.ImgHeight;
         ViewBag.ImageWidth = page.ImgWidth;
       }
-
+      ViewBag.SelectedDestinationId = DestinationId;
       ViewBag.CityId = DestinationId;
       ViewBag.CheckInDate = checkInDate;
       ViewBag.CheckOutDate = checkOutDate;
