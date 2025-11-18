@@ -2551,6 +2551,17 @@ price range css
   height: 5px;
   border-radius: 3px;
 }
+.price-range {
+    position: relative;
+}
+
+    .price-range:before {
+        content: "";
+        position: absolute;
+        inset: -20px; /* makes touch area bigger */
+        background: transparent;
+        z-index: 10;
+    }
 
 .price-range .ui-state-default, .price-range .ui-widget-content .ui-state-default {
   top: -7px;
@@ -2566,7 +2577,9 @@ price range css
 .price-range .ui-state-focus {
   outline: none;
 }
-
+.price-range {
+    touch-action: none; 
+}
 .price-range .ui-widget-header {
   background: #FCA702;
 }
