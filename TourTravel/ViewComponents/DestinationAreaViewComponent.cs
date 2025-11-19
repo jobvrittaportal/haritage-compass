@@ -4,36 +4,45 @@ using TourTravel.Models;
 
 namespace TourTravel.ViewComponents
 {
-  using global::TourTravel.Controllers;
-  //public class DestinationAreaViewComponent(MyDbContext db) : ViewComponent
-  //{
-  //    public IViewComponentResult Invoke(bool showHeading, int take)
-  //    {
-  //        var destinations = db.Destinations.OrderByDescending(t => t.Id).Take(take).ToList();
+    using global::TourTravel.Controllers;
+    //public class DestinationAreaViewComponent(MyDbContext db) : ViewComponent
+    //{
+    //    public IViewComponentResult Invoke(bool showHeading, int take)
+    //    {
+    //        var destinations = db.Destinations.OrderByDescending(t => t.Id).Take(take).ToList();
 
-  //        ViewData["ShowHeading"] = showHeading;
+    //        ViewData["ShowHeading"] = showHeading;
 
-  //        return View(destinations);
-  //    }
-  //}
+    //        return View(destinations);
+    //    }
+    //}
 
-  using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc;
     using System.Drawing.Printing;
 
-  namespace TourTravel.ViewComponents
-  {
-    public class DestinationAreaViewComponent : ViewComponent
+    namespace TourTravel.ViewComponents
     {
-      private readonly MyDbContext _db;
-      private readonly IHttpClientFactory _clientFactory;
+        public class DestinationAreaViewComponent : ViewComponent
+        {
+            private readonly MyDbContext _db;
+            private readonly IHttpClientFactory _clientFactory;
+            private readonly ApiUrlOptions _apiOptions;
+            private readonly string _baseUrl;
 
+            public DestinationAreaViewComponent(MyDbContext db, IHttpClientFactory clientFactory, ApiUrlOptions apiOptions)
+            {
+                _db = db;
+                _clientFactory = clientFactory;
+                _apiOptions = apiOptions;
+                _baseUrl = apiOptions.Use switch
+                {
+                    "Live" => apiOptions.Live,
+                    "Stage" => apiOptions.Stage,
+                    "Local" => apiOptions.Local,
+                    _ => apiOptions.Live
+                };
 
-      public DestinationAreaViewComponent(MyDbContext db, IHttpClientFactory clientFactory)
-      {
-        _db = db;
-        _clientFactory = clientFactory;
-
-      }
+            }
 
             //public IViewComponentResult Invoke(bool showHeading, int take)
             //{
@@ -61,7 +70,7 @@ namespace TourTravel.ViewComponents
                 try
                 {
                     var client = _clientFactory.CreateClient();
-                    client.BaseAddress = new Uri("https://jungleavengers-api.jobvritta.com/api/");
+                    client.BaseAddress = new Uri($"{_baseUrl}/api/");
 
                     var response = await client.GetFromJsonAsync<List<CityDto>>("Destination");
 

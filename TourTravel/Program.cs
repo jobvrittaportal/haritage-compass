@@ -50,6 +50,12 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 {
     options.TokenLifespan = TimeSpan.FromMinutes(5); // expire after 2 minutes
 });
+// Configure Url for APIs
+builder.Services.Configure<ApiUrlOptions>(
+    builder.Configuration.GetSection("ApiUrls"));
+
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiUrlOptions>>().Value);
 
 
 // Add MVC

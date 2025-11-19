@@ -243,7 +243,7 @@
 
 
             try {
-                const response = await fetch("https://jungleavengers-api.jobvritta.com/api/contact/addEnquiry", {
+                const response = await fetch("@ViewBag.Baseurl/api/contact/addEnquiry", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
