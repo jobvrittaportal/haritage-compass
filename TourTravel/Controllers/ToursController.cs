@@ -4,350 +4,266 @@ using TourTravel.Models;
 
 namespace TourTravel.Controllers
 {
-  public class ToursController : Controller
-  {
-    private readonly HttpClient _httpClient;
-    private readonly MyDbContext db;
-
-    public ToursController(IHttpClientFactory httpClientFactory, MyDbContext db)
+    public class ToursController : Controller
     {
-      this.db = db;
-      _httpClient = httpClientFactory.CreateClient();
-    }
-    //public IActionResult Index()
-    //{
-
-    //  var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package");
-    //  if (page != null)
-    //  {
-    //    ViewBag.Title = page.Title;
-    //    ViewBag.Page = page.Page;
-    //    ViewBag.Description = page.Description;
-    //    ViewBag.Keywords = page.KeyWords;
-    //    ViewBag.Image = page.Image;
-    //    ViewBag.ImageHeight = page.ImgHeight;
-    //    ViewBag.ImageWidth = page.ImgWidth;
-    //  }
-
-    //  return View();
-    //}
-
-
-    //public async Task<IActionResult> Index(int? DestinationId = null, string? checkInDate = null, string? checkOutDate = null, int? maxPerson = null, int? minPrice = null, int? maxPrice = null, int? minDuration = null, int? maxDuration = null)
-    //{
-    //  var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package");
-    //  if (page != null)
-    //  {
-    //    ViewBag.Title = page.Title;
-    //    ViewBag.Page = page.Page;
-    //    ViewBag.Description = page.Description;
-    //    ViewBag.Keywords = page.KeyWords;
-    //    ViewBag.Image = page.Image;
-    //    ViewBag.ImageHeight = page.ImgHeight;
-    //    ViewBag.ImageWidth = page.ImgWidth;
-    //  }
-    //  var apiUrl = $"https://stg-jungleave-back.jobvritta.com/api/package/getPackageList?cityId={DestinationId}&checkInDate={checkInDate}&checkOutDate={checkOutDate}&maxPerson={maxPerson}";
-    //  List<PackagessDto> packages = new List<PackagessDto>();
-    //  try
-    //  {
-    //    var response = await _httpClient.GetAsync(apiUrl);
-    //    if (response.IsSuccessStatusCode)
-    //    {
-    //      var json = await response.Content.ReadAsStringAsync();
-    //      packages = JsonConvert.DeserializeObject<List<PackagessDto>>(json);
-    //    }
-    //  }
-    //  catch
-    //  {
-    //  }
-    //  return View(packages);
-    //}
-
-    public async Task<IActionResult> Index(int? DestinationId = null, string? checkInDate = null, string? checkOutDate = null, int? maxPerson = null)
-    {
-      var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package");
-      if (page != null)
-      {
-        ViewBag.Title = page.Title;
-        ViewBag.Page = page.Page;
-        ViewBag.Description = page.Description;
-        ViewBag.Keywords = page.KeyWords;
-        ViewBag.Image = page.Image;
-        ViewBag.ImageHeight = page.ImgHeight;
-        ViewBag.ImageWidth = page.ImgWidth;
-      }
-      ViewBag.SelectedDestinationId = DestinationId;
-      ViewBag.CityId = DestinationId;
-      ViewBag.CheckInDate = checkInDate;
-      ViewBag.CheckOutDate = checkOutDate;
-      ViewBag.MaxPerson = maxPerson;
-
-      var queryParams = new List<string>();
-      if (DestinationId.HasValue) queryParams.Add($"cityId={DestinationId}");
-      if (!string.IsNullOrEmpty(checkInDate)) queryParams.Add($"checkInDate={Uri.EscapeDataString(checkInDate)}");
-      if (!string.IsNullOrEmpty(checkOutDate)) queryParams.Add($"checkOutDate={Uri.EscapeDataString(checkOutDate)}");
-      if (maxPerson.HasValue) queryParams.Add($"maxPerson={maxPerson}");
-
-      var apiUrl = "https://jungleavengers-api.jobvritta.com/api/package/getPackageList?" + string.Join("&", queryParams);
-
-      List<PackagessDto> packages = new List<PackagessDto>();
-      try
-      {
-        var response = await _httpClient.GetAsync(apiUrl);
-        if (response.IsSuccessStatusCode)
+        private readonly HttpClient _httpClient;
+        private readonly MyDbContext db;
+        private readonly ApiUrlOptions _apiOptions;
+        private readonly string _baseUrl;
+        public ToursController(IHttpClientFactory httpClientFactory, MyDbContext db, ApiUrlOptions apiOptions)
         {
-          var json = await response.Content.ReadAsStringAsync();
-          packages = JsonConvert.DeserializeObject<List<PackagessDto>>(json);
+            this.db = db;
+            _httpClient = httpClientFactory.CreateClient();
+            _apiOptions = apiOptions;
+            _baseUrl = apiOptions.Use switch
+            {
+                "Live" => apiOptions.Live,
+                "Stage" => apiOptions.Stage,
+                "Local" => apiOptions.Local,
+                _ => apiOptions.Live
+            };
         }
-      }
-      catch
-      {
-        // handle exception/log
-      }
-      return View(packages);
-    }
-
-    public IActionResult LoadTours(
-    int? DestinationId,
-    string? checkInDate,
-    string? checkOutDate,
-    decimal? minPrice,
-    decimal? maxPrice,
-    int? minDuration,
-    int? maxDuration)
-    {
-      return ViewComponent("TourCards", new
-      {
-        ShowHeading = false,
-        take = 8,
-        columnClass = "col-md-6 col-lg-6",
-        DestinationId,
-        checkInDate,
-        checkOutDate,
-        minPrice,
-        maxPrice,
-        minDuration,
-        maxDuration
-      });
-    }
 
 
-    //[HttpGet]
-    //public async Task<IActionResult> GetFilteredPackages(
-    //  int? DestinationId,
-    //  string? checkInDate,
-    //  string? checkOutDate,
-    //  decimal? minPrice,
-    //  decimal? maxPrice,
-    //  int? minDuration,
-    //  int? maxDuration)
-    //{
-    //  try
-    //  {
-    //    return ViewComponent("TourCards", new
-    //    {
-    //      DestinationId,
-    //      checkInDate,
-    //      checkOutDate,
-    //      minPrice,
-    //      maxPrice,
-    //      minDuration,
-    //      maxDuration,
-    //      ShowHeading = false,
-    //      take = 8,
-    //      columnClass = "col-md-6 col-lg-6"
-    //    });
-    //  }
-    //  catch (Exception ex)
-    //  {
-    //    return Content($"<p>Error loading packages: {ex.Message}</p>", "text/html");
-    //  }
-    //}
-
-
-    [HttpGet]
-    public async Task<IActionResult> GetFilteredPackages(
-      int? DestinationId,
-      string? checkInDate,
-      string? checkOutDate,
-      decimal? minPrice,
-      decimal? maxPrice,
-      int? minDuration,
-      int? maxDuration)
-    {
-      try
-      {
-        string html = await this.RenderViewComponentToStringAsync("TourCards", new
+        public async Task<IActionResult> Index(int? DestinationId = null, string? checkInDate = null, string? checkOutDate = null, int? maxPerson = null)
         {
-          DestinationId,
-          checkInDate,
-          checkOutDate,
-          minPrice,
-          maxPrice,
-          minDuration,
-          maxDuration,
-          ShowHeading = false,
-          take = 8,
-          columnClass = "col-md-6 col-lg-6"
-        });
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            ViewBag.SelectedDestinationId = DestinationId;
+            ViewBag.CityId = DestinationId;
+            ViewBag.CheckInDate = checkInDate;
+            ViewBag.CheckOutDate = checkOutDate;
+            ViewBag.MaxPerson = maxPerson;
 
-        return Content(html, "text/html");
-      }
-      catch (Exception ex)
-      {
-        return Content($"<p>Error loading packages: {ex.Message}</p>", "text/html");
-      }
-    }
+            var queryParams = new List<string>();
+            if (DestinationId.HasValue) queryParams.Add($"cityId={DestinationId}");
+            if (!string.IsNullOrEmpty(checkInDate)) queryParams.Add($"checkInDate={Uri.EscapeDataString(checkInDate)}");
+            if (!string.IsNullOrEmpty(checkOutDate)) queryParams.Add($"checkOutDate={Uri.EscapeDataString(checkOutDate)}");
+            if (maxPerson.HasValue) queryParams.Add($"maxPerson={maxPerson}");
+
+            var apiUrl = $"{_baseUrl}/api/package/getPackageList?{string.Join("&", queryParams)}";
 
 
-
-
-
-
-
-
-    public IActionResult TourPackageOffer()
-    {
-      var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package Offer");
-      if (page != null)
-      {
-        ViewBag.Title = page.Title;
-        ViewBag.Page = page.Page;
-        ViewBag.Description = page.Description;
-        ViewBag.Keywords = page.KeyWords;
-        ViewBag.Image = page.Image;
-        ViewBag.ImageHeight = page.ImgHeight;
-        ViewBag.ImageWidth = page.ImgWidth;
-      }
-      return View();
-    }
-    public IActionResult TourPackageCart()
-    {
-
-      var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Cart");
-      if (page != null)
-      {
-        ViewBag.Title = page.Title;
-        ViewBag.Page = page.Page;
-        ViewBag.Description = page.Description;
-        ViewBag.Keywords = page.KeyWords;
-        ViewBag.Image = page.Image;
-        ViewBag.ImageHeight = page.ImgHeight;
-        ViewBag.ImageWidth = page.ImgWidth;
-      }
-      return View();
-    }
-    public IActionResult TourPackageBookings()
-    {
-
-      var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package Booking");
-      if (page != null)
-      {
-        ViewBag.Title = page.Title;
-        ViewBag.Page = page.Page;
-        ViewBag.Description = page.Description;
-        ViewBag.Keywords = page.KeyWords;
-        ViewBag.Image = page.Image;
-        ViewBag.ImageHeight = page.ImgHeight;
-        ViewBag.ImageWidth = page.ImgWidth;
-      }
-      return View();
-    }
-    public IActionResult TourPackageConfirm()
-    {
-
-      var page = db.SitePages.FirstOrDefault(f => f.Page == "Booking Confirm");
-      if (page != null)
-      {
-        ViewBag.Title = page.Title;
-        ViewBag.Page = page.Page;
-        ViewBag.Description = page.Description;
-        ViewBag.Keywords = page.KeyWords;
-        ViewBag.Image = page.Image;
-        ViewBag.ImageHeight = page.ImgHeight;
-        ViewBag.ImageWidth = page.ImgWidth;
-      }
-      return View();
-    }
-    public IActionResult TourPackageSearch()
-    {
-
-      var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Search");
-      if (page != null)
-      {
-        ViewBag.Title = page.Title;
-        ViewBag.Page = page.Page;
-        ViewBag.Description = page.Description;
-        ViewBag.Keywords = page.KeyWords;
-        ViewBag.Image = page.Image;
-        ViewBag.ImageHeight = page.ImgHeight;
-        ViewBag.ImageWidth = page.ImgWidth;
-      }
-      return View();
-    }
-    //public IActionResult TourPackageDetails(int id)
-    //{
-
-    //  var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Details");
-    //  if (page != null)
-    //  {
-    //    ViewBag.Title = page.Title;
-    //    ViewBag.Page = page.Page;
-    //    ViewBag.Description = page.Description;
-    //    ViewBag.Keywords = page.KeyWords;
-    //    ViewBag.Image = page.Image;
-    //    ViewBag.ImageHeight = page.ImgHeight;
-    //    ViewBag.ImageWidth = page.ImgWidth;
-    //  }
-    //  var packagedetail = db.TourCardsView.FirstOrDefault(x => x.Id == id);
-    //  return View(packagedetail);
-    //}
-
-    public async Task<IActionResult> TourPackageDetails(int id)
-    {
-      var apiUrl = $"https://jungleavengers-api.jobvritta.com/api/package/getPackageDetails?id={id}";
-      PackageDetailsDto package = null;
-
-      try
-      {
-        var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Details");
-        if (page != null)
-        {
-          ViewBag.Title = page.Title;
-          ViewBag.Page = page.Page;
-          ViewBag.Description = page.Description;
-          ViewBag.Keywords = page.KeyWords;
-          ViewBag.Image = page.Image;
-          ViewBag.ImageHeight = page.ImgHeight;
-          ViewBag.ImageWidth = page.ImgWidth;
+            List<PackagessDto> packages = new List<PackagessDto>();
+            try
+            {
+                var response = await _httpClient.GetAsync(apiUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    packages = JsonConvert.DeserializeObject<List<PackagessDto>>(json);
+                }
+            }
+            catch
+            {
+                // handle exception/log
+            }
+            return View(packages);
         }
-        var response = await _httpClient.GetAsync(apiUrl);
-        if (response.IsSuccessStatusCode)
+
+        public IActionResult LoadTours(
+        int? DestinationId,
+        string? checkInDate,
+        string? checkOutDate,
+        decimal? minPrice,
+        decimal? maxPrice,
+        int? minDuration,
+        int? maxDuration)
         {
-          var json = await response.Content.ReadAsStringAsync();
-          package = JsonConvert.DeserializeObject<PackageDetailsDto>(json);
+            return ViewComponent("TourCards", new
+            {
+                ShowHeading = false,
+                take = 8,
+                columnClass = "col-md-6 col-lg-6",
+                DestinationId,
+                checkInDate,
+                checkOutDate,
+                minPrice,
+                maxPrice,
+                minDuration,
+                maxDuration
+            });
         }
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine(ex.Message);
-      }
 
-      return View(package);
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetFilteredPackages(
+          int? DestinationId,
+          string? checkInDate,
+          string? checkOutDate,
+          decimal? minPrice,
+          decimal? maxPrice,
+          int? minDuration,
+          int? maxDuration)
+        {
+            try
+            {
+                string html = await this.RenderViewComponentToStringAsync("TourCards", new
+                {
+                    DestinationId,
+                    checkInDate,
+                    checkOutDate,
+                    minPrice,
+                    maxPrice,
+                    minDuration,
+                    maxDuration,
+                    ShowHeading = false,
+                    take = 8,
+                    columnClass = "col-md-6 col-lg-6"
+                });
+
+                return Content(html, "text/html");
+            }
+            catch (Exception ex)
+            {
+                return Content($"<p>Error loading packages: {ex.Message}</p>", "text/html");
+            }
+        }
+
+
+
+
+
+
+
+
+        public IActionResult TourPackageOffer()
+        {
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package Offer");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
+        }
+        public IActionResult TourPackageCart()
+        {
+
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Cart");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
+        }
+        public IActionResult TourPackageBookings()
+        {
+
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Package Booking");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
+        }
+        public IActionResult TourPackageConfirm()
+        {
+
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Booking Confirm");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
+        }
+        public IActionResult TourPackageSearch()
+        {
+
+            var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Search");
+            if (page != null)
+            {
+                ViewBag.Title = page.Title;
+                ViewBag.Page = page.Page;
+                ViewBag.Description = page.Description;
+                ViewBag.Keywords = page.KeyWords;
+                ViewBag.Image = page.Image;
+                ViewBag.ImageHeight = page.ImgHeight;
+                ViewBag.ImageWidth = page.ImgWidth;
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> TourPackageDetails(int id)
+        {
+            var apiUrl = $"{_baseUrl}/api/package/getPackageDetails?id={id}";
+
+            PackageDetailsDto package = null;
+
+            try
+            {
+                var page = db.SitePages.FirstOrDefault(f => f.Page == "Tour Details");
+                if (page != null)
+                {
+                    ViewBag.Title = page.Title;
+                    ViewBag.Page = page.Page;
+                    ViewBag.Description = page.Description;
+                    ViewBag.Keywords = page.KeyWords;
+                    ViewBag.Image = page.Image;
+                    ViewBag.ImageHeight = page.ImgHeight;
+                    ViewBag.ImageWidth = page.ImgWidth;
+                }
+                var response = await _httpClient.GetAsync(apiUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    package = JsonConvert.DeserializeObject<PackageDetailsDto>(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return View(package);
+        }
     }
-  }
 
-  public class PackagessDto
-  {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string CityName { get; set; }
-    public int Duration { get; set; }
-    public int CityId { get; set; }
-    public string PackageImage { get; set; }
-    public decimal BasePrice { get; set; }
-    public int? MaxPerson { get; set; }
+    public class PackagessDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string CityName { get; set; }
+        public int Duration { get; set; }
+        public int CityId { get; set; }
+        public string PackageImage { get; set; }
+        public decimal BasePrice { get; set; }
+        public int? MaxPerson { get; set; }
 
-  }
+    }
 
 }

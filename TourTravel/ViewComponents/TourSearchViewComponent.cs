@@ -5,240 +5,250 @@ using TourTravel.Models;
 
 namespace TourTravel.ViewComponents
 {
-  public class TourSearchViewComponent : ViewComponent
-  {
-    private readonly HttpClient _httpClient;
-    private readonly MyDbContext _db;
-
-    public TourSearchViewComponent(MyDbContext db)
+    public class TourSearchViewComponent : ViewComponent
     {
-      _db = db;
-      _httpClient = new HttpClient();
-    }
+        private readonly HttpClient _httpClient;
+        private readonly MyDbContext _db;
+        private readonly ApiUrlOptions _apiOptions;
+        private readonly string _baseUrl;
 
-    public async Task<IViewComponentResult> InvokeAsync(
-        bool ShowHeading = true,
-        int take = 6,
-        string columnClass = "col-md-6 col-lg-4",
-        int? DestinationId = null,
-        string? checkInDate = null,
-        string? checkOutDate = null,
-        int? maxPerson = null,
-        decimal? minPrice = null,
-        decimal? maxPrice = null,
-        int? minDuration = null,
-        int? maxDuration = null)
-    {
-      ViewData["ShowHeading"] = ShowHeading;
-      ViewData["ColumnClass"] = columnClass;
-
-      List<PackagessDto> tours = new();
-
-      try
-      {
-        string apiUrl;
-
-        //  CASE 1: If DestinationId + Dates exist → use getPackageList
-        if (DestinationId.HasValue &&
-            !string.IsNullOrEmpty(checkInDate) &&
-            !string.IsNullOrEmpty(checkOutDate))
+        public TourSearchViewComponent(MyDbContext db, ApiUrlOptions apiOptions)
         {
-          var baseUrl = "https://jungleavengers-api.jobvritta.com/api/package/getPackageList?";
-          var parameters = new List<string>
+            _db = db;
+            _httpClient = new HttpClient();
+            _apiOptions = apiOptions;
+            _baseUrl = apiOptions.Use switch
+            {
+                "Live" => apiOptions.Live,
+                "Stage" => apiOptions.Stage,
+                "Local" => apiOptions.Local,
+                _ => apiOptions.Live
+            };
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(
+            bool ShowHeading = true,
+            int take = 6,
+            string columnClass = "col-md-6 col-lg-4",
+            int? DestinationId = null,
+            string? checkInDate = null,
+            string? checkOutDate = null,
+            int? maxPerson = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            int? minDuration = null,
+            int? maxDuration = null)
+        {
+            ViewData["ShowHeading"] = ShowHeading;
+            ViewData["ColumnClass"] = columnClass;
+
+            List<PackagessDto> tours = new();
+
+            try
+            {
+                string apiUrl;
+
+                //  CASE 1: If DestinationId + Dates exist → use getPackageList
+                if (DestinationId.HasValue &&
+                    !string.IsNullOrEmpty(checkInDate) &&
+                    !string.IsNullOrEmpty(checkOutDate))
+                {
+                    var baseUrl = $"{_baseUrl}/api/package/getPackageList?";
+                    var parameters = new List<string>
                 {
                     $"cityId={DestinationId}",
                     $"checkInDate={checkInDate}",
                     $"checkOutDate={checkOutDate}"
                 };
 
-          if (maxPerson.HasValue)
-            parameters.Add($"MaxPerson={maxPerson}");
+                    if (maxPerson.HasValue)
+                        parameters.Add($"MaxPerson={maxPerson}");
 
-          if (minPrice.HasValue)
-            parameters.Add($"minPrice={minPrice}");
+                    if (minPrice.HasValue)
+                        parameters.Add($"minPrice={minPrice}");
 
-          if (maxPrice.HasValue)
-            parameters.Add($"maxPrice={maxPrice}");
+                    if (maxPrice.HasValue)
+                        parameters.Add($"maxPrice={maxPrice}");
 
-          if (minDuration.HasValue)
-            parameters.Add($"minDuration={minDuration}");
+                    if (minDuration.HasValue)
+                        parameters.Add($"minDuration={minDuration}");
 
-          if (maxDuration.HasValue)
-            parameters.Add($"maxDuration={maxDuration}");
+                    if (maxDuration.HasValue)
+                        parameters.Add($"maxDuration={maxDuration}");
 
-          apiUrl = baseUrl + string.Join("&", parameters);
+                    apiUrl = baseUrl + string.Join("&", parameters);
+                }
+                else
+                {
+                    //  CASE 2: Otherwise → use getfilterPackageList (all optional)
+                    var baseUrl = $"{_baseUrl}/api/package/getfilterPackageList?";
+                    var parameters = new List<string>();
+
+                    if (DestinationId.HasValue)
+                        parameters.Add($"cityId={DestinationId}");
+
+                    if (!string.IsNullOrEmpty(checkInDate))
+                        parameters.Add($"checkInDate={checkInDate}");
+
+                    if (!string.IsNullOrEmpty(checkOutDate))
+                        parameters.Add($"checkOutDate={checkOutDate}");
+
+                    if (maxPerson.HasValue)
+                        parameters.Add($"MaxPerson={maxPerson}");
+
+                    if (minPrice.HasValue)
+                        parameters.Add($"minPrice={minPrice}");
+
+                    if (maxPrice.HasValue)
+                        parameters.Add($"maxPrice={maxPrice}");
+
+                    if (minDuration.HasValue)
+                        parameters.Add($"minDuration={minDuration}");
+
+                    if (maxDuration.HasValue)
+                        parameters.Add($"maxDuration={maxDuration}");
+
+                    apiUrl = baseUrl + string.Join("&", parameters);
+                }
+
+                //  If no parameters, call default endpoint
+                if (string.IsNullOrWhiteSpace(apiUrl))
+                    apiUrl = $"{_baseUrl}/api/package/getTourPackage";
+
+                //  Fetch data
+                var response = await _httpClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    tours = JsonConvert.DeserializeObject<List<PackagessDto>>(json) ?? new List<PackagessDto>();
+                }
+                else
+                {
+                    Console.WriteLine($"API returned status: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[TourCardsViewComponent] Error: {ex.Message}");
+            }
+            ViewBag.Baseurl = _baseUrl;
+            var limitedTours = tours.Take(take).ToList();
+            return View(limitedTours);
         }
-        else
-        {
-          //  CASE 2: Otherwise → use getfilterPackageList (all optional)
-          var baseUrl = "https://jungleavengers-api.jobvritta.com/api/package/getfilterPackageList?";
-          var parameters = new List<string>();
 
-          if (DestinationId.HasValue)
-            parameters.Add($"cityId={DestinationId}");
+        //public async Task<IViewComponentResult> InvokeAsync(
+        // bool ShowHeading = true,
+        // int take = 6,
+        // string columnClass = "col-md-6 col-lg-4",
+        // int? DestinationId = null,
+        // string? checkInDate = null,
+        // string? checkOutDate = null,
+        // int? maxPerson = null,
+        // decimal? minPrice = null,
+        // decimal? maxPrice = null,
+        // int? minDuration = null,
+        // int? maxDuration = null)
+        //{
+        //  ViewData["ShowHeading"] = ShowHeading;
+        //  ViewData["ColumnClass"] = columnClass;
 
-          if (!string.IsNullOrEmpty(checkInDate))
-            parameters.Add($"checkInDate={checkInDate}");
+        //  List<PackagessDto> tours = new();
 
-          if (!string.IsNullOrEmpty(checkOutDate))
-            parameters.Add($"checkOutDate={checkOutDate}");
+        //  try
+        //  {
+        //    string apiUrl = "";
+        //    bool hasAnyFilter =
+        //        DestinationId.HasValue ||
+        //        !string.IsNullOrEmpty(checkInDate) ||
+        //        !string.IsNullOrEmpty(checkOutDate) ||
+        //        maxPerson.HasValue ||
+        //        minPrice.HasValue ||
+        //        maxPrice.HasValue ||
+        //        minDuration.HasValue ||
+        //        maxDuration.HasValue;
 
-          if (maxPerson.HasValue)
-            parameters.Add($"MaxPerson={maxPerson}");
+        //    // -------------------------------------------
+        //    // CASE 1: Destination + Dates → getPackageList
+        //    // -------------------------------------------
+        //    if (DestinationId.HasValue &&
+        //        !string.IsNullOrEmpty(checkInDate) &&
+        //        !string.IsNullOrEmpty(checkOutDate))
+        //    {
+        //      var baseUrl = "https://localhost:7154/api/package/getPackageList?";
+        //      var parameters = new List<string>
+        //        {
+        //            $"cityId={DestinationId}",
+        //            $"checkInDate={checkInDate}",
+        //            $"checkOutDate={checkOutDate}"
+        //        };
 
-          if (minPrice.HasValue)
-            parameters.Add($"minPrice={minPrice}");
+        //      if (maxPerson.HasValue) parameters.Add($"MaxPerson={maxPerson}");
+        //      if (minPrice.HasValue) parameters.Add($"minPrice={minPrice}");
+        //      if (maxPrice.HasValue) parameters.Add($"maxPrice={maxPrice}");
+        //      if (minDuration.HasValue) parameters.Add($"minDuration={minDuration}");
+        //      if (maxDuration.HasValue) parameters.Add($"maxDuration={maxDuration}");
 
-          if (maxPrice.HasValue)
-            parameters.Add($"maxPrice={maxPrice}");
+        //      apiUrl = baseUrl + string.Join("&", parameters);
+        //    }
 
-          if (minDuration.HasValue)
-            parameters.Add($"minDuration={minDuration}");
+        //    // ---------------------------------------------------
+        //    // CASE 2: Filters exist (but not full date + dest) →
+        //    //          getfilterPackageList
+        //    // ---------------------------------------------------
+        //    else if (hasAnyFilter)
+        //    {
+        //      var baseUrl = "https://localhost:7154/api/package/getfilterPackageList?";
+        //      var parameters = new List<string>();
 
-          if (maxDuration.HasValue)
-            parameters.Add($"maxDuration={maxDuration}");
+        //      if (DestinationId.HasValue) parameters.Add($"cityId={DestinationId}");
+        //      if (!string.IsNullOrEmpty(checkInDate)) parameters.Add($"checkInDate={checkInDate}");
+        //      if (!string.IsNullOrEmpty(checkOutDate)) parameters.Add($"checkOutDate={checkOutDate}");
+        //      if (maxPerson.HasValue) parameters.Add($"MaxPerson={maxPerson}");
+        //      if (minPrice.HasValue) parameters.Add($"minPrice={minPrice}");
+        //      if (maxPrice.HasValue) parameters.Add($"maxPrice={maxPrice}");
+        //      if (minDuration.HasValue) parameters.Add($"minDuration={minDuration}");
+        //      if (maxDuration.HasValue) parameters.Add($"maxDuration={maxDuration}");
 
-          apiUrl = baseUrl + string.Join("&", parameters);
-        }
+        //      apiUrl = baseUrl + string.Join("&", parameters);
+        //    }
 
-        //  If no parameters, call default endpoint
-        if (string.IsNullOrWhiteSpace(apiUrl))
-          apiUrl = "https://jungleavengers-api.jobvritta.com/api/package/getTourPackage";
+        //    // -----------------------------------------
+        //    // CASE 3: No filter at all → TourPackage API
+        //    // -----------------------------------------
+        //    else
+        //    {
+        //      apiUrl = "https://localhost:7154/api/package/getTourPackage";
+        //    }
 
-        //  Fetch data
-        var response = await _httpClient.GetAsync(apiUrl);
+        //    // --------------------------
+        //    // Execute API Call
+        //    // --------------------------
+        //    var response = await _httpClient.GetAsync(apiUrl);
 
-        if (response.IsSuccessStatusCode)
-        {
-          var json = await response.Content.ReadAsStringAsync();
-          tours = JsonConvert.DeserializeObject<List<PackagessDto>>(json) ?? new List<PackagessDto>();
-        }
-        else
-        {
-          Console.WriteLine($"API returned status: {response.StatusCode}");
-        }
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine($"[TourCardsViewComponent] Error: {ex.Message}");
-      }
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //      var json = await response.Content.ReadAsStringAsync();
+        //      tours = JsonConvert.DeserializeObject<List<PackagessDto>>(json)
+        //              ?? new List<PackagessDto>();
+        //    }
+        //    else
+        //    {
+        //      Console.WriteLine($"API returned status: {response.StatusCode}");
+        //    }
+        //  }
+        //  catch (Exception ex)
+        //  {
+        //    Console.WriteLine($"[TourCardsViewComponent] Error: {ex.Message}");
+        //  }
 
-      var limitedTours = tours.Take(take).ToList();
-      return View(limitedTours);
+        //  var limitedTours = tours.Take(take).ToList();
+        //  return View(limitedTours);
+        //}
+
+
+
+
+
     }
-
-    //public async Task<IViewComponentResult> InvokeAsync(
-    // bool ShowHeading = true,
-    // int take = 6,
-    // string columnClass = "col-md-6 col-lg-4",
-    // int? DestinationId = null,
-    // string? checkInDate = null,
-    // string? checkOutDate = null,
-    // int? maxPerson = null,
-    // decimal? minPrice = null,
-    // decimal? maxPrice = null,
-    // int? minDuration = null,
-    // int? maxDuration = null)
-    //{
-    //  ViewData["ShowHeading"] = ShowHeading;
-    //  ViewData["ColumnClass"] = columnClass;
-
-    //  List<PackagessDto> tours = new();
-
-    //  try
-    //  {
-    //    string apiUrl = "";
-    //    bool hasAnyFilter =
-    //        DestinationId.HasValue ||
-    //        !string.IsNullOrEmpty(checkInDate) ||
-    //        !string.IsNullOrEmpty(checkOutDate) ||
-    //        maxPerson.HasValue ||
-    //        minPrice.HasValue ||
-    //        maxPrice.HasValue ||
-    //        minDuration.HasValue ||
-    //        maxDuration.HasValue;
-
-    //    // -------------------------------------------
-    //    // CASE 1: Destination + Dates → getPackageList
-    //    // -------------------------------------------
-    //    if (DestinationId.HasValue &&
-    //        !string.IsNullOrEmpty(checkInDate) &&
-    //        !string.IsNullOrEmpty(checkOutDate))
-    //    {
-    //      var baseUrl = "https://localhost:7154/api/package/getPackageList?";
-    //      var parameters = new List<string>
-    //        {
-    //            $"cityId={DestinationId}",
-    //            $"checkInDate={checkInDate}",
-    //            $"checkOutDate={checkOutDate}"
-    //        };
-
-    //      if (maxPerson.HasValue) parameters.Add($"MaxPerson={maxPerson}");
-    //      if (minPrice.HasValue) parameters.Add($"minPrice={minPrice}");
-    //      if (maxPrice.HasValue) parameters.Add($"maxPrice={maxPrice}");
-    //      if (minDuration.HasValue) parameters.Add($"minDuration={minDuration}");
-    //      if (maxDuration.HasValue) parameters.Add($"maxDuration={maxDuration}");
-
-    //      apiUrl = baseUrl + string.Join("&", parameters);
-    //    }
-
-    //    // ---------------------------------------------------
-    //    // CASE 2: Filters exist (but not full date + dest) →
-    //    //          getfilterPackageList
-    //    // ---------------------------------------------------
-    //    else if (hasAnyFilter)
-    //    {
-    //      var baseUrl = "https://localhost:7154/api/package/getfilterPackageList?";
-    //      var parameters = new List<string>();
-
-    //      if (DestinationId.HasValue) parameters.Add($"cityId={DestinationId}");
-    //      if (!string.IsNullOrEmpty(checkInDate)) parameters.Add($"checkInDate={checkInDate}");
-    //      if (!string.IsNullOrEmpty(checkOutDate)) parameters.Add($"checkOutDate={checkOutDate}");
-    //      if (maxPerson.HasValue) parameters.Add($"MaxPerson={maxPerson}");
-    //      if (minPrice.HasValue) parameters.Add($"minPrice={minPrice}");
-    //      if (maxPrice.HasValue) parameters.Add($"maxPrice={maxPrice}");
-    //      if (minDuration.HasValue) parameters.Add($"minDuration={minDuration}");
-    //      if (maxDuration.HasValue) parameters.Add($"maxDuration={maxDuration}");
-
-    //      apiUrl = baseUrl + string.Join("&", parameters);
-    //    }
-
-    //    // -----------------------------------------
-    //    // CASE 3: No filter at all → TourPackage API
-    //    // -----------------------------------------
-    //    else
-    //    {
-    //      apiUrl = "https://localhost:7154/api/package/getTourPackage";
-    //    }
-
-    //    // --------------------------
-    //    // Execute API Call
-    //    // --------------------------
-    //    var response = await _httpClient.GetAsync(apiUrl);
-
-    //    if (response.IsSuccessStatusCode)
-    //    {
-    //      var json = await response.Content.ReadAsStringAsync();
-    //      tours = JsonConvert.DeserializeObject<List<PackagessDto>>(json)
-    //              ?? new List<PackagessDto>();
-    //    }
-    //    else
-    //    {
-    //      Console.WriteLine($"API returned status: {response.StatusCode}");
-    //    }
-    //  }
-    //  catch (Exception ex)
-    //  {
-    //    Console.WriteLine($"[TourCardsViewComponent] Error: {ex.Message}");
-    //  }
-
-    //  var limitedTours = tours.Take(take).ToList();
-    //  return View(limitedTours);
-    //}
-
-
-
-
-
-  }
 }
