@@ -53,7 +53,7 @@
                     <th>Open Date</th>
                     <th>Raised By</th>
                     <th>Agent</th>
-                    <th>Action</th>
+                    <th >Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +68,7 @@
                         <td>@t.open</td>
                         <td>@t.raised_By_Name</td>
                         <td>@t.agent_Name</td>
-                        <td class="text-center">
+                        <td class="text-center" style="white-space:nowrap; width: 180px;">
 
                             <!-- View File (only if file exists) -->
                             @if (!string.IsNullOrEmpty(t.file))
@@ -259,7 +259,11 @@
 
                     <!-- Footer Buttons -->
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <button type="submit" class="btn btn-success">Update</button>
+                        <button type="submit" id="updateBtn" class="btn btn-success d-flex align-items-center gap-2">
+                            <span id="updateText">Update</span>
+                            <div id="updateLoader" class="spinner-border spinner-border-sm text-light" style="display:none;"></div>
+                        </button>
+
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
 
@@ -335,10 +339,39 @@
     </div>
 </div>
 
+<!-- Toast Container -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:99999;">
+    <div id="toastContainer"></div>
+</div>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
+
+        //
+        // ⭐ GLOBAL TOAST FUNCTION
+        //
+        function showToast(message, type) {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            document.getElementById("toastContainer").insertAdjacentHTML('beforeend', toastHtml);
+            setTimeout(() => document.getElementById(toastId)?.remove(), 3000);
+        }
+
+
+
+        //
+        // ⭐ VIEW HISTORY
+        //
         $(document).on("click", ".view-history", function () {
 
             let ticketId = $(this).data("id");
@@ -353,58 +386,57 @@
                         return;
                     }
 
-                    let html = '';
+                    let html = "";
 
                     data.forEach(entry => {
 
                         html += `
-                                    <div class="mb-3 border rounded p-3">
-                                        <strong>Updated By:</strong> ${entry.updatedBy} <br />
-                                        <strong>Updated At:</strong> ${entry.updatedAt} <br />
+                            <div class="mb-3 border rounded p-3">
+                                <strong>Updated By:</strong> ${entry.updatedBy} <br />
+                                <strong>Updated At:</strong> ${entry.updatedAt} <br />
 
-                                        ${entry.file_Url ? `
-                                            <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
-                                                    data-file="/admin/Support/NoteFile/${entry.file_Url}">
-                                                <i class="fa fa-eye"></i>
-                                            </button>
-                                        ` : ""}
+                                ${entry.file_Url ? `
+                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
+                                        data-file="/admin/Support/NoteFile/${entry.file_Url}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>` : ""}
 
-                                        <table class="table table-sm table-bordered mt-2 mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Field</th>
-                                                    <th>Old Value</th>
-                                                    <th>New Value</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>`;
+                                <table class="table table-sm table-bordered mt-2 mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Old Value</th>
+                                            <th>New Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+
                         entry.changes.forEach(change => {
 
-                            // ⭐ FIX: Render attachment as eye icon
                             let newValueHtml = "";
 
                             if (change.field === "Attachment" && change.newValue) {
                                 newValueHtml = `
-                                            <button class="btn btn-sm btn-outline-primary view-note-file"
-                                                    data-file="/admin/Support/NoteFile/${change.newValue}">
-                                                <i class="fa fa-eye"></i>
-                                            </button>`;
+                                    <button class="btn btn-sm btn-outline-primary view-note-file"
+                                        data-file="/admin/Support/NoteFile/${change.newValue}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>`;
                             } else {
                                 newValueHtml = change.newValue || "-";
                             }
 
                             html += `
-                                        <tr>
-                                            <td>${change.field}</td>
-                                            <td>${change.oldValue || '-'}</td>
-                                            <td>${newValueHtml}</td>
-                                        </tr>`;
+                                <tr>
+                                    <td>${change.field}</td>
+                                    <td>${change.oldValue || '-'}</td>
+                                    <td>${newValueHtml}</td>
+                                </tr>`;
                         });
 
                         html += `
-                                            </tbody>
-                                        </table>
-                                    </div>`;
+                                    </tbody>
+                                </table>
+                            </div>`;
                     });
 
                     $("#historyBody").html(html);
@@ -416,6 +448,11 @@
             new bootstrap.Modal(document.getElementById('historyModal')).show();
         });
 
+
+
+        //
+        // ⭐ VIEW ACTIVITY
+        //
         $(document).on("click", ".view-activity", function () {
 
             let ticketId = $(this).data("id");
@@ -428,7 +465,8 @@
 
             new bootstrap.Modal(document.getElementById('activityModal')).show();
         });
-
+        
+        // ⭐ LOAD NOTES
         function loadNotes(ticketId) {
 
             $("#notesContainer").html(`<div class="text-center">Loading...</div>`);
@@ -446,22 +484,19 @@
                     data.result.forEach(item => {
 
                         html += `
-                                        <div class="p-3 mb-2 bg-light rounded border">
-                                            <strong>${item.created_By_Name || ''}</strong>
-                                            <span class="float-end">${item.created_At || ''}</span>
+                            <div class="p-3 mb-2 bg-light rounded border">
+                                <strong>${item.created_By_Name || ''}</strong>
+                                <span class="float-end">${item.created_At || ''}</span>
 
-                                            <div class="mt-2">${item.note_Text || ''}</div>
+                                <div class="mt-2">${item.note_Text || ''}</div>
 
-                                                ${item.file_Url ? `
-            <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
-                    data-file="/admin/Support/NoteFile/${item.file_Url}">
-                <i class="fa fa-eye"></i>
-            </button>
-        ` : ""}
-
-                                        </div>`;
+                                ${item.file_Url ? `
+                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
+                                        data-file="/admin/Support/NoteFile/${item.file_Url}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>` : ""}
+                            </div>`;
                     });
-
 
                     $("#notesContainer").html(html);
                 })
@@ -470,8 +505,7 @@
                 });
         }
 
-
-        // POST NEW NOTE
+        // ⭐ POST NEW NOTE
         $("#postNoteBtn").on("click", function () {
 
             let formData = new FormData(document.getElementById("noteForm"));
@@ -482,21 +516,22 @@
             })
                 .then(res => res.json())
                 .then(data => {
-                    alert("Activity added successfully!");
+                    showToast("Activity added successfully!", "bg-success");
                     loadNotes($("#note_ticketId").val());
                     $("#note_text").val("");
                     $("#note_file").val("");
                 })
                 .catch(() => {
-                    alert("Error adding activity");
+                    showToast("Error adding activity", "bg-danger");
                 });
         });
 
+        // ⭐ LOAD DROPDOWNS + OPEN EDIT MODAL
         $(document).ready(function () {
 
-            // Load dropdowns for edit modal once on page load
             function loadEditDropdowns() {
-                // Application Group
+
+                // Application
                 fetch('/admin/Support/ApplicationGroup')
                     .then(res => res.json())
                     .then(data => {
@@ -518,58 +553,42 @@
                         });
                     });
 
-                //status
-                // fetch('/admin/Support/supportStatus')
-                //     .then(res => res.json())
-                //     .then(data => {
-                //         let appSelect = $("#editsupportStatus");
-                //         appSelect.empty().append('<option value="">-- Select status --</option>');
-                //         data.forEach(x => {
-                //             appSelect.append(`<option value="${x.status_Id}">${x.status}</option>`);
-                //         });
-                //     });
-
+                // Status (Only 5 & 6)
                 fetch('/admin/Support/supportStatus')
                     .then(res => res.json())
                     .then(data => {
-                        // Filter only status_Id 5 and 6
-                        const filteredData = data.filter(x => x.status_Id === 5 || x.status_Id === 6);
+                        const filtered = data.filter(x => x.status_Id === 5 || x.status_Id === 6);
 
-                        let appSelect = $("#editsupportStatus");
-                        appSelect.empty().append('<option value="">-- Select Status --</option>');
+                        let statusSelect = $("#editsupportStatus");
+                        statusSelect.empty().append('<option value="">-- Select Status --</option>');
 
-                        filteredData.forEach(x => {
-                            appSelect.append(`<option value="${x.status_Id}">${x.status}</option>`);
+                        filtered.forEach(x => {
+                            statusSelect.append(`<option value="${x.status_Id}">${x.status}</option>`);
                         });
-
-                     
                     });
-
             }
 
             loadEditDropdowns();
 
-            // When clicking Edit button on any ticket
-            let originalTicketData = null;  // store original values globally in this scope
+            let originalTicketData = null;
 
             $(document).on("click", ".edit-ticket-btn", function () {
+
                 let ticketId = $(this).data("id");
 
-                // Reset form
                 $("#editTicketForm")[0].reset();
 
-                // Fetch ticket details
                 fetch(`/admin/Support/getTicketDetails?ticket_Number=${ticketId}`)
                     .then(res => res.json())
                     .then(data => {
+
                         if (!data || !data.ticket_Id) {
-                            alert("Failed to load ticket details");
+                            showToast("Failed to load ticket details", "bg-danger");
                             return;
                         }
 
-                        originalTicketData = data;  // Save original ticket data
+                        originalTicketData = data;
 
-                        // Fill inputs
                         $("#edit_Ticket_Id").val(data.ticket_Number);
                         $("#edit_Application_Id").val(data.application_Group_Id);
                         $("#edit_Assign_Group_Id").val(data.assigned_Group_Id);
@@ -577,22 +596,17 @@
                         $("#edit_Impact").val(data.impact);
                         $("#edit_Subject").val(data.subject);
                         $("#edit_Desc").val(data.description);
-                        if (data.status) {
-                            $("#editsupportStatus").val(data.status);
-                        } else {
-                            $("#editsupportStatus").val("");
-                        }
+                        $("#editsupportStatus").val(data.status ?? "");
 
                         new bootstrap.Modal(document.getElementById('editTicketModal')).show();
                     })
-                    .catch(() => alert("Error loading ticket details"));
+                    .catch(() => showToast("Error loading ticket details", "bg-danger"));
             });
 
-            // On form submit
+            // ⭐ UPDATE TICKET WITH LOADER + TOAST
             $("#editTicketForm").on("submit", function (e) {
                 e.preventDefault();
 
-                // Collect current values
                 let ticketId = $("#edit_Ticket_Id").val();
                 let appId = $("#edit_Application_Id").val();
                 let assignGroupId = $("#edit_Assign_Group_Id").val();
@@ -602,26 +616,30 @@
                 let desc = $("#edit_Desc").val().trim();
 
                 if (!appId || !assignGroupId || !priority || !impact || !subject || !desc) {
-                    alert("Please fill all required fields");
+                    showToast("Please fill all required fields.", "bg-danger");
                     return;
                 }
 
-                // Build changes list comparing with originalTicketData
+                // SHOW BUTTON LOADER
+                const btn = $("#updateBtn");
+                const updateText = $("#updateText");
+                const updateLoader = $("#updateLoader");
+
+                btn.prop("disabled", true);
+                updateText.text("Updating...");
+                updateLoader.show();
+
+                // BUILD CHANGES
                 let changes = [];
 
-                function addChange(fieldName, oldValue, newValue) {
-                    if (oldValue != newValue) {
+                function addChange(field, oldVal, newVal) {
+                    if ((oldVal ?? "") !== (newVal ?? "")) {
                         changes.push({
-                            Field_Name: fieldName,
-                            Old_Value: oldValue ?? "",
-                            New_Value: newValue ?? ""
+                            Field_Name: field,
+                            Old_Value: oldVal ?? "",
+                            New_Value: newVal ?? ""
                         });
                     }
-                }
-
-                if (!originalTicketData) {
-                    alert("Original ticket data is missing.");
-                    return;
                 }
 
                 addChange("Application_Id", originalTicketData.application_Group_Id, parseInt(appId));
@@ -631,7 +649,6 @@
                 addChange("Subject", originalTicketData.subject, subject);
                 addChange("Desc", originalTicketData.description, desc);
 
-                // Prepare DTO with changes
                 const updateDto = {
                     Ticket_Id: parseInt(ticketId),
                     Application_Id: parseInt(appId),
@@ -643,7 +660,6 @@
                     Changes: changes
                 };
 
-                // Call PUT API to update
                 fetch("/admin/Support/updateTicket", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -651,30 +667,38 @@
                 })
                     .then(res => res.json())
                     .then(data => {
+
+                        resetLoader();
+
                         if (data.message) {
-                            alert(data.message);
-                            const editModal = bootstrap.Modal.getInstance(document.getElementById('editTicketModal'));
-                            if (editModal) editModal.hide();
-                            location.reload();
-                        } else if (data.error) {
-                            alert("Error: " + data.error);
+                            showToast(data.message, "bg-success");
+                            const modal = bootstrap.Modal.getInstance(document.getElementById("editTicketModal"));
+                            if (modal) modal.hide();
+                            setTimeout(() => location.reload(), 1200);
                         } else {
-                            alert("Unexpected response");
+                            showToast(data.error || "Unexpected response", "bg-danger");
                         }
                     })
-                    .catch(() => alert("Error updating ticket"));
+                    .catch(() => {
+                        resetLoader();
+                        showToast("Error updating ticket", "bg-danger");
+                    });
+
+                function resetLoader() {
+                    btn.prop("disabled", false);
+                    updateText.text("Update");
+                    updateLoader.hide();
+                }
             });
-
-
-            // UPDATE STATUS ONLY
-            $(document).on("click", "#btnUpdateTicketStatus", function () {
+            // ⭐ UPDATE STATUS ONLY
+            $("#btnUpdateTicketStatus").on("click", function () {
 
                 let ticketId = $("#edit_Ticket_Id").val();
                 let statusId = $("#editsupportStatus").val();
                 let remark = $("#edit_Remark").val();
 
                 if (!statusId) {
-                    alert("Please select a status");
+                    showToast("Please select a status", "bg-danger");
                     return;
                 }
 
@@ -686,70 +710,47 @@
 
                 fetch("/admin/support/changeTicketStatus", {
                     method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 })
-                    .then(res => {
-                        if (!res.ok) throw new Error("API Error");
-                        return res.json();
+                    .then(res => res.json())
+                    .then(() => {
+                        showToast("Status updated successfully!", "bg-success");
+                        setTimeout(() => location.reload(), 1000);
                     })
-                    .then(data => {
-                        alert("Status updated successfully!");
-                        location.reload();
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        alert("Status update failed");
-                    });
+                    .catch(() => showToast("Status update failed", "bg-danger"));
             });
-
-
-            $(document).on("click", ".view-file", function () {
-                let fileUrl = $(this).data("file");
-                $("#popupImage").attr("src", fileUrl);
-                $("#fileModal").modal("show");
-            });
-
-
+            // ⭐ VIEW FILE / NOTE FILE PREVIEW
             $(document).on("click", ".view-note-file", function () {
+
                 let fileUrl = $(this).data("file");
+                let ext = fileUrl.split('.').pop().toLowerCase();
 
-                let fileExt = fileUrl.split('.').pop().toLowerCase();
+                let html = "";
 
-                let previewHtml = "";
-
-                if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(fileExt)) {
-                    // Image preview
-                    previewHtml = `<img src="${fileUrl}" style="max-width:100%; border-radius:6px;" />`;
+                if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(ext)) {
+                    html = `<img src="${fileUrl}" style="max-width:100%;border-radius:6px;" />`;
                 }
-                else if (fileExt === "pdf") {
-                    // PDF preview
-                    previewHtml = `<iframe src="${fileUrl}" style="width:100%;height:500px;border:none;"></iframe>`;
+                else if (ext === "pdf") {
+                    html = `<iframe src="${fileUrl}" style="width:100%;height:500px;border:none;"></iframe>`;
                 }
                 else {
-                    // For other files – show download link
-                    previewHtml = `
-                        <a href="${fileUrl}" download class="btn btn-success">
-                            Download File
-                        </a>
-                    `;
+                    html = `<a href="${fileUrl}" download class="btn btn-success">Download File</a>`;
                 }
 
-                $("#noteFileBody").html(previewHtml);
-
+                $("#noteFileBody").html(html);
                 $("#noteFileModal").modal("show");
             });
-
-          
-
-
         });
 
+              $(document).on("click", ".view-file", function () {
+            let fileUrl = $(this).data("file");
+            $("#popupImage").attr("src", fileUrl);
+            $("#fileModal").modal("show");
+        });
 
+        // ⭐ MULTIPLE MODALS FIX
         $(document).on('show.bs.modal', '.modal', function () {
-            // Close any open backdrop issues
             $('.modal-backdrop').not(':first').remove();
 
             var zIndex = 1050 + (10 * $('.modal:visible').length);
@@ -762,9 +763,6 @@
                     .addClass('stacked');
             }, 50);
         });
-
-
-
-
     </script>
 }
+
