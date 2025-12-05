@@ -1,0 +1,199 @@
+@model TourTravel.Models.TicketCreateModel
+
+@{
+    ViewData["Title"] = "Edit Ticket";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+
+    // Escape strings for JavaScript
+    string jsSubject = Model.Subject?.Replace("\"", "\\\"") ?? "";
+    string jsDescription = (Model.Description ?? "").Replace("\r", "").Replace("\n", "\\n").Replace("\"", "\\\"");
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa fa-edit me-2"></i>Edit Ticket (@Model.Ticket_Number)</h5>
+
+            <a href="@Url.Action("Index", "Support")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            <form id="editForm">
+                <input type="hidden" id="Ticket_Id" value="@Model.Ticket_Id" />
+
+                <div class="row">
+
+                    <!-- Application Group -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Application Group <span class="text-danger">*</span></label>
+                        <select id="Application_Id" name="Application_Id" class="form-select" required>
+                            <option value="">-- Select Application --</option>
+                        </select>
+                    </div>
+
+                    <!-- Assign Group -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Assign Group <span class="text-danger">*</span></label>
+                        <select id="Assign_Group_Id" name="Assign_Group_Id" class="form-select" required>
+                            <option value="">-- Select Assign Group --</option>
+                        </select>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Priority <span class="text-danger">*</span></label>
+                        <select id="Priority" name="Priority" class="form-select" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <!-- Impact -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Impact <span class="text-danger">*</span></label>
+                        <select id="Impact" name="Impact" class="form-select" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Subject <span class="text-danger">*</span></label>
+                        <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Subject" required />
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea id="Desc" name="Desc" class="form-control" rows="4" required>@Html.Raw(Model.Description)</textarea>
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="submit" class="btn btn-success">Update</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:99999;">
+    <div id="toastContainer"></div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initial values from model to detect changes later
+        const initialValues = {
+            Application_Id: "@Model.Application_Group_Id",
+            Assign_Group_Id: "@Model.Assigned_Group_Id",
+            Priority: "@Model.Priority",
+            Impact: "@Model.Impact",
+            Subject: "@jsSubject",
+            Desc: "@jsDescription"
+        };
+
+        // Populate Application dropdown
+        fetch('/admin/Support/ApplicationGroup')
+            .then(res => res.json())
+            .then(data => {
+                let ddl = document.getElementById("Application_Id");
+                data.forEach(x => {
+                    ddl.innerHTML += `<option value="${x.support_Application_Id}">${x.application_Name}</option>`;
+                });
+                ddl.value = initialValues.Application_Id;
+            });
+
+        // Populate Assign Group dropdown
+        fetch('/admin/Support/AssignGroup')
+            .then(res => res.json())
+            .then(data => {
+                let ddl = document.getElementById("Assign_Group_Id");
+                data.forEach(x => {
+                    ddl.innerHTML += `<option value="${x.assign_Group_Id}">${x.assign_Group_Name}</option>`;
+                });
+                ddl.value = initialValues.Assign_Group_Id;
+            });
+
+        // Set Priority and Impact values
+        document.getElementById("Priority").value = initialValues.Priority;
+        document.getElementById("Impact").value = initialValues.Impact;
+
+        // Form submission handler
+        document.getElementById("editForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const currentValues = {
+                Application_Id: document.getElementById("Application_Id").value,
+                Assign_Group_Id: document.getElementById("Assign_Group_Id").value,
+                Priority: document.getElementById("Priority").value,
+                Impact: document.getElementById("Impact").value,
+                Subject: document.getElementById("Subject").value.trim(),
+                Desc: document.getElementById("Desc").value.trim()
+            };
+
+            // Detect changes
+            const changes = [];
+            for (const key in currentValues) {
+                if (currentValues[key] !== initialValues[key]) {
+                    changes.push({
+                        Field_Name: key,
+                        Old_Value: initialValues[key],
+                        New_Value: currentValues[key]
+                    });
+                }
+            }
+
+            const updateDto = {
+                Ticket_Id: parseInt(document.getElementById("Ticket_Id").value),
+                Application_Id: parseInt(currentValues.Application_Id),
+                Assign_Group_Id: parseInt(currentValues.Assign_Group_Id),
+                Priority: currentValues.Priority,
+                Impact: currentValues.Impact,
+                Subject: currentValues.Subject,
+                Desc: currentValues.Desc,
+                Changes: changes
+            };
+
+            fetch("/admin/Support/updateTicket", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updateDto)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        showToast(data.message, "bg-success");
+                        setTimeout(() => window.location.href = "/admin/Support", 1500);
+                    } else if (data.error) {
+                        showToast(data.error, "bg-danger");
+                    }
+                })
+                .catch(() => showToast("Unexpected error occurred", "bg-danger"));
+        });
+
+        // Toast function
+        function showToast(message, type) {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                        <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
+                            <div class="d-flex">
+                                <div class="toast-body">${message}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>`;
+            document.getElementById("toastContainer").insertAdjacentHTML('beforeend', toastHtml);
+            setTimeout(() => document.getElementById(toastId)?.remove(), 3000);
+        }
+    </script>
+}

@@ -9,6 +9,7 @@ namespace TourTravel.Models
   public class User : IdentityUser
   {
     public string Name { get; set; } = null!;
+    public string? EmployeeCode { get; set; }
     public bool IsActive { get; set; } = true;
   }
 

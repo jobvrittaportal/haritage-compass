@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TourTravel.Models;
 
 namespace TourTravel.Controllers
 {
   public class UserController : Controller
   {
-   
+
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-   
+
     public UserController(UserManager<ApplicationUser> userManager,
                           RoleManager<IdentityRole> roleManager)
     {
@@ -35,12 +36,41 @@ namespace TourTravel.Controllers
       if (existingUser != null)
         return Json(new { success = false, message = "A user with this email already exists." });
 
+      if (!string.IsNullOrWhiteSpace(model.EmployeeCode))
+      {
+        string apiUrl = $"https://hrmsapi.jobvritta.com/api/Hrlense_Employee/employeeCodeCheck?empCode={model.EmployeeCode}";
+
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("hrms-key", "Amar@Deep1Jobvritta#157");
+
+        HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
+
+        if (!response.IsSuccessStatusCode)
+        {
+          string errorResponse = await response.Content.ReadAsStringAsync();
+          return Json(new { success = false, message = "Employee code does not exist in HRLense.", detail = errorResponse });
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        var hrEmployee = JsonConvert.DeserializeObject<EmployeeCheckResponse>(json);
+
+        if (hrEmployee == null || hrEmployee.employee_Code != model.EmployeeCode)
+        {
+          return Json(new { success = false, message = "Invalid Employee Code. This code is not present in HRLense." });
+
+        }
+
+      }
+
+
       var user = new ApplicationUser
       {
         UserName = model.Email,
         Email = model.Email,
         Name = model.Name,
-        IsActive = model.IsActive
+        IsActive = model.IsActive,
+        EmployeeCode = model.EmployeeCode
+
       };
 
       var result = await _userManager.CreateAsync(user, password);
@@ -70,6 +100,8 @@ namespace TourTravel.Controllers
       user.Email = model.Email;
       user.UserName = model.Email;
       user.IsActive = model.IsActive;
+      user.EmployeeCode = model.EmployeeCode;
+
 
       var result = await _userManager.UpdateAsync(user);
       if (!result.Succeeded)
@@ -178,5 +210,12 @@ namespace TourTravel.Controllers
       await _userManager.DeleteAsync(user);
       return Json(new { success = true, message = "Deleted successfully!" });
     }
+  }
+
+  public class EmployeeCheckResponse
+  {
+    public string employee_Name { get; set; }
+    public string email { get; set; }
+    public string employee_Code { get; set; }
   }
 }

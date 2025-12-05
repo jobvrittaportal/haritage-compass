@@ -5,5 +5,7 @@ namespace TourTravel.Models
   {
     public string? Name { get; set; }
     public bool IsActive { get; set; } = true;
+    public string? EmployeeCode { get; set; }
+
   }
 }
