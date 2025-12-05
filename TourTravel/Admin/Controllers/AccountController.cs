@@ -19,50 +19,109 @@ public class AccountController : Controller
 
   [HttpGet]
   public IActionResult Login() => View("~/Views/Admin/Account/Index.cshtml");
+  //[HttpPost]
+  //[ValidateAntiForgeryToken]
+  //public async Task<IActionResult> Login(string email, string password)
+  //{
+
+  //  email = email?.Trim().Replace(" ", "");
+  //  password = password?.Trim(); 
+
+  //  // ✅ Validate required fields
+  //  if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+  //  {
+  //    ViewBag.Error = "Both Email and Password are required.";
+  //    return View("~/Views/Admin/Account/Index.cshtml");
+  //  }
+
+  //  // ✅ Check if user exists
+  //  var user = await _userManager.FindByEmailAsync(email);
+  //  if (user == null)
+  //  {
+  //    ViewBag.Error = "Invalid email. No account found with this email.";
+  //    return View("~/Views/Admin/Account/Index.cshtml");
+  //  }
+
+  //  // ✅ Check if account is active
+  //  if (!user.IsActive)
+  //  {
+  //    ViewBag.Error = "Your account is inactive. Please contact the administrator.";
+  //    return View("~/Views/Admin/Account/Index.cshtml");
+  //  }
+
+  //  // ✅ Validate password
+  //  var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+  //  if (!result.Succeeded)
+  //  {
+  //    ViewBag.Error = "Incorrect password. Please try again.";
+  //    return View("~/Views/Admin/Account/Index.cshtml");
+  //  }
+
+  //  // ✅ Assign claims dynamically
+  //  var roles = await _userManager.GetRolesAsync(user);
+  //  var claims = new List<Claim>
+  //  {
+  //      new Claim(ClaimTypes.NameIdentifier, user.Id),
+  //      new Claim(ClaimTypes.Name, user.UserName ?? user.Email)
+  //  };
+
+  //  var rolePermissions = _db.Permissions
+  //      .Where(p => roles.Contains(p.Role.Name))
+  //      .Select(p => p.Page.Name)
+  //      .Distinct()
+  //      .ToList();
+
+  //  foreach (var perm in rolePermissions)
+  //    claims.Add(new Claim("Permission", perm));
+
+  //  await _signInManager.SignInWithClaimsAsync(user, false, claims);
+
+  //  return RedirectToAction("Index", "Dashboard");
+  //}
+
+
+
+
   [HttpPost]
   [ValidateAntiForgeryToken]
   public async Task<IActionResult> Login(string email, string password)
   {
-
     email = email?.Trim().Replace(" ", "");
-    password = password?.Trim(); 
+    password = password?.Trim();
 
-    // ✅ Validate required fields
     if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
     {
       ViewBag.Error = "Both Email and Password are required.";
       return View("~/Views/Admin/Account/Index.cshtml");
     }
 
-    // ✅ Check if user exists
     var user = await _userManager.FindByEmailAsync(email);
     if (user == null)
     {
-      ViewBag.Error = "Invalid email. No account found with this email.";
+      ViewBag.Error = "Invalid email. No account found.";
       return View("~/Views/Admin/Account/Index.cshtml");
     }
 
-    // ✅ Check if account is active
     if (!user.IsActive)
     {
-      ViewBag.Error = "Your account is inactive. Please contact the administrator.";
+      ViewBag.Error = "Your account is inactive.";
       return View("~/Views/Admin/Account/Index.cshtml");
     }
 
-    // ✅ Validate password
     var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
     if (!result.Succeeded)
     {
-      ViewBag.Error = "Incorrect password. Please try again.";
+      ViewBag.Error = "Incorrect password.";
       return View("~/Views/Admin/Account/Index.cshtml");
     }
 
-    // ✅ Assign claims dynamically
+    // Add custom claims
     var roles = await _userManager.GetRolesAsync(user);
     var claims = new List<Claim>
     {
         new Claim(ClaimTypes.NameIdentifier, user.Id),
-        new Claim(ClaimTypes.Name, user.UserName ?? user.Email)
+        new Claim(ClaimTypes.Name, user.UserName ?? user.Email),
+        new Claim("EmployeeCode", user.EmployeeCode ?? "") // ✅ ADDED THIS
     };
 
     var rolePermissions = _db.Permissions
@@ -78,6 +137,7 @@ public class AccountController : Controller
 
     return RedirectToAction("Index", "Dashboard");
   }
+
 
 
   [HttpPost]

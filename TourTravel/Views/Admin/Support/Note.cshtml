@@ -1,0 +1,18 @@
+@model TourTravel.Models.Support.TicketDetail
+
+<h2>Ticket Details</h2>
+
+<table class="table table-bordered">
+    <tr><th>Ticket No</th><td>@Model.ticket_Number</td></tr>
+    <tr><th>Subject</th><td>@Model.subject</td></tr>
+    <tr><th>Description</th><td>@Model.description</td></tr>
+    <tr><th>Priority</th><td>@Model.priority</td></tr>
+    <tr><th>Status</th><td>@Model.status</td></tr>
+</table>
+
+@if (!string.IsNullOrEmpty(Model.attachmentURL))
+{
+    <a class="btn btn-primary" href="@Model.attachmentURL" target="_blank">Download Attachment</a>
+}
+
+<a class="btn btn-secondary mt-3" href="/Support/History/@Model.ticketId">View History</a>

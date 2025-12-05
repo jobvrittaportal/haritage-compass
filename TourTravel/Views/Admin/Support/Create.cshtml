@@ -1,0 +1,163 @@
+@model TourTravel.Models.TicketCreateModel
+@{
+    ViewData["Title"] = "Raise Ticket";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fa fa-ticket me-2"></i>Raise New Ticket</h5>
+
+            <a href="@Url.Action("Index", "Support")" class="btn btn-light btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data" id="ticketForm">
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+
+                    <!-- Application Group -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Application Group <span class="text-danger">*</span></label>
+                        <select name="Application_Group_Id" id="Application_Group_Id" class="form-select" required>
+                            <option value="">-- Select Application --</option>
+                        </select>
+                    </div>
+
+                    <!-- Assign Group -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Assign Group <span class="text-danger">*</span></label>
+                        <select name="Assigned_Group_Id" id="Assigned_Group_Id" class="form-select" required>
+                            <option value="">-- Select Assign Group --</option>
+                        </select>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Priority <span class="text-danger">*</span></label>
+                        <select name="Priority" class="form-select" required>
+                            <option value="">-- Select Priority --</option>
+
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <!-- Impact -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Impact <span class="text-danger">*</span></label>
+                        <select name="Impact" class="form-select" required>
+                            <option value="">-- Select Impact --</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Subject <span class="text-danger">*</span></label>
+                        <input type="text" name="Subject" class="form-control" placeholder="Enter subject" required />
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea name="Description" class="form-control" rows="4" placeholder="Enter description" required></textarea>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Upload Screenshot (Optional)</label>
+                        <input type="file" name="Screenshot" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:99999;">
+    <div id="toastContainer"></div>
+</div>
+
+
+@section Scripts {
+    <script>
+
+        fetch('/admin/Support/ApplicationGroup')
+            .then(res => res.json())
+            .then(data => {
+                let ddl = document.getElementById("Application_Group_Id");
+                data.forEach(x => {
+                    ddl.innerHTML += `<option value="${x.support_Application_Id}">${x.application_Name}</option>`;
+                });
+            });
+
+        fetch('/admin/Support/AssignGroup')
+            .then(res => res.json())
+            .then(data => {
+                let ddl = document.getElementById("Assigned_Group_Id");
+                data.forEach(x => {
+                    ddl.innerHTML += `<option value="${x.assign_Group_Id}">${x.assign_Group_Name}</option>`;
+                });
+            });
+
+        const form = document.getElementById("ticketForm");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            let formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'bg-success');
+                        setTimeout(() => window.location.href = "/admin/Support", 2000);
+                    } else {
+                        showToast(data.message || 'Something went wrong.', 'bg-danger');
+                    }
+                })
+                .catch(() => showToast('Unexpected error occurred.', 'bg-danger'));
+        });
+
+        document.getElementById("clearBtn").addEventListener("click", () => {
+            form.reset();
+            showToast("Form cleared successfully!", "bg-success");
+        });
+
+        function showToast(message, type) {
+            const toastId = 'toast' + Date.now();
+            const toastHtml = `
+                    <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>`;
+            document.getElementById("toastContainer").insertAdjacentHTML('beforeend', toastHtml);
+            setTimeout(() => document.getElementById(toastId)?.remove(), 3000);
+        }
+
+    </script>
+}

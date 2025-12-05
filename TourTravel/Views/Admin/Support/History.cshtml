@@ -1,0 +1,68 @@
+@model List<TourTravel.Models.TicketHistoryEntry>
+
+@{
+    ViewData["Title"] = "Ticket History";
+    Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h4>Ticket History</h4>
+
+    <a href="/admin/Support" class="btn btn-secondary mb-3">
+        <i class="fa fa-arrow-left"></i> Back to Tickets
+    </a>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">No history found for this ticket.</div>
+    }
+    else
+    {
+        @foreach (var entry in Model)
+        {
+            var attachment = entry.changes
+            .FirstOrDefault(c => c.field == "Attachment")?.newValue;
+
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+
+                    <p>
+                        <strong>Updated By:</strong> @entry.updatedBy <br />
+                        <strong>Updated At:</strong> @entry.updatedAt
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(attachment))
+                    {
+                        <a href="https://hrms-demo.jobvritta.com/api/Support/NoteFile/@attachment"
+                           class="btn btn-sm btn-outline-primary mb-2"
+                           target="_blank">
+                            View Attachment
+                        </a>
+                    }
+
+                    <table class="table table-sm table-bordered mt-2 mb-0">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Old Value</th>
+                                <th>New Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var change in entry.changes)
+                            {
+                                <tr>
+                                    <td>@change.field</td>
+                                    <td>@(string.IsNullOrEmpty(change.oldValue) ? "-" : change.oldValue)</td>
+                                    <td>@(string.IsNullOrEmpty(change.newValue) ? "-" : change.newValue)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        }
+    }
+</div>
