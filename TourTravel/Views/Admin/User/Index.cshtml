@@ -8,15 +8,18 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between mb-3">
         <h3>User Management</h3>
-        <button class="btn btn-primary" id="btnAddUser">   <i class="fa fa-plus"></i> New</button>
+        <button class="btn btn-primary" id="btnAddUser">
+            <i class="fa fa-plus"></i> New
+        </button>
     </div>
 
     <table class="table table-bordered table-hover" id="userTable">
-        <thead class="">
+        <thead>
             <tr>
                 <th>S.No</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Employee Code</th>
                 <th>Status</th>
                 <th style="width:180px;">Actions</th>
             </tr>
@@ -24,13 +27,20 @@
         <tbody>
             @if (Model != null && Model.Any())
             {
-                var sno = 1; // Initialize serial number
+                var sno = 1;
                 foreach (var user in Model)
                 {
-                    <tr data-id="@user.Id" data-name="@user.Name" data-email="@user.Email" data-active="@user.IsActive">
-                        <td>@sno</td> <!-- Show S.No -->
+                    <tr data-id="@user.Id"
+                        data-name="@user.Name"
+                        data-email="@user.Email"
+                        data-employeecode="@user.EmployeeCode"
+                        data-active="@user.IsActive">
+
+                        <td>@sno</td>
                         <td>@user.Name</td>
                         <td>@user.Email</td>
+                        <td>@user.EmployeeCode</td>
+
                         <td>
                             @if (user.IsActive)
                             {
@@ -41,24 +51,31 @@
                                 <span class="text-danger">Inactive</span>
                             }
                         </td>
+
                         <td>
-                            <button class="btn btn-sm btn-primary me-1"> <i class="fa fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger btn-delete"><i class="fa fa-trash"></i></button>
+                            <button class="btn btn-sm btn-primary me-1 btn-edit">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-delete">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
-                    sno++; // Increment serial number
+                    sno++;
                 }
             }
             else
             {
-                <tr><td colspan="5" class="text-center text-muted">No users found.</td></tr>
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No users found.</td>
+                </tr>
             }
         </tbody>
     </table>
 </div>
 
-<!-- 🟢 Modal (Static Form) -->
-<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="userForm">
@@ -66,6 +83,7 @@
                     <h5 class="modal-title" id="modalTitle">Add User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
                     <input type="hidden" id="UserId" name="Id" />
 
@@ -80,12 +98,17 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Employee Code</label>
+                        <input type="text" class="form-control" id="EmployeeCode" name="EmployeeCode" required />
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="text" class="form-control" id="Password" name="Password" required />
+                        <input type="text" class="form-control" id="Password" name="Password" />
                     </div>
 
                     <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" checked>
+                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive">
                         <label class="form-check-label" for="IsActive">Active</label>
                     </div>
                 </div>
@@ -99,31 +122,11 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title w-100 text-center">Confirm Delete</h5>
-            </div>
-            <div class="modal-body text-center">
-                Are you sure you want to delete?
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         $(function () {
 
-            // ✅ Open modal for Add
+            // ADD button
             $('#btnAddUser').click(function () {
                 $('#modalTitle').text('Add User');
                 $('#userForm')[0].reset();
@@ -131,56 +134,23 @@
                 $('#userModal').modal('show');
             });
 
-            // ✅ Open modal for Edit
-            $('#userTable').on('click', '.btn-primary', function () {
+            // EDIT button
+            $('#userTable').on('click', '.btn-edit', function () {
                 const row = $(this).closest('tr');
+
                 $('#modalTitle').text('Edit User');
+
                 $('#UserId').val(row.data('id'));
                 $('#Name').val(row.data('name'));
                 $('#Email').val(row.data('email'));
+                $('#EmployeeCode').val(row.data('employeecode')); // ✅ FIXED
                 $('#Password').val('');
-                $('#IsActive').prop('checked', row.data('active') === true || row.data('active') === "True");
+                $('#IsActive').prop('checked', row.data('active') == true || row.data('active') === "True");
+
                 $('#userModal').modal('show');
             });
 
-           
-
-            $(function () {
-                let deleteUserId = null;
-
-                // 🗑 Open Delete Confirmation Modal
-                $('#userTable').on('click', '.btn-delete', function () {
-                    deleteUserId = $(this).closest('tr').data('id');
-                    $('#deleteConfirmModal').modal('show');
-                });
-
-                // ✅ Confirm Delete
-                $('#confirmDeleteBtn').click(function () {
-                    if (!deleteUserId) return;
-
-                    $.ajax({
-                        url: '@Url.Action("Delete", "User")',
-                        type: 'POST',
-                        data: { id: deleteUserId },
-                        success: function (res) {
-                            $('#deleteConfirmModal').modal('hide');
-
-                            if (res.success) {
-                                showToast('User deleted successfully!', 'bg-success');
-                                setTimeout(() => location.reload(), 3000);
-                            } else {
-                                showToast(res.message || 'Failed to delete user.', 'bg-danger');
-                            }
-                        },
-                        error: function () {
-                            $('#deleteConfirmModal').modal('hide');
-                            showToast('An error occurred while deleting the user.', 'bg-danger');
-                        }
-                    });
-                });
-            });
-
-            // ✅ Add/Edit user submit
+            // SAVE (Add/Edit)
             $('#userForm').submit(function (e) {
                 e.preventDefault();
 
@@ -188,33 +158,36 @@
                     Id: $('#UserId').val(),
                     Name: $('#Name').val(),
                     Email: $('#Email').val(),
+                    EmployeeCode: $('#EmployeeCode').val(),
                     Password: $('#Password').val(),
                     IsActive: $('#IsActive').is(':checked')
                 };
 
-                const url = data.Id ? '@Url.Action("Edit", "User")' : '@Url.Action("Create", "User")';
+                const url = data.Id ? '/User/Edit' : '/User/Create';
 
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data,
-                    success: function (res) {
-                        if (res.success) {
-                            $('#userModal').modal('hide');
-                            showToast(res.message, 'bg-success');
-                            setTimeout(() => location.reload(), 3000);
-                        } else {
-                            showToast(res.message || 'Something went wrong.', 'bg-danger');
-                        }
-                    },
-                    error: function () {
-                        showToast('An unexpected error occurred.', 'bg-danger');
+                $.post(url, data, function (res) {
+                    if (res.success) {
+                        $('#userModal').modal('hide');
+                        alert(res.message);
+                        location.reload();
+                    } else {
+                        alert(res.message);
                     }
                 });
             });
-        });
 
-       
+            // DELETE
+            $('#userTable').on('click', '.btn-delete', function () {
+                if (!confirm("Are you sure you want to delete?")) return;
+
+                const id = $(this).closest('tr').data('id');
+
+                $.post('/User/Delete', { id }, function (res) {
+                    alert(res.message);
+                    if (res.success) location.reload();
+                });
+            });
+
+        });
     </script>
 }
-

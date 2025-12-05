@@ -23,6 +23,8 @@ builder.Services.AddTransient<IMailService, MailService>();
 
 // Register IHttpClientFactory
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<ISupportService, SupportService>();
+
 
 
 
