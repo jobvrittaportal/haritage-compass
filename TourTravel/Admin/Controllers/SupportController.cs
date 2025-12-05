@@ -109,12 +109,38 @@ public class SupportController : Controller
     return ticketResponse;
   }
 
+  //[HttpGet("")]
+  //public async Task<IActionResult> Index(string? filter, string? lazyParams)
+  //{
+  //  try
+  //  {
+  //    var tickets = await GetTickets(filter, lazyParams);
+  //    return View("~/Views/Admin/Support/Index.cshtml", tickets);
+  //  }
+  //  catch (Exception ex)
+  //  {
+  //    ViewBag.ErrorMessage = ex.Message;
+  //    return View("~/Views/Admin/Support/Index.cshtml");
+  //  }
+  //}
+
   [HttpGet("")]
-  public async Task<IActionResult> Index(string? filter, string? lazyParams)
+  public async Task<IActionResult> Index(string? date, string? lazyParams)
   {
     try
     {
+      ViewBag.Date = date;
+
+      // Convert date to filter JSON expected by your API
+      string filter = "";
+      if (!string.IsNullOrEmpty(date))
+      {
+        var filterObj = new { date = date };
+        filter = JsonSerializer.Serialize(filterObj);
+      }
+
       var tickets = await GetTickets(filter, lazyParams);
+
       return View("~/Views/Admin/Support/Index.cshtml", tickets);
     }
     catch (Exception ex)
@@ -123,6 +149,7 @@ public class SupportController : Controller
       return View("~/Views/Admin/Support/Index.cshtml");
     }
   }
+
 
   [HttpGet("Create")]
   public async Task<IActionResult> Create()

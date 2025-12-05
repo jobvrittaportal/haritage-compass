@@ -9,19 +9,20 @@
 
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Support Tickets</h4>
+        <h4 class="mb-0">Ticket Raise</h4>
 
         <div class="d-flex align-items-center">
 
             <!-- Search -->
             <form method="get" asp-action="Index" class="me-2">
                 <div class="input-group" style="width: 200px;">
-                    <input type="text" name="filter" value="@ViewBag.Filter" class="form-control" placeholder="Search..." />
+                    <input type="date" name="date" value="@ViewBag.Date" class="form-control" />
                     <button class="btn btn-outline-secondary">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
             </form>
+
 
             <!-- Create Button -->
             <a href="/admin/Support/Create" class="btn btn-primary ms-2">
@@ -45,29 +46,29 @@
         <table class="table table-striped table-bordered align-middle">
             <thead>
                 <tr>
-                    <th>Ticket No.</th>
                     <th>Ticket ID</th>
-                    <th>Subject</th>
+                    <th>APPLICATION</th>
                     <th>Priority</th>
-                    <th>Status</th>
-                    <th>Open Date</th>
-                    <th>Raised By</th>
-                    <th>Agent</th>
-                    <th >Action</th>
+                    <th>IMPACT</th>
+                    <th>ASSIGNED GROUP</th>
+                    <th> ASSIGNED TO</th>
+                    <th>STATUS</th>
+                    <th>CREATED AT</th>
+                    <th>ACTIONS</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var t in Model.result)
                 {
                     <tr id="ticketRow_@t.ticket_Number">
-                        <td>@t.ticket_Number</td>
                         <td>@t.ticket_Id</td>
-                        <td>@Html.Raw(t.subject)</td>
+                        <td>@t.application_Group_Name</td>
                         <td>@t.priority</td>
+                        <td>@t.impact</td>
+                        <td>@t.assigned_Grouped_Name</td>
+                        <td>@t.agent_Name</td>
                         <td>@t.status_Name</td>
                         <td>@t.open</td>
-                        <td>@t.raised_By_Name</td>
-                        <td>@t.agent_Name</td>
                         <td class="text-center" style="white-space:nowrap; width: 180px;">
 
                             <!-- View File (only if file exists) -->
@@ -242,18 +243,24 @@
                             </select>
                         </div>
 
-                        <!-- REMARK - OPTIONAL -->
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Remark (Optional)</label>
-                            <input type="text" id="edit_Remark" class="form-control" />
+                        <!-- AREA TO SHOW/HIDE -->
+                        <div id="statusActionArea" class="row" style="display:none;">
+                            <!-- REMARK -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Remark (Optional)</label>
+                                <input type="text" id="edit_Remark" class="form-control" />
+                            </div>
+
+                            <!-- Update Status Button -->
+                            <div class="col-md-12 mb-3">
+                                <button type="button" id="btnUpdateTicketStatus" class="btn btn-success d-flex align-items-center gap-2">
+                                    <span id="statusBtnText">Update Status</span>
+                                    <div id="statusBtnLoader" class="spinner-border spinner-border-sm text-light" style="display:none;"></div>
+                                </button>
+
+                            </div>
                         </div>
 
-                        <!-- Update Status Button -->
-                        <div class="col-md-12 mb-3">
-                            <button type="button" id="btnUpdateTicketStatus" class="btn btn-success">
-                                Update Status
-                            </button>
-                        </div>
 
                     </div>
 
@@ -356,13 +363,13 @@
         function showToast(message, type) {
             const toastId = 'toast' + Date.now();
             const toastHtml = `
-                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
-                    <div class="d-flex">
-                        <div class="toast-body">${message}</div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            `;
+                                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
+                                    <div class="d-flex">
+                                        <div class="toast-body">${message}</div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                    </div>
+                                </div>
+                            `;
             document.getElementById("toastContainer").insertAdjacentHTML('beforeend', toastHtml);
             setTimeout(() => document.getElementById(toastId)?.remove(), 3000);
         }
@@ -391,25 +398,25 @@
                     data.forEach(entry => {
 
                         html += `
-                            <div class="mb-3 border rounded p-3">
-                                <strong>Updated By:</strong> ${entry.updatedBy} <br />
-                                <strong>Updated At:</strong> ${entry.updatedAt} <br />
+                                            <div class="mb-3 border rounded p-3">
+                                                <strong>Updated By:</strong> ${entry.updatedBy} <br />
+                                                <strong>Updated At:</strong> ${entry.updatedAt} <br />
 
-                                ${entry.file_Url ? `
-                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
-                                        data-file="/admin/Support/NoteFile/${entry.file_Url}">
-                                        <i class="fa fa-eye"></i>
-                                    </button>` : ""}
+                                                ${entry.file_Url ? `
+                                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
+                                                        data-file="/admin/Support/NoteFile/${entry.file_Url}">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>` : ""}
 
-                                <table class="table table-sm table-bordered mt-2 mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Field</th>
-                                            <th>Old Value</th>
-                                            <th>New Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>`;
+                                                <table class="table table-sm table-bordered mt-2 mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field</th>
+                                                            <th>Old Value</th>
+                                                            <th>New Value</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>`;
 
                         entry.changes.forEach(change => {
 
@@ -417,26 +424,26 @@
 
                             if (change.field === "Attachment" && change.newValue) {
                                 newValueHtml = `
-                                    <button class="btn btn-sm btn-outline-primary view-note-file"
-                                        data-file="/admin/Support/NoteFile/${change.newValue}">
-                                        <i class="fa fa-eye"></i>
-                                    </button>`;
+                                                    <button class="btn btn-sm btn-outline-primary view-note-file"
+                                                        data-file="/admin/Support/NoteFile/${change.newValue}">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>`;
                             } else {
                                 newValueHtml = change.newValue || "-";
                             }
 
                             html += `
-                                <tr>
-                                    <td>${change.field}</td>
-                                    <td>${change.oldValue || '-'}</td>
-                                    <td>${newValueHtml}</td>
-                                </tr>`;
+                                                <tr>
+                                                    <td>${change.field}</td>
+                                                    <td>${change.oldValue || '-'}</td>
+                                                    <td>${newValueHtml}</td>
+                                                </tr>`;
                         });
 
                         html += `
-                                    </tbody>
-                                </table>
-                            </div>`;
+                                                    </tbody>
+                                                </table>
+                                            </div>`;
                     });
 
                     $("#historyBody").html(html);
@@ -465,7 +472,7 @@
 
             new bootstrap.Modal(document.getElementById('activityModal')).show();
         });
-        
+
         // ⭐ LOAD NOTES
         function loadNotes(ticketId) {
 
@@ -484,18 +491,18 @@
                     data.result.forEach(item => {
 
                         html += `
-                            <div class="p-3 mb-2 bg-light rounded border">
-                                <strong>${item.created_By_Name || ''}</strong>
-                                <span class="float-end">${item.created_At || ''}</span>
+                                            <div class="p-3 mb-2 bg-light rounded border">
+                                                <strong>${item.created_By_Name || ''}</strong>
+                                                <span class="float-end">${item.created_At || ''}</span>
 
-                                <div class="mt-2">${item.note_Text || ''}</div>
+                                                <div class="mt-2">${item.note_Text || ''}</div>
 
-                                ${item.file_Url ? `
-                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
-                                        data-file="/admin/Support/NoteFile/${item.file_Url}">
-                                        <i class="fa fa-eye"></i>
-                                    </button>` : ""}
-                            </div>`;
+                                                ${item.file_Url ? `
+                                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
+                                                        data-file="/admin/Support/NoteFile/${item.file_Url}">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>` : ""}
+                                            </div>`;
                     });
 
                     $("#notesContainer").html(html);
@@ -576,6 +583,9 @@
 
                 let ticketId = $(this).data("id");
 
+                $("#statusActionArea").hide();
+                $("#edit_Remark").val("");
+
                 $("#editTicketForm")[0].reset();
 
                 fetch(`/admin/Support/getTicketDetails?ticket_Number=${ticketId}`)
@@ -597,6 +607,16 @@
                         $("#edit_Subject").val(data.subject);
                         $("#edit_Desc").val(data.description);
                         $("#editsupportStatus").val(data.status ?? "");
+
+                        let statusSelect = $("#editsupportStatus");
+
+                        // Disable CURRENT status
+                        statusSelect.find("option").each(function () {
+                            let v = parseInt($(this).val());
+                            $(this).prop("disabled", v === data.status);
+                        });
+
+                        statusSelect.val(data.status ?? "");
 
                         new bootstrap.Modal(document.getElementById('editTicketModal')).show();
                     })
@@ -691,6 +711,7 @@
                 }
             });
             // ⭐ UPDATE STATUS ONLY
+            // ⭐ UPDATE STATUS ONLY — WITH LOADER
             $("#btnUpdateTicketStatus").on("click", function () {
 
                 let ticketId = $("#edit_Ticket_Id").val();
@@ -698,9 +719,17 @@
                 let remark = $("#edit_Remark").val();
 
                 if (!statusId) {
-                    showToast("Please select a status", "bg-danger");
+                    showToast("Please select a status.", "bg-danger");
                     return;
                 }
+
+                const btn = $("#btnUpdateTicketStatus");
+                const text = $("#statusBtnText");
+                const loader = $("#statusBtnLoader");
+
+                btn.prop("disabled", true);
+                text.text("Updating...");
+                loader.show();
 
                 let payload = {
                     Ticket_Id: parseInt(ticketId),
@@ -713,12 +742,24 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 })
-                    .then(res => res.json())
+                    .then(async res => {
+                        let json = null;
+                        try { json = await res.json(); } catch { }
+
+                        if (!res.ok) throw new Error(json?.error || "API error");
+
+                        return json;
+                    })
                     .then(() => {
                         showToast("Status updated successfully!", "bg-success");
                         setTimeout(() => location.reload(), 1000);
                     })
-                    .catch(() => showToast("Status update failed", "bg-danger"));
+                    .catch(err => showToast(err.message || "Status update failed", "bg-danger"))
+                    .finally(() => {
+                        btn.prop("disabled", false);
+                        text.text("Update Status");
+                        loader.hide();
+                    });
             });
             // ⭐ VIEW FILE / NOTE FILE PREVIEW
             $(document).on("click", ".view-note-file", function () {
@@ -743,7 +784,7 @@
             });
         });
 
-              $(document).on("click", ".view-file", function () {
+        $(document).on("click", ".view-file", function () {
             let fileUrl = $(this).data("file");
             $("#popupImage").attr("src", fileUrl);
             $("#fileModal").modal("show");
@@ -762,6 +803,24 @@
                     .css('z-index', zIndex - 1)
                     .addClass('stacked');
             }, 50);
+        });
+
+
+        $(document).ready(function () {
+
+            // Hide initially
+            $("#statusActionArea").hide();
+
+            // When dropdown changes
+            $("#editsupportStatus").on("change", function () {
+                let selected = $(this).val();
+
+                if (selected === "" || selected === null) {
+                    $("#statusActionArea").hide();   // hide if empty
+                } else {
+                    $("#statusActionArea").show();   // show if user chooses a status
+                }
+            });
         });
     </script>
 }
