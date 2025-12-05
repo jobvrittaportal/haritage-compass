@@ -81,10 +81,13 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-3">
-                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="submit" id="saveBtn" class="btn btn-success d-flex align-items-center gap-2">
+                        <span id="saveText">Save</span>
+                        <div id="btnLoader" class="spinner-border spinner-border-sm text-light" style="display:none;"></div>
+                    </button>
                     <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
                 </div>
-
+          
             </form>
 
         </div>
@@ -119,9 +122,17 @@
             });
 
         const form = document.getElementById("ticketForm");
-
-        form.addEventListener("submit", function (e) {
+                form.addEventListener("submit", function (e) {
             e.preventDefault();
+
+            let saveBtn = document.getElementById("saveBtn");
+            let saveText = document.getElementById("saveText");
+            let btnLoader = document.getElementById("btnLoader");
+
+            // ?? Show spinner inside button
+            saveBtn.disabled = true;
+            saveText.textContent = "Saving...";
+            btnLoader.style.display = "inline-block";
 
             let formData = new FormData(form);
 
@@ -131,15 +142,30 @@
             })
                 .then(res => res.json())
                 .then(data => {
+
+                    // ?? Hide spinner & reset button
+                    saveBtn.disabled = false;
+                    saveText.textContent = "Save";
+                    btnLoader.style.display = "none";
+
                     if (data.success) {
                         showToast(data.message, 'bg-success');
                         setTimeout(() => window.location.href = "/admin/Support", 2000);
                     } else {
-                        showToast(data.message || 'Something went wrong.', 'bg-danger');
+                        showToast(data.message || "Something went wrong.", "bg-danger");
                     }
                 })
-                .catch(() => showToast('Unexpected error occurred.', 'bg-danger'));
+                .catch(() => {
+
+                    // ?? Hide loader if error
+                    saveBtn.disabled = false;
+                    saveText.textContent = "Save";
+                    btnLoader.style.display = "none";
+
+                    showToast("Unexpected error occurred.", "bg-danger");
+                });
         });
+
 
         document.getElementById("clearBtn").addEventListener("click", () => {
             form.reset();
