@@ -75,7 +75,7 @@
                     <!-- File Upload -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Upload Screenshot (Optional)</label>
-                        <input type="file" name="Screenshot" class="form-control" />
+                        <input type="file" name="Screenshot" class="form-control" accept="image/*" />
                     </div>
 
                 </div>
@@ -87,7 +87,7 @@
                     </button>
                     <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
                 </div>
-          
+
             </form>
 
         </div>
@@ -122,7 +122,7 @@
             });
 
         const form = document.getElementById("ticketForm");
-                form.addEventListener("submit", function (e) {
+        form.addEventListener("submit", function (e) {
             e.preventDefault();
 
             let saveBtn = document.getElementById("saveBtn");
@@ -172,15 +172,30 @@
             showToast("Form cleared successfully!", "bg-info");
         });
 
+        // Allow only image files
+        document.querySelector("input[name='Screenshot']").addEventListener("change", function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            // Allowed image types
+            const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif", "image/webp"];
+
+            if (!validTypes.includes(file.type)) {
+                showToast("Only image files (JPG, PNG, GIF, WEBP) are allowed!", "bg-danger");
+                this.value = "";
+            }
+        });
+
+
         function showToast(message, type) {
             const toastId = 'toast' + Date.now();
             const toastHtml = `
-                    <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
-                        <div class="d-flex">
-                            <div class="toast-body">${message}</div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                        </div>
-                    </div>`;
+                            <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
+                                <div class="d-flex">
+                                    <div class="toast-body">${message}</div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                </div>
+                            </div>`;
             document.getElementById("toastContainer").insertAdjacentHTML('beforeend', toastHtml);
             setTimeout(() => document.getElementById(toastId)?.remove(), 3000);
         }

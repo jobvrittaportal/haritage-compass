@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -240,6 +241,14 @@ public class SupportController : Controller
 
       if (model.Screenshot != null)
       {
+
+        var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+        var ext = Path.GetExtension(model.Screenshot.FileName).ToLower();
+
+        if (!allowed.Contains(ext))
+        {
+          return Json(new { success = false, message = "Only image files are allowed." });
+        }
         var stream = model.Screenshot.OpenReadStream();
         var fileContent = new StreamContent(stream);
         fileContent.Headers.ContentType =
@@ -319,6 +328,16 @@ public class SupportController : Controller
 
       if (model.Attachment != null)
       {
+        if (model.Attachment != null)
+        {
+          var allowed = new[] { "application/pdf", "image/jpeg", "image/png" };
+
+          if (!allowed.Contains(model.Attachment.ContentType))
+          {
+            return Json(new { success = false, message = "Invalid file type" });
+          }
+        }
+
         var stream = model.Attachment.OpenReadStream();
         var fileContent = new StreamContent(stream);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue(model.Attachment.ContentType);

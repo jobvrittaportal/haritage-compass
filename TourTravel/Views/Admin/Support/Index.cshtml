@@ -116,7 +116,7 @@
                     sn++;
 
                 }
-              
+
             </tbody>
         </table>
 
@@ -333,7 +333,8 @@
 
                     <div class="mt-3">
                         <label class="fw-bold">Attachment</label><br />
-                        <input type="file" name="Attachment" id="note_file" />
+                        <input type="file" name="Attachment" id="note_file" accept=".pdf,image/*" />
+
                     </div>
 
                     <button type="button" id="postNoteBtn" class="btn btn-primary mt-3">
@@ -372,13 +373,13 @@
         function showToast(message, type) {
             const toastId = 'toast' + Date.now();
             const toastHtml = `
-                                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
-                                    <div class="d-flex">
-                                        <div class="toast-body">${message}</div>
-                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                                    </div>
-                                </div>
-                            `;
+                                                <div id="${toastId}" class="toast align-items-center text-white ${type} border-0 show" role="alert">
+                                                    <div class="d-flex">
+                                                        <div class="toast-body">${message}</div>
+                                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                                    </div>
+                                                </div>
+                                            `;
             document.getElementById("toastContainer").insertAdjacentHTML('beforeend', toastHtml);
             setTimeout(() => document.getElementById(toastId)?.remove(), 3000);
         }
@@ -407,25 +408,25 @@
                     data.forEach(entry => {
 
                         html += `
-                                            <div class="mb-3 border rounded p-3">
-                                                <strong>Updated By:</strong> ${entry.updatedBy} <br />
-                                                <strong>Updated At:</strong> ${entry.updatedAt} <br />
+                                                            <div class="mb-3 border rounded p-3">
+                                                                <strong>Updated By:</strong> ${entry.updatedBy} <br />
+                                                                <strong>Updated At:</strong> ${entry.updatedAt} <br />
 
-                                                ${entry.file_Url ? `
-                                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
-                                                        data-file="/admin/Support/NoteFile/${entry.file_Url}">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>` : ""}
+                                                                ${entry.file_Url ? `
+                                                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
+                                                                        data-file="/admin/Support/NoteFile/${entry.file_Url}">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button>` : ""}
 
-                                                <table class="table table-sm table-bordered mt-2 mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Field</th>
-                                                            <th>Old Value</th>
-                                                            <th>New Value</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>`;
+                                                                <table class="table table-sm table-bordered mt-2 mb-0">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Field</th>
+                                                                            <th>Old Value</th>
+                                                                            <th>New Value</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>`;
 
                         entry.changes.forEach(change => {
 
@@ -433,26 +434,26 @@
 
                             if (change.field === "Attachment" && change.newValue) {
                                 newValueHtml = `
-                                                    <button class="btn btn-sm btn-outline-primary view-note-file"
-                                                        data-file="/admin/Support/NoteFile/${change.newValue}">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>`;
+                                                                    <button class="btn btn-sm btn-outline-primary view-note-file"
+                                                                        data-file="/admin/Support/NoteFile/${change.newValue}">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button>`;
                             } else {
                                 newValueHtml = change.newValue || "-";
                             }
 
                             html += `
-                                                <tr>
-                                                    <td>${change.field}</td>
-                                                    <td>${change.oldValue || '-'}</td>
-                                                    <td>${newValueHtml}</td>
-                                                </tr>`;
+                                                                <tr>
+                                                                    <td>${change.field}</td>
+                                                                    <td>${change.oldValue || '-'}</td>
+                                                                    <td>${newValueHtml}</td>
+                                                                </tr>`;
                         });
 
                         html += `
-                                                    </tbody>
-                                                </table>
-                                            </div>`;
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>`;
                     });
 
                     $("#historyBody").html(html);
@@ -500,18 +501,18 @@
                     data.result.forEach(item => {
 
                         html += `
-                                            <div class="p-3 mb-2 bg-light rounded border">
-                                                <strong>${item.created_By_Name || ''}</strong>
-                                                <span class="float-end">${item.created_At || ''}</span>
+                                                            <div class="p-3 mb-2 bg-light rounded border">
+                                                                <strong>${item.created_By_Name || ''}</strong>
+                                                                <span class="float-end">${item.created_At || ''}</span>
 
-                                                <div class="mt-2">${item.note_Text || ''}</div>
+                                                                <div class="mt-2">${item.note_Text || ''}</div>
 
-                                                ${item.file_Url ? `
-                                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
-                                                        data-file="/admin/Support/NoteFile/${item.file_Url}">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>` : ""}
-                                            </div>`;
+                                                                ${item.file_Url ? `
+                                                                    <button class="btn btn-sm btn-outline-primary mt-2 view-note-file"
+                                                                        data-file="/admin/Support/NoteFile/${item.file_Url}">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button>` : ""}
+                                                            </div>`;
                     });
 
                     $("#notesContainer").html(html);
@@ -526,9 +527,27 @@
             let noteText = $("#note_text").val().trim();
 
             if (!noteText) {
-                showToast("Note text is required!", "bg-danger");
-                return; 
+                showToast("Activities is required!", "bg-danger");
+                return;
             }
+
+            let fileInput = document.getElementById("note_file");
+            let file = fileInput.files[0];
+
+            if (file) {
+                const allowedTypes = [
+                    "application/pdf",
+                    "image/jpeg",
+                    "image/png",
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+                    showToast("Only PDF, JPG, and PNG files are allowed!", "bg-danger");
+                    fileInput.value = "";
+                    return;
+                }
+            }
+
 
             let formData = new FormData(document.getElementById("noteForm"));
 
@@ -623,15 +642,32 @@
                         $("#edit_Desc").val(data.description);
                         $("#editsupportStatus").val(data.status ?? "");
 
+                        let currentStatus = data.status;   // may be null
+
                         let statusSelect = $("#editsupportStatus");
- 
-    // Disable CURRENT status
-    statusSelect.find("option").each(function () {
-        let v = parseInt($(this).val());
-        $(this).prop("disabled", v === data.status);
-    });
- 
-    statusSelect.val(data.status ?? "");
+
+                        // Disable CURRENT status
+                        // statusSelect.find("option").each(function () {
+                        //     let v = parseInt($(this).val());
+                        //     $(this).prop("disabled", v === data.status);
+                        // });
+
+
+                        statusSelect.find("option").each(function () {
+                            let val = parseInt($(this).val());
+
+                            // Case 1: current status is 5 or 6 → disable only that option
+                            if (currentStatus === 5 || currentStatus === 6) {
+                                $(this).prop("disabled", val === currentStatus);
+                            }
+                            // Case 2: current status is NULL or NOT 5,6 → disable Status 6
+                            else {
+                                $(this).prop("disabled", val === 6);
+                            }
+                        });
+
+
+                        statusSelect.val(data.status ?? "");
 
                         new bootstrap.Modal(document.getElementById('editTicketModal')).show();
                     })
