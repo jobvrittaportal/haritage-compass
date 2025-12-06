@@ -42,6 +42,10 @@
     else if (Model == null || Model.result == null || !Model.result.Any())
     {
         <div class="alert alert-info text-center">No tickets found.</div>
+
+        <a href="/admin/Support" class="btn btn-secondary">
+            Back to All Tickets
+        </a>
     }
     else
     {
@@ -198,8 +202,8 @@
 
                         <!-- Application Group -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Application Group <span class="text-danger">*</span></label>
-                            <select id="edit_Application_Id" class="form-select" required>
+                            <label class="form-label">Application  <span class="text-danger">*</span></label>
+                            <select id="edit_Application_Id" class="form-select" required disabled>
                                 <option value="">-- Select Application --</option>
                             </select>
                         </div>
@@ -207,7 +211,7 @@
                         <!-- Assign Group -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Assign Group <span class="text-danger">*</span></label>
-                            <select id="edit_Assign_Group_Id" class="form-select" required>
+                            <select id="edit_Assign_Group_Id" class="form-select" required disabled>
                                 <option value="">-- Select Assign Group --</option>
                             </select>
                         </div>
@@ -719,6 +723,19 @@
                 addChange("Impact", originalTicketData.impact, impact);
                 addChange("Subject", originalTicketData.subject, subject);
                 addChange("Desc", originalTicketData.description, desc);
+
+                // ⭐ STOP if no changes made
+                if (changes.length === 0) {
+                    showToast("No changes found!", "bg-warning");
+               
+                    // reset button loader
+                    btn.prop("disabled", false);
+                    updateText.text("Update");
+                    updateLoader.hide();
+               
+                    return; // stop API call
+                }
+
 
                 const updateDto = {
                     Ticket_Id: parseInt(ticketId),
