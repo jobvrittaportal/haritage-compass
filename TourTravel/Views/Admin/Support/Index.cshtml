@@ -4,6 +4,9 @@
     ViewData["Title"] = "Support Tickets";
     Layout = "~/Admin/Views/Shared/_Layout-common.cshtml";
 }
+@{
+    int sn = 1;
+}
 
 <div class="container mt-4">
 
@@ -46,6 +49,8 @@
         <table class="table table-striped table-bordered align-middle">
             <thead>
                 <tr>
+                    <th>S.NO</th>
+
                     <th>Ticket ID</th>
                     <th>APPLICATION</th>
                     <th>Priority</th>
@@ -61,6 +66,7 @@
                 @foreach (var t in Model.result)
                 {
                     <tr id="ticketRow_@t.ticket_Number">
+                        <td>@sn</td>
                         <td>@t.ticket_Id</td>
                         <td>@t.application_Group_Name</td>
                         <td>@t.priority</td>
@@ -107,7 +113,10 @@
 
 
                     </tr>
+                    sn++;
+
                 }
+              
             </tbody>
         </table>
 
@@ -237,7 +246,7 @@
 
                         <!-- STATUS - OPTIONAL -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Status (Optional)</label>
+                            <label class="form-label">Status <span class="text-danger">*</span></label>
                             <select id="editsupportStatus" class="form-select" data-current-status-id="1">
                                 <option value="">-- Select Status --</option>
                             </select>
@@ -247,7 +256,7 @@
                         <div id="statusActionArea" class="row" style="display:none;">
                             <!-- REMARK -->
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Remark (Optional)</label>
+                                <label class="form-label">Remark <span class="text-danger">*</span></label>
                                 <input type="text" id="edit_Remark" class="form-control" />
                             </div>
 
@@ -514,6 +523,12 @@
 
         // ⭐ POST NEW NOTE
         $("#postNoteBtn").on("click", function () {
+            let noteText = $("#note_text").val().trim();
+
+            if (!noteText) {
+                showToast("Note text is required!", "bg-danger");
+                return; 
+            }
 
             let formData = new FormData(document.getElementById("noteForm"));
 
@@ -609,14 +624,14 @@
                         $("#editsupportStatus").val(data.status ?? "");
 
                         let statusSelect = $("#editsupportStatus");
-
-                        // Disable CURRENT status
-                        statusSelect.find("option").each(function () {
-                            let v = parseInt($(this).val());
-                            $(this).prop("disabled", v === data.status);
-                        });
-
-                        statusSelect.val(data.status ?? "");
+ 
+    // Disable CURRENT status
+    statusSelect.find("option").each(function () {
+        let v = parseInt($(this).val());
+        $(this).prop("disabled", v === data.status);
+    });
+ 
+    statusSelect.val(data.status ?? "");
 
                         new bootstrap.Modal(document.getElementById('editTicketModal')).show();
                     })
@@ -711,7 +726,6 @@
                 }
             });
             // ⭐ UPDATE STATUS ONLY
-            // ⭐ UPDATE STATUS ONLY — WITH LOADER
             $("#btnUpdateTicketStatus").on("click", function () {
 
                 let ticketId = $("#edit_Ticket_Id").val();
@@ -720,6 +734,11 @@
 
                 if (!statusId) {
                     showToast("Please select a status.", "bg-danger");
+                    return;
+                }
+
+                if (!remark) {
+                    showToast("Please enter a remark.", "bg-danger");
                     return;
                 }
 
